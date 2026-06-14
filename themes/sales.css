@@ -1,0 +1,119 @@
+/* @theme sales */
+/* 営業プレゼン用スライドテーマ（清潔感のあるコーポレートデザイン） */
+
+@import 'default';
+
+:root {
+  --brand: #1565c0;        /* メインカラー（青）。会社のカラーに合わせて変更可 */
+  --brand-dark: #0d3c75;
+  --accent: #ff6f00;       /* アクセントカラー（オレンジ） */
+  --text: #1a1a2e;
+  --muted: #5a6472;
+  --bg: #ffffff;
+  --bg-soft: #f3f6fb;
+}
+
+section {
+  font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", sans-serif;
+  font-size: 26px;
+  color: var(--text);
+  background: var(--bg);
+  padding: 60px 70px;
+  line-height: 1.6;
+}
+
+/* 見出し */
+h1 {
+  color: var(--brand-dark);
+  font-size: 46px;
+  border-bottom: 4px solid var(--brand);
+  padding-bottom: 12px;
+  margin-bottom: 24px;
+}
+
+h2 {
+  color: var(--brand);
+  font-size: 34px;
+  margin-bottom: 16px;
+}
+
+h3 {
+  color: var(--brand-dark);
+  font-size: 28px;
+}
+
+/* 強調 */
+strong { color: var(--accent); }
+
+a { color: var(--brand); }
+
+/* 箇条書き */
+ul, ol { margin-left: 0.4em; }
+li { margin: 0.35em 0; }
+ul li::marker { color: var(--brand); }
+
+/* 表 */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 23px;
+}
+th {
+  background: var(--brand);
+  color: #fff;
+  padding: 12px 16px;
+  text-align: left;
+}
+td {
+  border-bottom: 1px solid #dce3ee;
+  padding: 11px 16px;
+}
+tr:nth-child(even) td { background: var(--bg-soft); }
+
+/* 引用（メッセージ・お客様の声などに） */
+blockquote {
+  border-left: 6px solid var(--accent);
+  background: var(--bg-soft);
+  padding: 16px 24px;
+  color: var(--muted);
+  font-style: normal;
+}
+
+/* ページ番号 */
+section::after {
+  color: var(--muted);
+  font-size: 16px;
+}
+
+/* ===== 表紙用クラス（<!-- _class: title --> で適用） ===== */
+section.title {
+  background: linear-gradient(135deg, var(--brand) 0%, var(--brand-dark) 100%);
+  color: #fff;
+  justify-content: center;
+  text-align: left;
+}
+section.title h1 {
+  color: #fff;
+  border: none;
+  font-size: 56px;
+}
+section.title h2,
+section.title h3,
+section.title p { color: #e8f0fb; }
+section.title strong { color: #ffd180; }
+
+/* ===== 章扉用クラス（<!-- _class: section --> で適用） ===== */
+section.section {
+  background: var(--bg-soft);
+  justify-content: center;
+  text-align: center;
+}
+section.section h1 {
+  border: none;
+  font-size: 50px;
+  color: var(--brand-dark);
+}
+
+/* ===== 強調メッセージ用クラス（<!-- _class: lead --> で適用） ===== */
+section.lead { text-align: center; justify-content: center; }
+section.lead h1 { border: none; }

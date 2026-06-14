@@ -1,0 +1,13 @@
+# 依存パッケージ
+node_modules/
+
+# 出力した資料（PDF・PowerPoint・HTML）はGitに含めない
+output/
+*.pdf
+*.pptx
+*.html
+
+# OS / エディタの一時ファイル
+.DS_Store
+Thumbs.db
+.vscode/

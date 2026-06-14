@@ -148,12 +148,18 @@ section.title h1 {
   margin: 0;
   border-bottom: 3px solid var(--rule);
 }
+section.title .sub {           /* サブタイトル（青） */
+  color: var(--navy);
+  font-size: 24px;
+  font-weight: 800;
+  margin: 16px 0 0;
+}
 section.title .date {          /* 日付：右寄せグレー */
   color: var(--gray);
-  font-size: 28px;
+  font-size: 26px;
   font-weight: 800;
   text-align: right;
-  margin: 16px 0 0;
+  margin: 10px 0 0;
 }
 section.title footer { background: none; color: var(--gray); font-style: normal; text-align: right; padding-right: 56px; }
 section.title::after { color: var(--gray); }

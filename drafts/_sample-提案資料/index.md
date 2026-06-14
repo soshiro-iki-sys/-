@@ -1,6 +1,6 @@
 ---
 marp: true
-theme: sales
+theme: addness
 paginate: true
 ---
 

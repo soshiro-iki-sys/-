@@ -4,10 +4,10 @@
   "private": true,
   "description": "営業用プレゼンスライドを効率よく作るためのセットアップ（Marp）",
   "scripts": {
-    "pdf": "marp --theme themes/sales.css --allow-local-files",
-    "pptx": "marp --pptx --theme themes/sales.css --allow-local-files",
-    "html": "marp --theme themes/sales.css --allow-local-files",
-    "watch": "marp --theme themes/sales.css --watch --preview"
+    "pdf": "marp --theme themes/addness.css --allow-local-files",
+    "pptx": "marp --pptx --theme themes/addness.css --allow-local-files",
+    "html": "marp --theme themes/addness.css --allow-local-files",
+    "watch": "marp --theme themes/addness.css --watch --preview"
   },
   "devDependencies": {
     "@marp-team/marp-cli": "^3.4.0"

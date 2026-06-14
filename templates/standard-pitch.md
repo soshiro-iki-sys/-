@@ -1,6 +1,11 @@
+<!--
+standard-pitch.md — Addnessブランド（黒×青）標準ピッチ雛形
+使い方：このファイルを drafts/＜案件名＞/ にコピーして、◯◯ や △△ を書き換える。
+詳しい流れは ../CLAUDE.md / ../README.md を参照。
+-->
 ---
 marp: true
-theme: sales
+theme: addness
 paginate: true
 ---
 
@@ -11,7 +16,7 @@ paginate: true
 
 ## サービス／商品名をここに
 
-株式会社△△
+Addness
 営業担当：あなたの名前
 2026年◯月◯日
 

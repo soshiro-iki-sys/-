@@ -1,16 +1,18 @@
-/* @theme sales */
-/* 営業プレゼン用スライドテーマ（清潔感のあるコーポレートデザイン） */
+/* @theme addness */
+/* Addness 営業ピッチ用テーマ（ブランドカラー：黒 × 青） */
 
 @import 'default';
 
 :root {
-  --brand: #1565c0;        /* メインカラー（青）。会社のカラーに合わせて変更可 */
-  --brand-dark: #0d3c75;
-  --accent: #ff6f00;       /* アクセントカラー（オレンジ） */
-  --text: #1a1a2e;
-  --muted: #5a6472;
+  --ink: #0a0e16;          /* ベースの黒（背景・表紙） */
+  --ink-soft: #161b26;
+  --brand: #1e6bff;        /* ブランドブルー（アクセント） */
+  --brand-bright: #4f93ff; /* 明るい青（強調・リンク） */
+  --text: #14181f;         /* 本文の黒文字 */
+  --muted: #6b7280;
   --bg: #ffffff;
-  --bg-soft: #f3f6fb;
+  --bg-soft: #f4f7fc;
+  --line: #e2e8f3;
 }
 
 section {
@@ -18,13 +20,13 @@ section {
   font-size: 26px;
   color: var(--text);
   background: var(--bg);
-  padding: 60px 70px;
+  padding: 58px 70px;
   line-height: 1.6;
 }
 
 /* 見出し */
 h1 {
-  color: var(--brand-dark);
+  color: var(--ink);
   font-size: 46px;
   border-bottom: 4px solid var(--brand);
   padding-bottom: 12px;
@@ -38,14 +40,13 @@ h2 {
 }
 
 h3 {
-  color: var(--brand-dark);
+  color: var(--ink);
   font-size: 28px;
 }
 
 /* 強調 */
-strong { color: var(--accent); }
-
-a { color: var(--brand); }
+strong { color: var(--brand); }
+a { color: var(--brand-bright); }
 
 /* 箇条書き */
 ul, ol { margin-left: 0.4em; }
@@ -59,20 +60,20 @@ table {
   font-size: 23px;
 }
 th {
-  background: var(--brand);
+  background: var(--ink);
   color: #fff;
   padding: 12px 16px;
   text-align: left;
 }
 td {
-  border-bottom: 1px solid #dce3ee;
+  border-bottom: 1px solid var(--line);
   padding: 11px 16px;
 }
 tr:nth-child(even) td { background: var(--bg-soft); }
 
-/* 引用（メッセージ・お客様の声などに） */
+/* 引用（お客様の声・メッセージ） */
 blockquote {
-  border-left: 6px solid var(--accent);
+  border-left: 6px solid var(--brand);
   background: var(--bg-soft);
   padding: 16px 24px;
   color: var(--muted);
@@ -85,9 +86,11 @@ section::after {
   font-size: 16px;
 }
 
-/* ===== 表紙用クラス（<!-- _class: title --> で適用） ===== */
+/* ===== 表紙（<!-- _class: title --> ） ===== */
 section.title {
-  background: linear-gradient(135deg, var(--brand) 0%, var(--brand-dark) 100%);
+  background:
+    radial-gradient(circle at 85% 15%, rgba(30,107,255,0.35) 0%, transparent 45%),
+    linear-gradient(135deg, var(--ink) 0%, var(--ink-soft) 100%);
   color: #fff;
   justify-content: center;
   text-align: left;
@@ -99,21 +102,30 @@ section.title h1 {
 }
 section.title h2,
 section.title h3,
-section.title p { color: #e8f0fb; }
-section.title strong { color: #ffd180; }
+section.title p { color: #d7e2f5; }
+section.title strong { color: var(--brand-bright); }
 
-/* ===== 章扉用クラス（<!-- _class: section --> で適用） ===== */
+/* ===== 章扉（<!-- _class: section --> ） ===== */
 section.section {
-  background: var(--bg-soft);
+  background: var(--ink);
+  color: #fff;
   justify-content: center;
   text-align: center;
 }
 section.section h1 {
   border: none;
   font-size: 50px;
-  color: var(--brand-dark);
+  color: #fff;
+}
+section.section h1::after {
+  content: "";
+  display: block;
+  width: 80px;
+  height: 4px;
+  background: var(--brand);
+  margin: 20px auto 0;
 }
 
-/* ===== 強調メッセージ用クラス（<!-- _class: lead --> で適用） ===== */
+/* ===== 強調メッセージ（<!-- _class: lead --> ） ===== */
 section.lead { text-align: center; justify-content: center; }
 section.lead h1 { border: none; }

@@ -19,6 +19,8 @@
     --text:#222;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
+  .nw{display:inline-block;}
+  h2,h3,h4{text-wrap:balance;}
   html{scroll-behavior:smooth;}
   body{
     font-family:"Noto Sans JP","Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic","Meiryo",sans-serif;
@@ -115,6 +117,9 @@
     .hero-images{flex-direction:row;}
     .hero-images .img-ph{flex:1;min-height:200px;}
   }
+  @media(max-width:480px){
+    .hero-images .img-ph{font-size:14px;min-height:150px;}
+  }
 
   /* ===== こんなお悩み ===== */
   .problems{background:var(--gray);}
@@ -177,7 +182,7 @@
   .plan-list{list-style:none;padding:18px 22px;flex:1;}
   .plan-list li{
     padding:11px 0;font-size:17px;font-weight:700;color:var(--navy);
-    border-bottom:1px dashed #dde5ef;text-align:center;
+    border-bottom:1px dashed #dde5ef;text-align:center;text-wrap:balance;
   }
   .plan-list li.no{color:#b0b8c4;font-weight:500;}
   .plan-list li.no::before{content:"✕ ";color:#e08a93;font-weight:900;}
@@ -194,7 +199,7 @@
   .compare-lead{font-size:clamp(17px,3.2vw,22px);font-weight:700;color:#444;margin-bottom:14px;}
   .compare-catch{
     font-size:clamp(27px,5vw,40px);font-weight:900;color:var(--red);
-    margin-bottom:36px;line-height:1.6;
+    margin-bottom:36px;line-height:1.6;text-wrap:balance;
   }
   .compare-wrap{
     display:grid;grid-template-columns:1fr auto 1fr;gap:20px;align-items:stretch;
@@ -245,7 +250,7 @@
   .voice-card .stars{color:#f5a623;font-size:22px;letter-spacing:2px;}
   .voice-card .img-ph{min-height:170px;}
   .voice-card .who{font-size:17px;font-weight:900;color:var(--navy);text-align:center;}
-  .voice-card p{font-size:17px;color:#444;}
+  .voice-card p{font-size:17px;color:#444;text-wrap:pretty;}
 
   /* ===== キャンペーンバー ===== */
   .campaign-bar{
@@ -270,7 +275,7 @@
   }
   @media(max-width:860px){.closing-inner{grid-template-columns:1fr;}}
   .closing-title{
-    font-size:clamp(27px,5vw,40px);font-weight:900;line-height:1.6;margin-bottom:10px;
+    font-size:clamp(27px,5vw,40px);font-weight:900;line-height:1.6;margin-bottom:10px;text-wrap:balance;
   }
   .closing-title .accent{color:var(--yellow);}
   .closing-lead{font-size:clamp(18px,3.4vw,23px);font-weight:700;margin-bottom:28px;color:#dcebfb;}
@@ -295,17 +300,17 @@
   .mini-plan .price{background:var(--cream);text-align:center;padding:6px;font-weight:900;color:var(--navy);font-size:13px;}
   .mini-plan .price .p{color:var(--red);font-size:17px;}
   .mini-plan ul{list-style:none;padding:10px 12px;flex:1;}
-  .mini-plan li{padding:4px 0;border-bottom:1px dashed #e3e9f2;font-weight:700;color:var(--navy);text-align:center;}
+  .mini-plan li{padding:4px 0;border-bottom:1px dashed #e3e9f2;font-weight:700;color:var(--navy);text-align:center;text-wrap:balance;}
   .mini-plan li.no{color:#b0b8c4;font-weight:500;}
   .mini-plan li.no::before{content:"✕ ";color:#e08a93;font-weight:900;}
   .mini-plan .btn{
     display:block;margin:8px 10px 12px;padding:7px;text-align:center;
     background:var(--red);color:#fff;text-decoration:none;font-weight:900;border-radius:999px;font-size:13px;
   }
-  .trust-row{display:flex;flex-wrap:wrap;gap:10px;}
+  .trust-row{display:flex;flex-wrap:wrap;gap:8px;}
   .trust-row span{
     background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.4);
-    border-radius:8px;padding:10px 22px;font-size:17px;font-weight:700;
+    border-radius:8px;padding:9px 15px;font-size:15px;font-weight:700;white-space:nowrap;
   }
   .form-box{
     background:#fff;color:var(--text);border-radius:18px;
@@ -327,6 +332,14 @@
   .form-thanks .icon{font-size:48px;}
   .form-thanks h4{color:var(--navy);font-size:20px;font-weight:900;margin:10px 0 6px;}
   .form-thanks p{font-size:14px;color:#555;}
+
+  /* ===== スマホ調整 ===== */
+  @media(max-width:480px){
+    .problem-card{flex-direction:column;}
+    .problem-card .img-ph{flex:none;width:100%;min-height:110px;font-size:13px;}
+    .problem-card h3{font-size:19px;}
+    .problem-card p{font-size:15px;}
+  }
 </style>
 </head>
 <body>
@@ -336,16 +349,16 @@
   <div class="hero-inner">
     <div class="hero-main">
       <span class="hero-badge">住まいの定額おまかせパック</span>
-      <p class="hero-sub">▶ 毎年のエアコン費用、もう払わなくていい。</p>
+      <p class="hero-sub">▶ <span class="nw">毎年のエアコン費用、</span><span class="nw">もう払わなくていい。</span></p>
 
       <div class="hero-title">
-        毎月たった<span class="price">500<span class="yen">円</span></span>で<br>
+        <span class="nw">毎月たった<span class="price">500<span class="yen">円</span></span>で</span><br>
         <span class="nw">エアコン清掃・</span><span class="nw">ドローン屋根点検・</span><span class="nw">エコキュート修理が</span><span class="komikomi nw">全部コミコミ！</span>
         <span class="tagline">住まいの定額おまかせパック、誕生。</span>
       </div>
 
       <div class="hero-offer">
-        <p>今ご加入で、通常<span class="marker">15,000円</span>のプロのエアコン清掃が</p>
+        <p><span class="nw">今ご加入で、</span><span class="nw">通常<span class="marker">15,000円</span>の</span><span class="nw">プロのエアコン清掃が</span></p>
         <span class="big">【 初回◯◯off 】で今すぐ受けられる！</span>
       </div>
 
@@ -366,29 +379,29 @@
     <div class="problem-grid">
       <div class="problem-card">
         <div class="txt">
-          <h3>エアコン清掃に毎年1〜2万円...</h3>
-          <p>業者を探して、予約して、また来年も…が面倒で高い</p>
+          <h3><span class="nw">エアコン清掃に</span><span class="nw">毎年1〜2万円...</span></h3>
+          <p><span class="nw">業者を探して、予約して、</span><span class="nw">また来年も…が</span><span class="nw">面倒で高い</span></p>
         </div>
         <div class="img-ph">イメージ<br>画像</div>
       </div>
       <div class="problem-card">
         <div class="txt">
-          <h3>そろそろ交換時期・・<br>エコキュートが突然壊れたら？</h3>
-          <p>修理代10〜30万円！保証切れで不安な日々</p>
+          <h3><span class="nw">そろそろ</span><span class="nw">交換時期・・</span><br><span class="nw">エコキュートが</span><span class="nw">突然壊れたら？</span></h3>
+          <p><span class="nw">修理代10〜30万円！</span><span class="nw">保証切れで不安な日々</span></p>
         </div>
         <div class="img-ph">イメージ<br>画像</div>
       </div>
       <div class="problem-card">
         <div class="txt">
-          <h3>屋根の状態、何年も見ていない</h3>
-          <p>雨漏りが起きてから発覚では手遅れのケースも・・・</p>
+          <h3><span class="nw">屋根の状態、</span><span class="nw">何年も見ていない</span></h3>
+          <p><span class="nw">雨漏りが起きてから</span><span class="nw">発覚では</span><span class="nw">手遅れのケースも・・・</span></p>
         </div>
         <div class="img-ph">イメージ<br>画像</div>
       </div>
       <div class="problem-card">
         <div class="txt">
-          <h3>急なトラブルに24時間対応できる業者がない</h3>
-          <p>夜中に水漏れ・停電…頼める先が見つからない</p>
+          <h3><span class="nw">急なトラブルに</span><span class="nw">24時間対応できる</span><span class="nw">業者がない</span></h3>
+          <p><span class="nw">夜中に水漏れ・停電…</span><span class="nw">頼める先が見つからない</span></p>
         </div>
         <div class="img-ph">イメージ<br>画像</div>
       </div>
@@ -399,7 +412,7 @@
 <!-- 6つの安心 -->
 <section class="solutions">
   <div class="inner">
-    <h2 class="sec-title">イエオモイが解決！〜<span class="accent">6つの安心が月額500円</span>〜</h2>
+    <h2 class="sec-title"><span class="nw">イエオモイが解決！</span><span class="nw">〜<span class="accent">6つの安心が</span></span><span class="nw"><span class="accent">月額500円</span>〜</span></h2>
     <div class="solution-grid">
       <div class="solution-card">
         <h3>エコキュート点検<br><span class="accent">修理無料！</span></h3>
@@ -442,13 +455,13 @@
         </div>
         <div class="plan-price">月額 <span class="p">¥500</span>（税込 ¥550）</div>
         <ul class="plan-list">
-          <li>エコキュート点検＋修理無料</li>
+          <li><span class="nw">エコキュート点検＋</span><span class="nw">修理無料</span></li>
           <li>ドローン外壁・屋根点検</li>
           <li>太陽光・蓄電池電気点検</li>
           <li>簡易的なクロス補修</li>
-          <li class="no">エコキュート購入70%off</li>
-          <li class="no">リフォーム工事10%off</li>
-          <li class="no">24時間駆けつけサービス</li>
+          <li class="no"><span class="nw">エコキュート購入</span><span class="nw">70%off</span></li>
+          <li class="no"><span class="nw">リフォーム工事</span><span class="nw">10%off</span></li>
+          <li class="no"><span class="nw">24時間駆けつけ</span><span class="nw">サービス</span></li>
           <li class="no">エアコン清掃会員価格</li>
         </ul>
         <div class="plan-cta"><a href="#entry">このプランで申し込む ▶</a></div>
@@ -462,13 +475,13 @@
         </div>
         <div class="plan-price">月額 <span class="p">¥1500</span>（税込 ¥1,650）</div>
         <ul class="plan-list">
-          <li>エコキュート点検＋修理無料</li>
+          <li><span class="nw">エコキュート点検＋</span><span class="nw">修理無料</span></li>
           <li>ドローン外壁・屋根点検</li>
           <li>太陽光・蓄電池電気点検</li>
           <li>簡易的なクロス補修</li>
-          <li>エコキュート購入70%off</li>
-          <li>リフォーム工事10%off</li>
-          <li>24時間駆けつけサービス</li>
+          <li><span class="nw">エコキュート購入</span><span class="nw">70%off</span></li>
+          <li><span class="nw">リフォーム工事</span><span class="nw">10%off</span></li>
+          <li><span class="nw">24時間駆けつけ</span><span class="nw">サービス</span></li>
           <li class="no">エアコン清掃会員価格</li>
         </ul>
         <div class="plan-cta"><a href="#entry">このプランで申し込む ▶</a></div>
@@ -481,13 +494,13 @@
         </div>
         <div class="plan-price">月額 <span class="p">¥2500</span>（税込2,750）</div>
         <ul class="plan-list">
-          <li>エコキュート点検＋修理無料</li>
+          <li><span class="nw">エコキュート点検＋</span><span class="nw">修理無料</span></li>
           <li>ドローン外壁・屋根点検</li>
           <li>太陽光・蓄電池電気点検</li>
           <li>簡易的なクロス補修</li>
-          <li>エコキュート購入70%off</li>
-          <li>リフォーム工事10%off</li>
-          <li>24時間駆けつけサービス</li>
+          <li><span class="nw">エコキュート購入</span><span class="nw">70%off</span></li>
+          <li><span class="nw">リフォーム工事</span><span class="nw">10%off</span></li>
+          <li><span class="nw">24時間駆けつけ</span><span class="nw">サービス</span></li>
           <li>エアコン清掃会員価格</li>
         </ul>
         <div class="plan-cta"><a href="#entry">このプランで申し込む ▶</a></div>
@@ -562,7 +575,7 @@
 <section class="closing" id="entry">
   <div class="closing-inner">
     <div>
-      <h2 class="closing-title">あなたの住まいを、<br>今日から<span class="accent">イエオモイ</span>が守ります。</h2>
+      <h2 class="closing-title">あなたの住まいを、<br><span class="nw">今日から<span class="accent">イエオモイ</span>が</span><span class="nw">守ります。</span></h2>
       <p class="closing-lead">すべてコミコミで月額たったの ¥500〜</p>
 
       <p class="closing-plans-title">3つのプランから選べる！</p>
@@ -571,13 +584,13 @@
           <div class="head"><span class="tag">お気軽な</span><h4>ライトプラン</h4></div>
           <div class="price">月額 <span class="p">¥500</span>（税込 ¥550）</div>
           <ul>
-            <li>エコキュート点検＋修理無料</li>
+            <li><span class="nw">エコキュート点検＋</span><span class="nw">修理無料</span></li>
             <li>ドローン外壁・屋根点検</li>
             <li>太陽光・蓄電池電気点検</li>
             <li>簡易的なクロス補修</li>
-            <li class="no">エコキュート購入70%off</li>
-            <li class="no">リフォーム工事10%off</li>
-            <li class="no">24時間駆けつけサービス</li>
+            <li class="no"><span class="nw">エコキュート購入</span><span class="nw">70%off</span></li>
+            <li class="no"><span class="nw">リフォーム工事</span><span class="nw">10%off</span></li>
+            <li class="no"><span class="nw">24時間駆けつけ</span><span class="nw">サービス</span></li>
             <li class="no">エアコン清掃会員価格</li>
           </ul>
           <a class="btn" href="#entry">このプランで申し込む ▶</a>
@@ -587,13 +600,13 @@
           <div class="head"><span class="tag">人気No.1 ★</span><h4>ベーシックプラン</h4></div>
           <div class="price">月額 <span class="p">¥1500</span>（税込 ¥1,650）</div>
           <ul>
-            <li>エコキュート点検＋修理無料</li>
+            <li><span class="nw">エコキュート点検＋</span><span class="nw">修理無料</span></li>
             <li>ドローン外壁・屋根点検</li>
             <li>太陽光・蓄電池電気点検</li>
             <li>簡易的なクロス補修</li>
-            <li>エコキュート購入70%off</li>
-            <li>リフォーム工事10%off</li>
-            <li>24時間駆けつけサービス</li>
+            <li><span class="nw">エコキュート購入</span><span class="nw">70%off</span></li>
+            <li><span class="nw">リフォーム工事</span><span class="nw">10%off</span></li>
+            <li><span class="nw">24時間駆けつけ</span><span class="nw">サービス</span></li>
             <li class="no">エアコン清掃会員価格</li>
           </ul>
           <a class="btn" href="#entry">このプランで申し込む ▶</a>
@@ -602,13 +615,13 @@
           <div class="head"><span class="tag">フルカバー</span><h4>プレミアムプラン</h4></div>
           <div class="price">月額 <span class="p">¥2500</span>（税込2,750）</div>
           <ul>
-            <li>エコキュート点検＋修理無料</li>
+            <li><span class="nw">エコキュート点検＋</span><span class="nw">修理無料</span></li>
             <li>ドローン外壁・屋根点検</li>
             <li>太陽光・蓄電池電気点検</li>
             <li>簡易的なクロス補修</li>
-            <li>エコキュート購入70%off</li>
-            <li>リフォーム工事10%off</li>
-            <li>24時間駆けつけサービス</li>
+            <li><span class="nw">エコキュート購入</span><span class="nw">70%off</span></li>
+            <li><span class="nw">リフォーム工事</span><span class="nw">10%off</span></li>
+            <li><span class="nw">24時間駆けつけ</span><span class="nw">サービス</span></li>
             <li>エアコン清掃会員価格</li>
           </ul>
           <a class="btn" href="#entry">このプランで申し込む ▶</a>

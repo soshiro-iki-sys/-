@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>イエオモイ｜住まいの定額おまかせパック</title>
+<style>
+  :root {
+    --red: #e60012;
+    --red-dark: #c50010;
+    --red-bg: #fff5f5;
+    --text: #333333;
+    --gold: #d4a017;
+    /* 基準サイズ：ラフの比率をここから算出 */
+    --fs-body: clamp(14px, 1.6vw, 16px);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif;
+    color: var(--text);
+    font-size: var(--fs-body);
+    line-height: 1.7;
+    background: #ffffff;
+  }
+
+  img { max-width: 100%; height: auto; display: block; }
+
+  .inner {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  section { padding: 60px 0; }
+
+  /* ===== セクション見出し（ラフ：本文の約1.6倍・太字） ===== */
+  .sec-title {
+    font-size: clamp(22px, 3.2vw, 30px);
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 40px;
+    line-height: 1.4;
+  }
+
+  /* ===== CTAボタン ===== */
+  .cta-btn {
+    display: block;
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+    background: var(--red);
+    color: #ffffff;
+    font-size: clamp(18px, 2.4vw, 24px);
+    font-weight: 800;
+    text-align: center;
+    text-decoration: none;
+    padding: 20px 24px;
+    border-radius: 8px;
+    box-shadow: 0 4px 0 var(--red-dark);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .cta-btn:hover {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 var(--red-dark);
+  }
+  .cta-btn .arrow { margin-left: 0.5em; }
+
+  /* =====================================================
+     ファーストビュー
+     ラフの比率：
+       リード文      … 本文の約1.25倍
+       メインコピー  … 約2.2倍
+       「500円」     … 約4倍（コピー中で最大）
+       「全部コミコミ！」… 約3倍
+       サブコピー    … 本文と同等
+     ===================================================== */
+  .fv {
+    padding: 40px 0 60px;
+    background: #ffffff;
+  }
+  .fv-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 40px;
+    align-items: start;
+  }
+  .fv-badge {
+    display: inline-block;
+    font-size: clamp(13px, 1.5vw, 15px);
+    font-weight: 700;
+    color: var(--red);
+    border: 2px solid var(--red);
+    border-radius: 999px;
+    padding: 4px 16px;
+    margin-bottom: 16px;
+  }
+  .fv-lead {
+    font-size: clamp(16px, 2vw, 20px);
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .fv-lead::before { content: "▶"; color: var(--red); margin-right: 0.3em; }
+  .fv-copy {
+    font-weight: 800;
+    color: var(--red);
+    font-size: clamp(24px, 3.8vw, 36px);
+    line-height: 1.45;
+    margin-bottom: 16px;
+  }
+  .fv-copy .num {
+    font-size: clamp(44px, 7vw, 66px);
+    line-height: 1;
+  }
+  .fv-copy .em {
+    font-size: clamp(34px, 5.2vw, 50px);
+    line-height: 1.2;
+  }
+  .fv-sub {
+    font-size: clamp(14px, 1.6vw, 16px);
+    margin-bottom: 24px;
+  }
+  .fv-offer {
+    border: 3px solid var(--red);
+    border-radius: 8px;
+    padding: 20px 24px;
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  .fv-offer p {
+    font-size: clamp(16px, 2.2vw, 22px);
+    font-weight: 700;
+    line-height: 1.6;
+  }
+  .fv-offer .zero {
+    color: var(--red);
+    font-size: clamp(24px, 3.4vw, 32px);
+    font-weight: 800;
+  }
+  .fv-images {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .img-placeholder {
+    background: #f2f2f2;
+    border: 1px dashed #bbbbbb;
+    border-radius: 8px;
+    color: #888888;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 200px;
+    line-height: 1.6;
+  }
+
+  /* =====================================================
+     お悩みセクション（2×2カード）
+     ラフの比率：カード見出し＝本文の約1.15倍・太字
+     ===================================================== */
+  .problems { background: var(--red-bg); }
+  .problem-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .problem-card {
+    background: #ffffff;
+    border-left: 6px solid var(--red);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    padding: 24px;
+    display: grid;
+    grid-template-columns: 1fr 96px;
+    gap: 16px;
+    align-items: center;
+  }
+  .problem-card h3 {
+    font-size: clamp(16px, 1.9vw, 19px);
+    font-weight: 800;
+    line-height: 1.5;
+    margin-bottom: 8px;
+  }
+  .problem-card p {
+    font-size: clamp(13px, 1.5vw, 15px);
+    line-height: 1.7;
+  }
+  .problem-card .img-placeholder {
+    min-height: 96px;
+    font-size: 12px;
+  }
+
+  /* =====================================================
+     6つの安心（3×2カード）
+     ラフの比率：カード見出し＝本文の約1.3倍・太字
+     ===================================================== */
+  .service-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .service-card {
+    border: 2px solid var(--red);
+    border-radius: 8px;
+    padding: 24px 20px;
+    display: flex;
+    flex-direction: column;
+    min-height: 180px;
+  }
+  .service-card h3 {
+    font-size: clamp(17px, 2.1vw, 21px);
+    font-weight: 800;
+    color: var(--red);
+    line-height: 1.4;
+    margin-bottom: auto;
+  }
+  .service-card p {
+    font-size: clamp(12px, 1.4vw, 14px);
+    line-height: 1.6;
+    margin-top: 16px;
+  }
+
+  /* =====================================================
+     料金プラン（3カラム）
+     ラフの比率：
+       プラン名 … 本文の約1.3倍
+       月額     … 本文の約1.1倍（金額のみ太字）
+       項目     … 本文と同等
+     ===================================================== */
+  .plan-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    align-items: stretch;
+  }
+  .plan-card {
+    border: 2px solid var(--red);
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+  }
+  .plan-card.recommended {
+    border-width: 3px;
+    box-shadow: 0 4px 16px rgba(230, 0, 18, 0.2);
+    position: relative;
+  }
+  .plan-ribbon {
+    background: var(--red);
+    color: #ffffff;
+    font-size: clamp(13px, 1.5vw, 15px);
+    font-weight: 800;
+    text-align: center;
+    padding: 6px;
+  }
+  .plan-head {
+    text-align: center;
+    padding: 20px 16px 16px;
+    border-bottom: 1px solid #f0c0c4;
+  }
+  .plan-tag {
+    font-size: clamp(11px, 1.2vw, 12px);
+    color: var(--red);
+  }
+  .plan-head h3 {
+    font-size: clamp(17px, 2.1vw, 21px);
+    font-weight: 800;
+    color: var(--red);
+    line-height: 1.4;
+  }
+  .plan-price {
+    font-size: clamp(13px, 1.5vw, 15px);
+    margin-top: 4px;
+  }
+  .plan-price strong {
+    font-size: clamp(16px, 1.9vw, 19px);
+  }
+  .plan-list {
+    list-style: none;
+    padding: 16px 20px;
+    flex-grow: 1;
+  }
+  .plan-list li {
+    font-size: clamp(13px, 1.5vw, 15px);
+    line-height: 1.6;
+    padding: 6px 0;
+    border-bottom: 1px dotted #e0e0e0;
+  }
+  .plan-list li:last-child { border-bottom: none; }
+  .plan-list li.excluded {
+    color: #999999;
+  }
+  .plan-list li.excluded::before {
+    content: "✕";
+    color: var(--red);
+    font-weight: 700;
+    margin-right: 0.4em;
+  }
+  .plan-cta {
+    display: block;
+    margin: 0 20px 20px;
+    background: #ffffff;
+    color: var(--red);
+    border: 2px solid var(--red);
+    border-radius: 6px;
+    font-size: clamp(14px, 1.6vw, 16px);
+    font-weight: 800;
+    text-align: center;
+    text-decoration: none;
+    padding: 12px;
+    transition: background 0.15s, color 0.15s;
+  }
+  .plan-cta:hover { background: var(--red); color: #ffffff; }
+  .plan-card.recommended .plan-cta {
+    background: var(--red);
+    color: #ffffff;
+  }
+  .plan-card.recommended .plan-cta:hover { background: var(--red-dark); }
+
+  /* =====================================================
+     料金比較（個別依頼 VS イエオモイ）
+     ラフの比率：
+       見出しコピー … 本文の約1.9倍
+       合計金額     … 本文の約1.4倍
+       「月額¥500〜」… 右ボックス内で最大（約2.8倍）
+     ===================================================== */
+  .compare { background: var(--red-bg); }
+  .compare-lead {
+    text-align: center;
+    font-size: clamp(14px, 1.6vw, 16px);
+    margin-bottom: 12px;
+  }
+  .compare-copy {
+    text-align: center;
+    font-size: clamp(22px, 3.2vw, 30px);
+    font-weight: 800;
+    color: var(--red);
+    line-height: 1.5;
+    margin-bottom: 40px;
+  }
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 24px;
+    align-items: center;
+  }
+  .compare-left h3 {
+    font-size: clamp(15px, 1.8vw, 18px);
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .compare-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .compare-table td {
+    border: 1px solid var(--red);
+    background: #ffffff;
+    font-size: clamp(13px, 1.5vw, 15px);
+    padding: 10px 14px;
+  }
+  .compare-table td:last-child {
+    text-align: right;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .compare-total {
+    text-align: right;
+    font-size: clamp(17px, 2.2vw, 22px);
+    font-weight: 800;
+    margin-top: 12px;
+  }
+  .compare-vs {
+    font-size: clamp(20px, 2.6vw, 26px);
+    font-weight: 800;
+    color: var(--red);
+    background: #ffffff;
+    border: 2px solid var(--red);
+    border-radius: 8px;
+    padding: 16px 12px;
+  }
+  .compare-right {
+    background: #ffffff;
+    border: 3px solid var(--red);
+    border-radius: 8px;
+    text-align: center;
+    padding: 32px 24px;
+  }
+  .compare-right .label {
+    font-size: clamp(14px, 1.6vw, 16px);
+    font-weight: 700;
+  }
+  .compare-right .price {
+    font-size: clamp(34px, 4.8vw, 46px);
+    font-weight: 800;
+    color: var(--red);
+    line-height: 1.3;
+    margin: 8px 0;
+  }
+  .compare-right .note {
+    font-size: clamp(13px, 1.5vw, 15px);
+    margin-bottom: 8px;
+  }
+  .compare-right .bonus {
+    font-size: clamp(16px, 2vw, 20px);
+    font-weight: 800;
+    margin-bottom: 20px;
+  }
+  .compare-right .bonus .zero { color: var(--red); }
+
+  /* =====================================================
+     お客様の声
+     ===================================================== */
+  .voice-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .voice-card {
+    border: 1px solid var(--red);
+    border-radius: 8px;
+    padding: 20px;
+  }
+  .voice-stars {
+    color: var(--gold);
+    font-size: clamp(16px, 1.9vw, 19px);
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+  }
+  .voice-card .img-placeholder {
+    min-height: 120px;
+    margin-bottom: 12px;
+    font-size: 12px;
+  }
+  .voice-name {
+    font-size: clamp(13px, 1.5vw, 15px);
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 8px;
+  }
+  .voice-text {
+    font-size: clamp(12px, 1.4vw, 14px);
+    line-height: 1.7;
+    color: var(--red);
+  }
+
+  /* =====================================================
+     クロージング＋申し込みフォーム
+     ラフの比率：
+       キャンペーンバー … 本文の約1.4倍
+       クロージングコピー … 本文の約1.9倍
+     ===================================================== */
+  .campaign-bar {
+    background: var(--red);
+    color: #ffffff;
+    text-align: center;
+    font-size: clamp(16px, 2.2vw, 22px);
+    font-weight: 800;
+    padding: 14px 20px;
+  }
+  .closing-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 40px;
+    align-items: start;
+  }
+  .closing-copy {
+    font-size: clamp(22px, 3.2vw, 30px);
+    font-weight: 800;
+    line-height: 1.5;
+    color: var(--red);
+    margin-bottom: 12px;
+  }
+  .closing-sub {
+    font-size: clamp(15px, 1.8vw, 18px);
+    font-weight: 700;
+    margin-bottom: 32px;
+  }
+  .trust-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 32px;
+  }
+  .trust-badges span {
+    border: 2px solid var(--red);
+    border-radius: 6px;
+    color: var(--red);
+    font-size: clamp(13px, 1.5vw, 15px);
+    font-weight: 700;
+    padding: 8px 16px;
+  }
+  .form-box {
+    border: 2px solid var(--red);
+    border-radius: 8px;
+    padding: 24px;
+  }
+  .form-box h3 {
+    font-size: clamp(16px, 2vw, 20px);
+    font-weight: 800;
+    color: var(--red);
+    text-align: center;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #f0c0c4;
+    margin-bottom: 20px;
+  }
+  .form-field { margin-bottom: 16px; }
+  .form-field label {
+    display: block;
+    font-size: clamp(12px, 1.4vw, 14px);
+    font-weight: 700;
+    color: var(--red);
+    margin-bottom: 6px;
+  }
+  .form-field input,
+  .form-field select {
+    width: 100%;
+    font-size: 16px;
+    padding: 10px 12px;
+    border: 1px solid var(--red);
+    border-radius: 4px;
+  }
+  .form-box .cta-btn {
+    font-size: clamp(15px, 1.8vw, 18px);
+    padding: 16px 20px;
+    margin-top: 24px;
+  }
+
+  footer {
+    background: var(--red);
+    color: #ffffff;
+    text-align: center;
+    font-size: 13px;
+    padding: 24px 20px;
+  }
+
+  /* ===== レスポンシブ ===== */
+  @media (max-width: 800px) {
+    section { padding: 40px 0; }
+    .fv-grid,
+    .closing-grid { grid-template-columns: 1fr; }
+    .problem-grid { grid-template-columns: 1fr; }
+    .service-grid { grid-template-columns: 1fr 1fr; }
+    .plan-grid,
+    .voice-grid { grid-template-columns: 1fr; }
+    .compare-grid { grid-template-columns: 1fr; }
+    .compare-vs { text-align: center; }
+  }
+  @media (max-width: 480px) {
+    .service-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== ファーストビュー ===== -->
+<header class="fv">
+  <div class="inner">
+    <div class="fv-grid">
+      <div>
+        <span class="fv-badge">住まいの定額おまかせパック</span>
+        <p class="fv-lead">毎年のエアコン費用、もう払わなくていい。</p>
+        <h1 class="fv-copy">
+          毎月たった<span class="num">500</span>円で<br>
+          ドローン屋根点検・<br>
+          エコキュート修理・クロス補修が<br>
+          <span class="em">全部コミコミ！</span>
+        </h1>
+        <p class="fv-sub">住まいの定額おまかせパック、誕生。</p>
+        <div class="fv-offer">
+          <p>
+            今ご加入で、通常15,000円の<br>
+            プロのクロス補修が<br>
+            <span class="zero">【 初回0円 】</span>で今すぐ受けられる！
+          </p>
+        </div>
+        <a href="#form" class="cta-btn">今すぐ無料で申し込む<span class="arrow">▶</span></a>
+      </div>
+      <div class="fv-images">
+        <div class="img-placeholder">【 イメージ画像 】<br>クロス張替え</div>
+        <div class="img-placeholder">【 イメージ画像 】<br>エコキュート・エアコン</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ===== お悩みセクション ===== -->
+<section class="problems">
+  <div class="inner">
+    <h2 class="sec-title">こんなお悩み、ありませんか？</h2>
+    <div class="problem-grid">
+      <div class="problem-card">
+        <div>
+          <h3>エアコン清掃に毎年1〜2万円…</h3>
+          <p>業者を探して、予約して、また来年も…<br>が面倒で高い</p>
+        </div>
+        <div class="img-placeholder">イメージ<br>画像</div>
+      </div>
+      <div class="problem-card">
+        <div>
+          <h3>そろそろ交換時期・・<br>エコキュートが突然壊れたら？</h3>
+          <p>修理代10〜30万円！<br>保証切れで不安な日々</p>
+        </div>
+        <div class="img-placeholder">イメージ<br>画像</div>
+      </div>
+      <div class="problem-card">
+        <div>
+          <h3>屋根の状態、何年も見ていない</h3>
+          <p>雨漏りが起きてから発覚では<br>手遅れのケースも・・・</p>
+        </div>
+        <div class="img-placeholder">イメージ<br>画像</div>
+      </div>
+      <div class="problem-card">
+        <div>
+          <h3>急なトラブルに24時間対応<br>できる業者がない</h3>
+          <p>夜中に水漏れ・停電…<br>頼める先が見つからない</p>
+        </div>
+        <div class="img-placeholder">イメージ<br>画像</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 6つの安心 ===== -->
+<section>
+  <div class="inner">
+    <h2 class="sec-title">イエオモイが解決！<br>〜6つの安心が月額500円〜</h2>
+    <div class="service-grid">
+      <div class="service-card">
+        <h3>エコキュート点検<br>修理無料！</h3>
+        <p>※10年以上の機器は対象外<br>→新品交換は通常金額の3%OFF</p>
+      </div>
+      <div class="service-card">
+        <h3>外壁点検</h3>
+        <p>プロによる外壁劣化チェック</p>
+      </div>
+      <div class="service-card">
+        <h3>屋根点検（ドローン）</h3>
+        <p>最新ドローンで安全・精密点検</p>
+      </div>
+      <div class="service-card">
+        <h3>エアコン清掃</h3>
+        <p>通常15,000円のクリーニングが無料！</p>
+      </div>
+      <div class="service-card">
+        <h3>クロス補修</h3>
+        <p>※条件</p>
+      </div>
+      <div class="service-card">
+        <h3>24時間駆けつけ</h3>
+        <p>※スタンダードプラン以上</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 料金プラン ===== -->
+<section class="plans">
+  <div class="inner">
+    <h2 class="sec-title">3つのプランから選べる！</h2>
+    <div class="plan-grid">
+
+      <div class="plan-card">
+        <div class="plan-head">
+          <p class="plan-tag">お気軽な</p>
+          <h3>ライトプラン</h3>
+          <p class="plan-price">月額 <strong>¥500</strong>（税込 ¥550）</p>
+        </div>
+        <ul class="plan-list">
+          <li>エコキュート点検＋修理無料</li>
+          <li>ドローン外壁・屋根点検</li>
+          <li>太陽光・蓄電池電気点検</li>
+          <li>簡易的なクロス補修</li>
+          <li class="excluded">エコキュート購入70%off</li>
+          <li class="excluded">リフォーム工事10%off</li>
+          <li class="excluded">24時間駆けつけサービス</li>
+          <li class="excluded">エアコン清掃会員価格</li>
+        </ul>
+        <a href="#form" class="plan-cta">このプランで申し込む ▶</a>
+      </div>
+
+      <div class="plan-card recommended">
+        <p class="plan-ribbon">一番人気！おすすめ</p>
+        <div class="plan-head">
+          <p class="plan-tag">人気No.1 ★</p>
+          <h3>ベーシックプラン</h3>
+          <p class="plan-price">月額 <strong>¥1500</strong>（税込 ¥1,650）</p>
+        </div>
+        <ul class="plan-list">
+          <li>エコキュート点検＋修理無料</li>
+          <li>ドローン外壁・屋根点検</li>
+          <li>太陽光・蓄電池電気点検</li>
+          <li>簡易的なクロス補修</li>
+          <li>エコキュート購入70%off</li>
+          <li>リフォーム工事10%off</li>
+          <li>24時間駆けつけサービス</li>
+          <li class="excluded">エアコン清掃会員価格</li>
+        </ul>
+        <a href="#form" class="plan-cta">このプランで申し込む ▶</a>
+      </div>
+
+      <div class="plan-card">
+        <div class="plan-head">
+          <p class="plan-tag">フルカバー</p>
+          <h3>プレミアムプラン</h3>
+          <p class="plan-price">月額 <strong>¥2500</strong>（税込 ¥2,750）</p>
+        </div>
+        <ul class="plan-list">
+          <li>エコキュート点検＋修理無料</li>
+          <li>ドローン外壁・屋根点検</li>
+          <li>太陽光・蓄電池電気点検</li>
+          <li>簡易的なクロス補修</li>
+          <li>エコキュート購入70%off</li>
+          <li>リフォーム工事10%off</li>
+          <li>24時間駆けつけサービス</li>
+          <li>エアコン清掃会員価格</li>
+        </ul>
+        <a href="#form" class="plan-cta">このプランで申し込む ▶</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== 料金比較 ===== -->
+<section class="compare">
+  <div class="inner">
+    <p class="compare-lead">お家のメンテナンス、どこに頼んでいいかわからない…</p>
+    <p class="compare-copy">
+      イエオモイなら！<br>
+      エコキュート修理も<br>
+      屋根点検も全部タダ！
+    </p>
+    <div class="compare-grid">
+      <div class="compare-left">
+        <h3>個別に頼むと合計…</h3>
+        <table class="compare-table">
+          <tr><td>プロのエアコン清掃</td><td>¥15,000/年</td></tr>
+          <tr><td>ドローン点検</td><td>¥30,000/年</td></tr>
+          <tr><td>エコキュート修理保証</td><td>¥50,000以上</td></tr>
+          <tr><td>クロス張替え</td><td>¥20,000/年</td></tr>
+        </table>
+        <p class="compare-total">合計：¥115,000以上/年</p>
+      </div>
+      <div class="compare-vs">VS</div>
+      <div class="compare-right">
+        <p class="label">イエオモイなら</p>
+        <p class="price">月額<br>¥500〜</p>
+        <p class="note">年間¥500〜で全サービス利用可能！</p>
+        <p class="bonus">初回ドローン点検<span class="zero">【0円】</span></p>
+        <a href="#form" class="cta-btn">今すぐ申し込む<span class="arrow">▶</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== お客様の声 ===== -->
+<section>
+  <div class="inner">
+    <h2 class="sec-title">お客様の声</h2>
+    <div class="voice-grid">
+      <div class="voice-card">
+        <p class="voice-stars">★★★★★</p>
+        <div class="img-placeholder">【 イメージ画像 】</div>
+        <p class="voice-name">○○市○様</p>
+        <p class="voice-text">「毎年エアコン清掃に1万5千円払っていたのが、このサービスに入って0円に！屋根も点検してもらい安心感が全然違います。」</p>
+      </div>
+      <div class="voice-card">
+        <p class="voice-stars">★★★★★</p>
+        <div class="img-placeholder">【 イメージ画像 】</div>
+        <p class="voice-name">○○市○様</p>
+        <p class="voice-text">「毎年エアコン清掃に1万5千円払っていたのが、このサービスに入って0円に！屋根も点検してもらい安心感が全然違います。」</p>
+      </div>
+      <div class="voice-card">
+        <p class="voice-stars">★★★★★</p>
+        <div class="img-placeholder">【 イメージ画像 】</div>
+        <p class="voice-name">○○市○様</p>
+        <p class="voice-text">「毎年エアコン清掃に1万5千円払っていたのが、このサービスに入って0円に！屋根も点検してもらい安心感が全然違います。」</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== クロージング＋申し込みフォーム ===== -->
+<div class="campaign-bar">限定キャンペーン実施中！先着【○○名様限定】</div>
+<section id="form">
+  <div class="inner">
+    <div class="closing-grid">
+      <div>
+        <p class="closing-copy">
+          あなたの住まいを、<br>
+          今日からイエオモイが守ります。
+        </p>
+        <p class="closing-sub">すべてコミコミで月額たったの ¥500〜</p>
+        <div class="trust-badges">
+          <span>個人情報保護</span>
+          <span>電話対応あり</span>
+          <span>解約自由</span>
+          <span>満足度○%</span>
+        </div>
+      </div>
+      <div class="form-box">
+        <h3>無料お申し込みフォーム</h3>
+        <form>
+          <div class="form-field">
+            <label for="name">お名前</label>
+            <input type="text" id="name" name="name" autocomplete="name">
+          </div>
+          <div class="form-field">
+            <label for="tel">電話番号</label>
+            <input type="tel" id="tel" name="tel" autocomplete="tel">
+          </div>
+          <div class="form-field">
+            <label for="email">メールアドレス</label>
+            <input type="email" id="email" name="email" autocomplete="email">
+          </div>
+          <div class="form-field">
+            <label for="address">ご住所（市区町村まで）</label>
+            <input type="text" id="address" name="address" autocomplete="address-level2">
+          </div>
+          <div class="form-field">
+            <label for="plan">ご希望プラン</label>
+            <select id="plan" name="plan">
+              <option value="">選択してください</option>
+              <option value="light">ライトプラン（月額¥500）</option>
+              <option value="basic">ベーシックプラン（月額¥1500）</option>
+              <option value="premium">プレミアムプラン（月額¥2500）</option>
+            </select>
+          </div>
+          <button type="submit" class="cta-btn" style="border: none; cursor: pointer;">今すぐ無料で申し込む<span class="arrow">▶</span></button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© イエオモイ 住まいの定額おまかせパック</p>
+</footer>
+
+</body>
+</html>

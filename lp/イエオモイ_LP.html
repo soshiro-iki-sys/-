@@ -6,21 +6,21 @@
 <title>イエオモイ｜住まいの定額おまかせパック 月額500円〜</title>
 <meta name="description" content="エアコン清掃・ドローン屋根点検・エコキュート修理が月額500円で全部コミコミ。住まいの定額おまかせパック、誕生。">
 <style>
-  /* イエオモイ ロゴ準拠のブランドカラー
-     テラコッタ / くすみピンク / マスタード / グレージュ
-     （ロゴの黒背景は取り込まず、濃色はグレージュを深めたトーンで代用） */
+  /* イエオモイ ロゴ準拠のブランドカラー（高彩度・高コントラスト版）
+     テラコッタ / ロゼピンク / マスタードゴールド / コーヒーブラウン
+     （ロゴの黒背景は取り込まない） */
   :root{
-    --brown:#8a7670;
-    --brown-dark:#6f5d57;
-    --taupe:#9a8888;
-    --rose:#c98f92;
-    --rose-light:#f7ece8;
-    --red:#c8564a;
-    --red-dark:#9e3c31;
-    --yellow:#d9a62e;
-    --cream:#faf3e2;
-    --gray:#f6f1ea;
-    --text:#2b2320;
+    --brown:#5f3f33;
+    --brown-dark:#452b21;
+    --taupe:#8a685c;
+    --rose:#cd7d78;
+    --rose-light:#fdeee7;
+    --red:#d84a2e;
+    --red-dark:#a5321a;
+    --yellow:#f5b31c;
+    --cream:#fff5da;
+    --gray:#f7f1ea;
+    --text:#33241f;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   .nw{display:inline-block;}
@@ -45,21 +45,21 @@
   .marker{background:linear-gradient(transparent 62%,var(--yellow) 62%);font-weight:900;}
 
   .img-ph{
-    background:linear-gradient(160deg,#ffffff,#f3e2dc);
-    border:2px dashed #d0a49f;
+    background:linear-gradient(160deg,#ffffff,#fbe3d8);
+    border:2px dashed #dc9c86;
     border-radius:10px;
     display:flex;align-items:center;justify-content:center;
-    color:#a06a60;font-weight:700;font-size:17px;text-align:center;
+    color:#b0664c;font-weight:700;font-size:17px;text-align:center;
     padding:10px;line-height:1.5;
   }
 
   .cta-btn{
     display:block;max-width:520px;
-    background:linear-gradient(180deg,#dd7261,var(--red));
+    background:linear-gradient(180deg,#f06a45,var(--red));
     color:#fff;text-decoration:none;text-align:center;
     font-size:clamp(19px,3.6vw,25px);font-weight:900;letter-spacing:.06em;
     padding:20px 30px;border-radius:999px;
-    box-shadow:0 6px 0 var(--red-dark),0 12px 24px rgba(200,86,74,.35);
+    box-shadow:0 6px 0 var(--red-dark),0 12px 24px rgba(216,74,46,.35);
     transition:transform .15s,box-shadow .15s;
     position:relative;
   }
@@ -68,7 +68,7 @@
 
   /* ===== ヒーロー ===== */
   .hero{
-    background:linear-gradient(160deg,#cb9b9d 0%,#dcb6b4 45%,#f8ece7 100%);
+    background:linear-gradient(160deg,#c96a63 0%,#dc958c 45%,#fceee5 100%);
     position:relative;overflow:hidden;
     padding:56px 0 60px;
   }
@@ -140,9 +140,9 @@
   .problem-card .img-ph{flex:0 0 130px;font-size:14px;}
 
   /* ===== 6つの安心 ===== */
-  .solutions{background:var(--taupe);color:#fff;}
+  .solutions{background:var(--brown);color:#fff;}
   .solutions .sec-title{color:#fff;}
-  .solutions .sec-title .accent{color:#ffe2a3;}
+  .solutions .sec-title .accent{color:var(--yellow);}
   .solution-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px;}
   .solution-card{
     background:#fff;color:var(--text);border-radius:14px;padding:26px 22px;

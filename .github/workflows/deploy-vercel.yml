@@ -1,0 +1,27 @@
+name: deploy-vercel
+
+on:
+  workflow_dispatch:
+    inputs:
+      vercel_token:
+        description: Vercel access token
+        required: true
+        type: string
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy site/ to Vercel (production)
+        env:
+          VERCEL_TOKEN: ${{ inputs.vercel_token }}
+        run: |
+          echo "::add-mask::$VERCEL_TOKEN"
+          mkdir -p /tmp/ieomoi-lp
+          cp -r site/. /tmp/ieomoi-lp/
+          cd /tmp/ieomoi-lp
+          npx vercel@latest deploy --prod --yes --token "$VERCEL_TOKEN" 2>&1 | tee /tmp/deploy.log
+          echo "## Vercel deploy result" >> "$GITHUB_STEP_SUMMARY"
+          grep -Eo 'https://[a-zA-Z0-9.-]+\.vercel\.app' /tmp/deploy.log | sort -u >> "$GITHUB_STEP_SUMMARY"

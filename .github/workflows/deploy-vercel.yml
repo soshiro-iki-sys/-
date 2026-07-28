@@ -2,11 +2,6 @@ name: deploy-vercel
 
 on:
   workflow_dispatch:
-    inputs:
-      vercel_token:
-        description: Vercel access token
-        required: true
-        type: string
 
 jobs:
   deploy:
@@ -16,9 +11,12 @@ jobs:
 
       - name: Deploy site/ to Vercel (production)
         env:
-          VERCEL_TOKEN: ${{ inputs.vercel_token }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: |
-          echo "::add-mask::$VERCEL_TOKEN"
+          if [ -z "$VERCEL_TOKEN" ]; then
+            echo "リポジトリシークレット VERCEL_TOKEN が設定されていません" >&2
+            exit 1
+          fi
           mkdir -p /tmp/ieomoi-lp
           cp -r site/. /tmp/ieomoi-lp/
           cd /tmp/ieomoi-lp

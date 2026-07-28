@@ -83,10 +83,17 @@
     display:grid;grid-template-columns:1fr 440px;gap:30px;align-items:stretch;
   }
   @media(max-width:820px){.hero-inner{grid-template-columns:1fr;}}
+  .hero-badges{
+    display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:16px;
+  }
   .hero-badge{
     display:inline-block;background:var(--brown);color:#fff;font-weight:900;
     padding:10px 24px;border-radius:6px;font-size:clamp(16px,3vw,20px);letter-spacing:.08em;
-    margin-bottom:16px;
+  }
+  .hero-badge.limited{
+    background:var(--yellow);color:var(--brown);
+    font-size:clamp(14px,2.4vw,17px);padding:8px 18px;
+    box-shadow:0 3px 0 #c98d0c;
   }
   .hero-sub{
     font-size:clamp(20px,3.8vw,27px);font-weight:900;color:#fff;
@@ -255,6 +262,7 @@
   .voice-card .img-ph{min-height:170px;}
   .voice-card .who{font-size:17px;font-weight:900;color:var(--brown);text-align:center;}
   .voice-card p{font-size:17px;color:#55483f;text-wrap:pretty;}
+  .voice-note{margin-top:18px;text-align:center;font-size:14px;color:#8d817b;}
 
   /* ===== キャンペーンバー ===== */
   .campaign-bar{
@@ -316,6 +324,9 @@
     background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.4);
     border-radius:8px;padding:9px 15px;font-size:15px;font-weight:700;white-space:nowrap;
   }
+  .trust-note{
+    margin-top:12px;font-size:14px;line-height:1.7;color:#f2e3dd;text-wrap:pretty;
+  }
   .form-box{
     background:#fff;color:var(--text);border-radius:18px;
     padding:30px 26px;box-shadow:0 14px 40px rgba(0,0,0,.3);
@@ -352,7 +363,10 @@
 <div class="hero">
   <div class="hero-inner">
     <div class="hero-main">
-      <span class="hero-badge">住まいの定額おまかせパック</span>
+      <div class="hero-badges">
+        <span class="hero-badge limited">戸建て限定</span>
+        <span class="hero-badge">住まいの定額おまかせパック</span>
+      </div>
       <p class="hero-sub">▶ <span class="nw">毎年のエアコン費用、</span><span class="nw">もう払わなくていい。</span></p>
 
       <div class="hero-title">
@@ -553,27 +567,28 @@
       <div class="voice-card">
         <div class="stars">★★★★★</div>
         <div class="img-ph">イメージ画像</div>
-        <div class="who">◯◯市◯様</div>
-        <p>「毎年エアコン清掃に1万5千円払っていたのが、このサービスに入って0円に！屋根も点検してもらい安心感が全然違います。」</p>
+        <div class="who">名古屋市・T様</div>
+        <p>「毎年のエアコン清掃だけでも15,000円以上かかっていたので、月額500円でまるっとお願いできるのは本当に助かります！ドローン点検も無料で安心です。」</p>
       </div>
       <div class="voice-card">
         <div class="stars">★★★★★</div>
         <div class="img-ph">イメージ画像</div>
-        <div class="who">◯◯市◯様</div>
-        <p>「毎年エアコン清掃に1万5千円払っていたのが、このサービスに入って0円に！屋根も点検してもらい安心感が全然違います。」</p>
+        <div class="who">名古屋市・M様</div>
+        <p>「古くなったエコキュートの交換費用が不安でしたが、会員特典で70％OFFに！想像以上に負担を抑えられて助かりました！」</p>
       </div>
       <div class="voice-card">
         <div class="stars">★★★★★</div>
         <div class="img-ph">イメージ画像</div>
-        <div class="who">◯◯市◯様</div>
-        <p>「毎年エアコン清掃に1万5千円払っていたのが、このサービスに入って0円に！屋根も点検してもらい安心感が全然違います。」</p>
+        <div class="who">名古屋市・S様</div>
+        <p>「何かあった時にすぐ相談できる窓口があるのは心強いです。24時間駆けつけサービスもあるので、これからも安心して暮らせそうです。」</p>
       </div>
     </div>
+    <p class="voice-note">※個人の感想であり、効果を保証するものではありません。</p>
   </div>
 </section>
 
 <!-- 限定キャンペーンバー -->
-<div class="campaign-bar">限定キャンペーン実施中！先着<span class="num">【◯◯名様限定】</span></div>
+<div class="campaign-bar">限定キャンペーン実施中！先着<span class="num">【50名様限定】</span></div>
 
 <!-- クロージング＋申込フォーム -->
 <section class="closing" id="entry">
@@ -636,8 +651,8 @@
         <span>個人情報保護</span>
         <span>電話対応あり</span>
         <span>解約自由</span>
-        <span>満足度◯%</span>
       </div>
+      <p class="trust-note">※ライトプランは解約金不要です。ベーシックプラン・プレミアムプランは2年未満の解約に解約金がかかります。</p>
     </div>
 
     <div class="form-box">

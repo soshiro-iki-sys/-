@@ -161,6 +161,25 @@
     text-align: left; font-weight: 500;
     display: flex; align-items: center;
   }
+
+  /* --- section3: フォーム横ミニ料金表のプラン別✕マーク（section2と同配分） ---
+     ✓（青丸）の上に背景色で被覆し、赤い✕を重ねて非対応項目を表現。
+     ライト＝下4項目を✕／ベーシック＝エアコン清掃会員価格のみ✕／プレミアム＝全対応。 */
+  .ov-x {
+    transform: translate(-50%, -50%);
+    width: 1.7%; height: 0.96%;
+    display: flex; align-items: center; justify-content: center;
+    background: #fcfcfc;
+    color: #e60012;
+    font-weight: 900;
+    font-size: 1.9cqw;
+    line-height: 1;
+  }
+  .ov-x-lr5 { left: 4.30%; top: 44.54%; }
+  .ov-x-lr6 { left: 4.30%; top: 46.43%; }
+  .ov-x-lr7 { left: 4.30%; top: 48.33%; }
+  .ov-x-lr8 { left: 4.30%; top: 50.14%; }
+  .ov-x-br8 { left: 22.90%; top: 50.14%; }
 </style>
 </head>
 <body>
@@ -204,6 +223,12 @@
       <div class="ov ov-remove-manzoku"></div>
       <!-- 解約の注記差し替え -->
       <div class="ov ov-kaiyaku">※ライトプランはいつでも解約OK。ベーシック・プレミアムは2年間のご利用となります。</div>
+      <!-- フォーム横ミニ料金表：プラン別の非対応項目に✕（ライト＝下4項目／ベーシック＝エアコン清掃会員価格） -->
+      <div class="ov ov-x ov-x-lr5">✕</div>
+      <div class="ov ov-x ov-x-lr6">✕</div>
+      <div class="ov ov-x ov-x-lr7">✕</div>
+      <div class="ov ov-x ov-x-lr8">✕</div>
+      <div class="ov ov-x ov-x-br8">✕</div>
     </section>
   </main>
 

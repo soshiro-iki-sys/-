@@ -1,0 +1,25 @@
+name: deploy-vercel
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy site/ to Vercel (production)
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          if [ -z "$VERCEL_TOKEN" ]; then
+            echo "リポジトリシークレット VERCEL_TOKEN が設定されていません" >&2
+            exit 1
+          fi
+          mkdir -p /tmp/ieomoi-lp
+          cp -r site/. /tmp/ieomoi-lp/
+          cd /tmp/ieomoi-lp
+          npx vercel@latest deploy --prod --yes --token "$VERCEL_TOKEN" 2>&1 | tee /tmp/deploy.log
+          echo "## Vercel deploy result" >> "$GITHUB_STEP_SUMMARY"
+          grep -Eo 'https://[a-zA-Z0-9.-]+\.vercel\.app' /tmp/deploy.log | sort -u >> "$GITHUB_STEP_SUMMARY"

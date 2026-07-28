@@ -7,6 +7,12 @@ output/
 *.pptx
 *.html
 
+# LPは手書きのソースなのでGitで管理する
+!lp/*.html
+
+# Vercel公開用の静的サイト（site/）もGitで管理する
+!site/**/*.html
+
 # OS / エディタの一時ファイル
 .DS_Store
 Thumbs.db

@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>イエオモイ｜住まいの定額おまかせパック 月額500円〜</title>
+<meta name="description" content="エアコン清掃・ドローン屋根点検・エコキュート修理が月額500円で全部コミコミ。住まいの定額おまかせパック、誕生。">
+<style>
+  /* イエオモイ ロゴ準拠のブランドカラー（高彩度・高コントラスト版）
+     テラコッタ / ロゼピンク / マスタードゴールド / コーヒーブラウン
+     （ロゴの黒背景は取り込まない） */
+  :root{
+    --brown:#5f3f33;
+    --brown-dark:#452b21;
+    --taupe:#8a685c;
+    --rose:#cd7d78;
+    --rose-light:#fdeee7;
+    --red:#d84a2e;
+    --red-dark:#a5321a;
+    --yellow:#f5b31c;
+    --cream:#fff5da;
+    --gray:#f7f1ea;
+    --text:#33241f;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  .nw{display:inline-block;}
+  h2,h3,h4{text-wrap:balance;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:"Noto Sans JP","Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic","Meiryo",sans-serif;
+    color:var(--text);
+    font-size:17px;
+    line-height:1.7;
+    background:#fff;
+  }
+  .inner{max-width:1000px;margin:0 auto;padding:0 20px;}
+  section{padding:60px 0;}
+  .sec-title{
+    font-size:clamp(28px,5vw,42px);
+    font-weight:900;
+    color:var(--brown);
+    margin-bottom:36px;
+  }
+  .sec-title .accent{color:var(--red);}
+  .marker{background:linear-gradient(transparent 62%,var(--yellow) 62%);font-weight:900;}
+
+  .img-ph{
+    background:linear-gradient(160deg,#ffffff,#fbe3d8);
+    border:2px dashed #dc9c86;
+    border-radius:10px;
+    display:flex;align-items:center;justify-content:center;
+    color:#b0664c;font-weight:700;font-size:17px;text-align:center;
+    padding:10px;line-height:1.5;
+  }
+
+  .cta-btn{
+    display:block;max-width:520px;
+    background:linear-gradient(180deg,#f06a45,var(--red));
+    color:#fff;text-decoration:none;text-align:center;
+    font-size:clamp(19px,3.6vw,25px);font-weight:900;letter-spacing:.06em;
+    padding:20px 30px;border-radius:999px;
+    box-shadow:0 6px 0 var(--red-dark),0 12px 24px rgba(216,74,46,.35);
+    transition:transform .15s,box-shadow .15s;
+    position:relative;
+  }
+  .cta-btn::after{content:"▶";position:absolute;right:24px;top:50%;transform:translateY(-50%);font-size:.8em;}
+  .cta-btn:hover{transform:translateY(4px);box-shadow:0 2px 0 var(--red-dark),0 6px 12px rgba(200,86,74,.3);}
+
+  /* ===== ヒーロー ===== */
+  .hero{
+    background:linear-gradient(160deg,#c96a63 0%,#dc958c 45%,#fceee5 100%);
+    position:relative;overflow:hidden;
+    padding:56px 0 60px;
+  }
+  .hero::before,.hero::after{
+    content:"";position:absolute;background:rgba(255,255,255,.85);border-radius:100px;
+    filter:blur(2px);
+  }
+  .hero::before{width:220px;height:60px;top:50px;left:-40px;}
+  .hero::after{width:300px;height:70px;top:130px;right:-60px;opacity:.7;}
+  .hero-inner{
+    position:relative;z-index:2;max-width:1000px;margin:0 auto;padding:0 20px;
+    display:grid;grid-template-columns:1fr 440px;gap:30px;align-items:stretch;
+  }
+  @media(max-width:820px){.hero-inner{grid-template-columns:1fr;}}
+  .hero-badge{
+    display:inline-block;background:var(--brown);color:#fff;font-weight:900;
+    padding:10px 24px;border-radius:6px;font-size:clamp(16px,3vw,20px);letter-spacing:.08em;
+    margin-bottom:16px;
+  }
+  .hero-sub{
+    font-size:clamp(20px,3.8vw,27px);font-weight:900;color:#fff;
+    text-shadow:0 1px 6px rgba(51,39,35,.5);
+    margin-bottom:12px;
+  }
+  .hero-title{
+    background:#fff;border-radius:16px;padding:26px 26px 20px;
+    box-shadow:0 10px 30px rgba(51,39,35,.25);
+    font-size:clamp(24px,4.4vw,37px);font-weight:900;line-height:1.5;color:var(--brown);
+  }
+  .hero-title .price{
+    color:var(--red);font-size:1.9em;line-height:1.1;
+    font-family:"Arial Black","Noto Sans JP",sans-serif;
+  }
+  .hero-title .yen{font-size:.55em;}
+  .hero-title .nw{display:inline-block;}
+  .hero-title .komikomi{color:var(--red);}
+  .hero-title .tagline{display:block;font-size:.45em;font-weight:700;color:#6e615c;margin-top:10px;}
+  .hero-offer{
+    background:var(--cream);border:3px solid var(--red);border-radius:14px;
+    margin-top:18px;padding:18px 24px;text-align:center;
+  }
+  .hero-offer p{font-size:clamp(17px,3.2vw,21px);font-weight:700;color:var(--brown);}
+  .hero-offer .big{
+    font-size:clamp(23px,4.4vw,34px);font-weight:900;color:var(--red);display:block;margin-top:4px;
+  }
+  .hero .cta-btn{margin-top:22px;}
+  .hero-images{display:flex;flex-direction:column;gap:18px;}
+  .hero-images .img-ph{flex:1;min-height:280px;font-size:19px;}
+  @media(max-width:820px){
+    .hero-images{flex-direction:row;}
+    .hero-images .img-ph{flex:1;min-height:200px;}
+  }
+  @media(max-width:480px){
+    .hero-images .img-ph{font-size:14px;min-height:150px;}
+  }
+
+  /* ===== こんなお悩み ===== */
+  .problems{background:var(--gray);}
+  .problem-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:22px;}
+  .problem-card{
+    background:#fff;border-radius:14px;padding:22px;
+    border-left:6px solid var(--red);
+    box-shadow:0 4px 14px rgba(51,39,35,.08);
+    display:flex;gap:16px;align-items:stretch;
+  }
+  .problem-card .txt{flex:1;}
+  .problem-card h3{font-size:21px;font-weight:900;color:var(--red);margin-bottom:6px;line-height:1.5;}
+  .problem-card p{font-size:17px;color:#5d524d;}
+  .problem-card .img-ph{flex:0 0 130px;font-size:14px;}
+
+  /* ===== 6つの安心 ===== */
+  .solutions{background:var(--brown);color:#fff;}
+  .solutions .sec-title{color:#fff;}
+  .solutions .sec-title .accent{color:var(--yellow);}
+  .solution-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px;}
+  .solution-card{
+    background:#fff;color:var(--text);border-radius:14px;padding:26px 22px;
+    box-shadow:0 6px 18px rgba(0,0,0,.14);
+    display:flex;flex-direction:column;
+  }
+  .solution-card h3{font-size:24px;font-weight:900;color:var(--brown);margin-bottom:10px;line-height:1.5;}
+  .solution-card h3 .accent{color:var(--red);}
+  .solution-card p{font-size:17px;color:#5d524d;flex:1;}
+  .solution-card .note{font-size:15px;color:#8d817b;}
+
+  /* ===== プラン ===== */
+  .plans{background:var(--rose-light);}
+  .plan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;align-items:stretch;}
+  .plan-card{
+    background:#fff;border-radius:16px;
+    box-shadow:0 6px 20px rgba(51,39,35,.12);
+    display:flex;flex-direction:column;
+    border:3px solid transparent;
+    margin-top:18px;
+  }
+  .plan-card.popular{
+    border-color:var(--red);
+    position:relative;z-index:2;
+  }
+  .plan-head{background:var(--brown);color:#fff;text-align:center;padding:20px 16px 14px;position:relative;border-radius:12px 12px 0 0;}
+  .plan-card.popular .plan-head{background:var(--red);}
+  .plan-tag{
+    display:inline-block;font-size:14px;font-weight:700;
+    background:rgba(255,255,255,.2);padding:2px 12px;border-radius:999px;margin-bottom:6px;letter-spacing:.1em;
+  }
+  .plan-ribbon{
+    position:absolute;top:-16px;left:50%;transform:translateX(-50%);
+    background:var(--yellow);color:var(--brown);font-weight:900;font-size:16px;
+    padding:5px 22px;border-radius:999px;white-space:nowrap;
+    box-shadow:0 3px 8px rgba(0,0,0,.2);
+  }
+  .plan-head h3{font-size:27px;font-weight:900;letter-spacing:.04em;}
+  .plan-price{background:var(--cream);text-align:center;padding:14px;font-weight:900;color:var(--brown);font-size:18px;}
+  .plan-price .p{font-size:34px;color:var(--red);font-family:"Arial Black","Noto Sans JP",sans-serif;line-height:1.2;}
+  .plan-list{list-style:none;padding:18px 22px;flex:1;}
+  .plan-list li{
+    padding:11px 0;font-size:17px;font-weight:700;color:var(--brown);
+    border-bottom:1px dashed #e9ddd3;text-align:center;text-wrap:balance;
+  }
+  .plan-list li.no{color:#beb1aa;font-weight:500;}
+  .plan-list li.no::before{content:"✕ ";color:#d89f97;font-weight:900;}
+  .plan-cta{margin:0 22px 24px;}
+  .plan-cta a{
+    display:block;text-align:center;background:var(--brown);color:#fff;text-decoration:none;
+    font-weight:900;padding:15px;border-radius:999px;font-size:18px;
+    box-shadow:0 4px 0 var(--brown-dark);transition:transform .15s,box-shadow .15s;
+  }
+  .plan-card.popular .plan-cta a{background:var(--red);box-shadow:0 4px 0 var(--red-dark);}
+  .plan-cta a:hover{transform:translateY(3px);box-shadow:none;}
+
+  /* ===== 比較 ===== */
+  .compare-lead{font-size:clamp(17px,3.2vw,22px);font-weight:700;color:#55483f;margin-bottom:14px;}
+  .compare-catch{
+    font-size:clamp(27px,5vw,40px);font-weight:900;color:var(--red);
+    margin-bottom:36px;line-height:1.6;text-wrap:balance;
+  }
+  .compare-wrap{
+    display:grid;grid-template-columns:1fr auto 1fr;gap:20px;align-items:stretch;
+  }
+  @media(max-width:760px){.compare-wrap{grid-template-columns:1fr;}}
+  .compare-box{border-radius:16px;padding:26px 24px;}
+  .compare-box.individual{background:var(--gray);border:2px solid #e2d6cc;}
+  .compare-box.individual h3{font-size:21px;font-weight:900;color:var(--brown);margin-bottom:16px;}
+  .cost-table{width:100%;border-collapse:collapse;font-size:17px;}
+  .cost-table td{padding:10px 8px;border-bottom:1px solid #e2d6cc;font-weight:700;color:#55483f;}
+  .cost-table td:last-child{text-align:right;color:var(--brown);white-space:nowrap;}
+  .cost-total{
+    margin-top:16px;text-align:center;font-size:clamp(19px,3.6vw,25px);font-weight:900;color:var(--red);
+  }
+  .vs{display:flex;align-items:center;justify-content:center;}
+  .vs span{
+    width:64px;height:64px;border-radius:50%;background:var(--brown);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-weight:900;font-size:20px;
+    box-shadow:0 4px 12px rgba(51,39,35,.3);
+  }
+  .compare-box.ieomoi{
+    background:var(--cream);border:3px solid var(--red);text-align:center;
+    display:flex;flex-direction:column;justify-content:center;gap:8px;
+  }
+  .compare-box.ieomoi .brand{font-size:18px;font-weight:700;color:var(--brown);}
+  .compare-box.ieomoi .big-price{
+    font-size:clamp(36px,6.5vw,52px);font-weight:900;color:var(--red);line-height:1.2;
+    font-family:"Arial Black","Noto Sans JP",sans-serif;
+  }
+  .compare-box.ieomoi .big-price small{font-size:.4em;color:var(--brown);}
+  .compare-box.ieomoi p{font-weight:700;color:var(--brown);font-size:18px;}
+  .compare-box.ieomoi .zero{
+    background:#fff;border:2px dashed var(--red);border-radius:10px;padding:10px;
+    font-weight:900;color:var(--brown);margin-top:6px;
+  }
+  .compare-box.ieomoi .zero .accent{color:var(--red);font-size:1.2em;}
+  .compare-box.ieomoi .cta-btn{max-width:100%;margin-top:12px;font-size:19px;padding:16px 20px;}
+
+  /* ===== お客様の声 ===== */
+  .voices{background:var(--gray);}
+  .voices .sec-title{text-align:center;}
+  .voice-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px;}
+  .voice-card{
+    background:#fff;border-radius:14px;padding:24px;
+    box-shadow:0 4px 14px rgba(51,39,35,.08);
+    display:flex;flex-direction:column;gap:12px;
+  }
+  .voice-card .stars{color:var(--yellow);font-size:22px;letter-spacing:2px;}
+  .voice-card .img-ph{min-height:170px;}
+  .voice-card .who{font-size:17px;font-weight:900;color:var(--brown);text-align:center;}
+  .voice-card p{font-size:17px;color:#55483f;text-wrap:pretty;}
+
+  /* ===== キャンペーンバー ===== */
+  .campaign-bar{
+    background:var(--red);
+    color:#fff;
+    text-align:center;
+    font-weight:900;
+    font-size:clamp(18px,3.6vw,25px);
+    padding:16px 16px;
+    letter-spacing:.05em;
+  }
+  .campaign-bar .num{color:#ffd970;}
+
+  /* ===== クロージング＋フォーム ===== */
+  .closing{
+    background:linear-gradient(160deg,var(--brown) 0%,var(--taupe) 100%);
+    color:#fff;
+  }
+  .closing-inner{
+    max-width:1000px;margin:0 auto;padding:0 20px;
+    display:grid;grid-template-columns:1fr 360px;gap:36px;align-items:start;
+  }
+  @media(max-width:860px){.closing-inner{grid-template-columns:1fr;}}
+  .closing-title{
+    font-size:clamp(27px,5vw,40px);font-weight:900;line-height:1.6;margin-bottom:10px;text-wrap:balance;
+  }
+  .closing-title .accent{color:var(--yellow);}
+  .closing-lead{font-size:clamp(18px,3.4vw,23px);font-weight:700;margin-bottom:28px;color:#f2e3dd;}
+  .closing-plans-title{font-size:19px;font-weight:900;margin-bottom:14px;}
+  .mini-plan-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:28px;}
+  @media(max-width:600px){.mini-plan-grid{grid-template-columns:1fr;}}
+  .mini-plan{
+    background:#fff;color:var(--text);border-radius:12px;overflow:visible;
+    display:flex;flex-direction:column;font-size:13px;
+    border:2px solid transparent;margin-top:12px;
+  }
+  .mini-plan.popular{border-color:var(--yellow);position:relative;}
+  .mini-plan .ribbon{
+    position:absolute;top:-12px;left:50%;transform:translateX(-50%);
+    background:var(--yellow);color:var(--brown);font-weight:900;font-size:12px;
+    padding:3px 14px;border-radius:999px;white-space:nowrap;
+  }
+  .mini-plan .head{background:var(--brown);color:#fff;text-align:center;padding:10px 8px 8px;border-radius:10px 10px 0 0;}
+  .mini-plan.popular .head{background:var(--red);}
+  .mini-plan .head .tag{display:block;font-size:11px;opacity:.85;}
+  .mini-plan .head h4{font-size:17px;font-weight:900;}
+  .mini-plan .price{background:var(--cream);text-align:center;padding:6px;font-weight:900;color:var(--brown);font-size:13px;}
+  .mini-plan .price .p{color:var(--red);font-size:17px;}
+  .mini-plan ul{list-style:none;padding:10px 12px;flex:1;}
+  .mini-plan li{padding:4px 0;border-bottom:1px dashed #eee2d8;font-weight:700;color:var(--brown);text-align:center;text-wrap:balance;}
+  .mini-plan li.no{color:#beb1aa;font-weight:500;}
+  .mini-plan li.no::before{content:"✕ ";color:#d89f97;font-weight:900;}
+  .mini-plan .btn{
+    display:block;margin:8px 10px 12px;padding:7px;text-align:center;
+    background:var(--red);color:#fff;text-decoration:none;font-weight:900;border-radius:999px;font-size:13px;
+  }
+  .trust-row{display:flex;flex-wrap:wrap;gap:8px;}
+  .trust-row span{
+    background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.4);
+    border-radius:8px;padding:9px 15px;font-size:15px;font-weight:700;white-space:nowrap;
+  }
+  .form-box{
+    background:#fff;color:var(--text);border-radius:18px;
+    padding:30px 26px;box-shadow:0 14px 40px rgba(0,0,0,.3);
+  }
+  .form-box h3{
+    text-align:center;color:var(--brown);font-size:23px;font-weight:900;margin-bottom:20px;
+    padding-bottom:12px;border-bottom:2px solid var(--brown);
+  }
+  .field{margin-bottom:16px;}
+  .field label{display:block;font-size:16px;font-weight:900;color:var(--brown);margin-bottom:6px;}
+  .field input,.field select,.field textarea{
+    width:100%;padding:12px 13px;border:2px solid #e2d6cc;border-radius:10px;
+    font-size:17px;font-family:inherit;background:#fdfaf6;
+  }
+  .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--red);background:#fff;}
+  .form-box .cta-btn{max-width:100%;font-size:19px;padding:18px;border:none;cursor:pointer;width:100%;margin-top:6px;}
+  .form-thanks{display:none;text-align:center;padding:30px 10px;}
+  .form-thanks .icon{font-size:48px;}
+  .form-thanks h4{color:var(--brown);font-size:20px;font-weight:900;margin:10px 0 6px;}
+  .form-thanks p{font-size:14px;color:#5d524d;}
+
+  /* ===== スマホ調整 ===== */
+  @media(max-width:480px){
+    .problem-card{flex-direction:column;}
+    .problem-card .img-ph{flex:none;width:100%;min-height:110px;font-size:13px;}
+    .problem-card h3{font-size:19px;}
+    .problem-card p{font-size:15px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ヒーロー -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-main">
+      <span class="hero-badge">住まいの定額おまかせパック</span>
+      <p class="hero-sub">▶ <span class="nw">毎年のエアコン費用、</span><span class="nw">もう払わなくていい。</span></p>
+
+      <div class="hero-title">
+        <span class="nw">毎月たった<span class="price">500<span class="yen">円</span></span>で</span><br>
+        <span class="nw">エアコン清掃・</span><span class="nw">ドローン屋根点検・</span><span class="nw">エコキュート修理が</span><span class="komikomi nw">全部コミコミ！</span>
+        <span class="tagline">住まいの定額おまかせパック、誕生。</span>
+      </div>
+
+      <div class="hero-offer">
+        <p><span class="nw">今ご加入で、</span><span class="nw">通常<span class="marker">15,000円</span>の</span><span class="nw">プロのドローン点検が</span></p>
+        <span class="big">【 初回0円 】で今すぐ受けられる！</span>
+      </div>
+
+      <a class="cta-btn" href="#entry">今すぐ無料で申し込む</a>
+    </div>
+
+    <div class="hero-images">
+      <div class="img-ph">【イメージ画像】<br>ドローン点検</div>
+      <div class="img-ph">【イメージ画像】<br>エコキュート・<br>エアコン</div>
+    </div>
+  </div>
+</div>
+
+<!-- こんなお悩み -->
+<section class="problems">
+  <div class="inner">
+    <h2 class="sec-title">こんなお悩み、ありませんか？</h2>
+    <div class="problem-grid">
+      <div class="problem-card">
+        <div class="txt">
+          <h3><span class="nw">エアコン清掃に</span><span class="nw">毎年1〜2万円...</span></h3>
+          <p><span class="nw">業者を探して、予約して、</span><span class="nw">また来年も…が</span><span class="nw">面倒で高い</span></p>
+        </div>
+        <div class="img-ph">イメージ<br>画像</div>
+      </div>
+      <div class="problem-card">
+        <div class="txt">
+          <h3><span class="nw">そろそろ</span><span class="nw">交換時期・・</span><br><span class="nw">エコキュートが</span><span class="nw">突然壊れたら？</span></h3>
+          <p><span class="nw">修理代10〜30万円！</span><span class="nw">保証切れで不安な日々</span></p>
+        </div>
+        <div class="img-ph">イメージ<br>画像</div>
+      </div>
+      <div class="problem-card">
+        <div class="txt">
+          <h3><span class="nw">屋根の状態、</span><span class="nw">何年も見ていない</span></h3>
+          <p><span class="nw">雨漏りが起きてから</span><span class="nw">発覚では</span><span class="nw">手遅れのケースも・・・</span></p>
+        </div>
+        <div class="img-ph">イメージ<br>画像</div>
+      </div>
+      <div class="problem-card">
+        <div class="txt">
+          <h3><span class="nw">急なトラブルに</span><span class="nw">24時間対応できる</span><span class="nw">業者がない</span></h3>
+          <p><span class="nw">夜中に水漏れ・停電…</span><span class="nw">頼める先が見つからない</span></p>
+        </div>
+        <div class="img-ph">イメージ<br>画像</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6つの安心 -->
+<section class="solutions">
+  <div class="inner">
+    <h2 class="sec-title"><span class="nw">イエオモイが解決！</span><span class="nw">〜<span class="accent">6つの安心が</span></span><span class="nw"><span class="accent">月額500円</span>〜</span></h2>
+    <div class="solution-grid">
+      <div class="solution-card">
+        <h3>エコキュート点検<br><span class="accent">修理無料！</span></h3>
+        <p class="note">※10年以上の機器は対象外<br>→新品交換は通常金額の3%OFF</p>
+      </div>
+      <div class="solution-card">
+        <h3>外壁点検</h3>
+        <p>プロによる外壁劣化チェック</p>
+      </div>
+      <div class="solution-card">
+        <h3>屋根点検（ドローン）</h3>
+        <p>最新ドローンで安全・精密点検</p>
+      </div>
+      <div class="solution-card">
+        <h3>エアコン清掃</h3>
+        <p>通常15,000円のクリーニングが無料！</p>
+      </div>
+      <div class="solution-card">
+        <h3>クロス補修</h3>
+        <p class="note">※条件</p>
+      </div>
+      <div class="solution-card">
+        <h3>24時間駆けつけ</h3>
+        <p class="note">※スタンダードプラン以上</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- プラン -->
+<section class="plans" id="plans">
+  <div class="inner">
+    <h2 class="sec-title">3つのプランから選べる！</h2>
+    <div class="plan-grid">
+
+      <div class="plan-card">
+        <div class="plan-head">
+          <span class="plan-tag">お気軽な</span>
+          <h3>ライトプラン</h3>
+        </div>
+        <div class="plan-price">月額 <span class="p">¥500</span>（税込 ¥550）</div>
+        <ul class="plan-list">
+          <li><span class="nw">エコキュート点検＋</span><span class="nw">修理無料</span></li>
+          <li>ドローン外壁・屋根点検</li>
+          <li>太陽光・蓄電池電気点検</li>
+          <li>簡易的なクロス補修</li>
+          <li class="no"><span class="nw">エコキュート購入</span><span class="nw">70%off</span></li>
+          <li class="no"><span class="nw">リフォーム工事</span><span class="nw">10%off</span></li>
+          <li class="no"><span class="nw">24時間駆けつけ</span><span class="nw">サービス</span></li>
+          <li class="no">エアコン清掃会員価格</li>
+        </ul>
+        <div class="plan-cta"><a href="#entry">このプランで申し込む ▶</a></div>
+      </div>
+
+      <div class="plan-card popular">
+        <div class="plan-head">
+          <span class="plan-ribbon">一番人気！おすすめ</span>
+          <span class="plan-tag">人気No.1 ★</span>
+          <h3>ベーシックプラン</h3>
+        </div>
+        <div class="plan-price">月額 <span class="p">¥1500</span>（税込 ¥1,650）</div>
+        <ul class="plan-list">
+          <li><span class="nw">エコキュート点検＋</span><span class="nw">修理無料</span></li>
+          <li>ドローン外壁・屋根点検</li>
+          <li>太陽光・蓄電池電気点検</li>
+          <li>簡易的なクロス補修</li>
+          <li><span class="nw">エコキュート購入</span><span class="nw">70%off</span></li>
+          <li><span class="nw">リフォーム工事</span><span class="nw">10%off</span></li>
+          <li><span class="nw">24時間駆けつけ</span><span class="nw">サービス</span></li>
+          <li class="no">エアコン清掃会員価格</li>
+        </ul>
+        <div class="plan-cta"><a href="#entry">このプランで申し込む ▶</a></div>
+      </div>
+
+      <div class="plan-card">
+        <div class="plan-head">
+          <span class="plan-tag">フルカバー</span>
+          <h3>プレミアムプラン</h3>
+        </div>
+        <div class="plan-price">月額 <span class="p">¥2500</span>（税込2,750）</div>
+        <ul class="plan-list">
+          <li><span class="nw">エコキュート点検＋</span><span class="nw">修理無料</span></li>
+          <li>ドローン外壁・屋根点検</li>
+          <li>太陽光・蓄電池電気点検</li>
+          <li>簡易的なクロス補修</li>
+          <li><span class="nw">エコキュート購入</span><span class="nw">70%off</span></li>
+          <li><span class="nw">リフォーム工事</span><span class="nw">10%off</span></li>
+          <li><span class="nw">24時間駆けつけ</span><span class="nw">サービス</span></li>
+          <li>エアコン清掃会員価格</li>
+        </ul>
+        <div class="plan-cta"><a href="#entry">このプランで申し込む ▶</a></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- 比較 -->
+<section class="compare">
+  <div class="inner">
+    <p class="compare-lead">お家のメンテナンス、どこに頼んでいいかわからない…</p>
+    <p class="compare-catch">イエオモイなら！<br>エコキュート修理も<br>屋根点検も全部タダ！</p>
+
+    <div class="compare-wrap">
+      <div class="compare-box individual">
+        <h3>個別に頼むと合計…</h3>
+        <table class="cost-table">
+          <tr><td>プロのエアコン清掃</td><td>¥15,000/年</td></tr>
+          <tr><td>ドローン点検</td><td>¥30,000/年</td></tr>
+          <tr><td>エコキュート修理保証</td><td>¥50,000以上</td></tr>
+          <tr><td>クロス張替え</td><td>¥20,000/年</td></tr>
+        </table>
+        <p class="cost-total">合計：¥115,000以上/年</p>
+      </div>
+
+      <div class="vs"><span>VS</span></div>
+
+      <div class="compare-box ieomoi">
+        <p class="brand">◯◯なら</p>
+        <div class="big-price">月額<br>¥500<small>〜</small></div>
+        <p>年間¥500〜で全サービス利用可能！</p>
+        <div class="zero">初回ドローン点検<span class="accent">【0円】</span></div>
+        <a class="cta-btn" href="#entry">今すぐ申し込む</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- お客様の声 -->
+<section class="voices">
+  <div class="inner">
+    <h2 class="sec-title">お客様の声</h2>
+    <div class="voice-grid">
+      <div class="voice-card">
+        <div class="stars">★★★★★</div>
+        <div class="img-ph">イメージ画像</div>
+        <div class="who">◯◯市◯様</div>
+        <p>「毎年エアコン清掃に1万5千円払っていたのが、このサービスに入って0円に！屋根も点検してもらい安心感が全然違います。」</p>
+      </div>
+      <div class="voice-card">
+        <div class="stars">★★★★★</div>
+        <div class="img-ph">イメージ画像</div>
+        <div class="who">◯◯市◯様</div>
+        <p>「毎年エアコン清掃に1万5千円払っていたのが、このサービスに入って0円に！屋根も点検してもらい安心感が全然違います。」</p>
+      </div>
+      <div class="voice-card">
+        <div class="stars">★★★★★</div>
+        <div class="img-ph">イメージ画像</div>
+        <div class="who">◯◯市◯様</div>
+        <p>「毎年エアコン清掃に1万5千円払っていたのが、このサービスに入って0円に！屋根も点検してもらい安心感が全然違います。」</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 限定キャンペーンバー -->
+<div class="campaign-bar">限定キャンペーン実施中！先着<span class="num">【◯◯名様限定】</span></div>
+
+<!-- クロージング＋申込フォーム -->
+<section class="closing" id="entry">
+  <div class="closing-inner">
+    <div>
+      <h2 class="closing-title">あなたの住まいを、<br><span class="nw">今日から<span class="accent">イエオモイ</span>が</span><span class="nw">守ります。</span></h2>
+      <p class="closing-lead">すべてコミコミで月額たったの ¥500〜</p>
+
+      <p class="closing-plans-title">3つのプランから選べる！</p>
+      <div class="mini-plan-grid">
+        <div class="mini-plan">
+          <div class="head"><span class="tag">お気軽な</span><h4>ライトプラン</h4></div>
+          <div class="price">月額 <span class="p">¥500</span>（税込 ¥550）</div>
+          <ul>
+            <li><span class="nw">エコキュート点検＋</span><span class="nw">修理無料</span></li>
+            <li>ドローン外壁・屋根点検</li>
+            <li>太陽光・蓄電池電気点検</li>
+            <li>簡易的なクロス補修</li>
+            <li class="no"><span class="nw">エコキュート購入</span><span class="nw">70%off</span></li>
+            <li class="no"><span class="nw">リフォーム工事</span><span class="nw">10%off</span></li>
+            <li class="no"><span class="nw">24時間駆けつけ</span><span class="nw">サービス</span></li>
+            <li class="no">エアコン清掃会員価格</li>
+          </ul>
+          <a class="btn" href="#entry">このプランで申し込む ▶</a>
+        </div>
+        <div class="mini-plan popular">
+          <span class="ribbon">一番人気！おすすめ</span>
+          <div class="head"><span class="tag">人気No.1 ★</span><h4>ベーシックプラン</h4></div>
+          <div class="price">月額 <span class="p">¥1500</span>（税込 ¥1,650）</div>
+          <ul>
+            <li><span class="nw">エコキュート点検＋</span><span class="nw">修理無料</span></li>
+            <li>ドローン外壁・屋根点検</li>
+            <li>太陽光・蓄電池電気点検</li>
+            <li>簡易的なクロス補修</li>
+            <li><span class="nw">エコキュート購入</span><span class="nw">70%off</span></li>
+            <li><span class="nw">リフォーム工事</span><span class="nw">10%off</span></li>
+            <li><span class="nw">24時間駆けつけ</span><span class="nw">サービス</span></li>
+            <li class="no">エアコン清掃会員価格</li>
+          </ul>
+          <a class="btn" href="#entry">このプランで申し込む ▶</a>
+        </div>
+        <div class="mini-plan">
+          <div class="head"><span class="tag">フルカバー</span><h4>プレミアムプラン</h4></div>
+          <div class="price">月額 <span class="p">¥2500</span>（税込2,750）</div>
+          <ul>
+            <li><span class="nw">エコキュート点検＋</span><span class="nw">修理無料</span></li>
+            <li>ドローン外壁・屋根点検</li>
+            <li>太陽光・蓄電池電気点検</li>
+            <li>簡易的なクロス補修</li>
+            <li><span class="nw">エコキュート購入</span><span class="nw">70%off</span></li>
+            <li><span class="nw">リフォーム工事</span><span class="nw">10%off</span></li>
+            <li><span class="nw">24時間駆けつけ</span><span class="nw">サービス</span></li>
+            <li>エアコン清掃会員価格</li>
+          </ul>
+          <a class="btn" href="#entry">このプランで申し込む ▶</a>
+        </div>
+      </div>
+
+      <div class="trust-row">
+        <span>個人情報保護</span>
+        <span>電話対応あり</span>
+        <span>解約自由</span>
+        <span>満足度◯%</span>
+      </div>
+    </div>
+
+    <div class="form-box">
+      <h3>無料お申し込みフォーム</h3>
+      <form id="entryForm">
+        <div class="field">
+          <label>お名前</label>
+          <input type="text" name="name" required>
+        </div>
+        <div class="field">
+          <label>電話番号</label>
+          <input type="tel" name="tel" required>
+        </div>
+        <div class="field">
+          <label>メールアドレス</label>
+          <input type="email" name="email" required>
+        </div>
+        <div class="field">
+          <label>ご住所</label>
+          <input type="text" name="address" required>
+        </div>
+        <div class="field">
+          <label>ご希望の連絡方法</label>
+          <select name="contact">
+            <option value="">選択してください</option>
+            <option>電話</option>
+            <option>メール</option>
+            <option>どちらでも可</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>点検時気になる箇所</label>
+          <textarea name="concern" rows="3" placeholder="例：屋根の色あせ、お湯の温度が安定しない など"></textarea>
+        </div>
+        <button type="submit" class="cta-btn">今すぐ無料で申し込む</button>
+      </form>
+      <div class="form-thanks" id="formThanks">
+        <div class="icon">✅</div>
+        <h4>お申し込みありがとうございます！</h4>
+        <p>担当者よりご連絡いたします。<br>今しばらくお待ちください。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // フォーム送信（送信先が決まるまでは完了表示のみ。実運用時はここでAPI/フォームサービスへPOSTする）
+  document.getElementById('entryForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    this.style.display = 'none';
+    document.getElementById('formThanks').style.display = 'block';
+  });
+</script>
+
+</body>
+</html>

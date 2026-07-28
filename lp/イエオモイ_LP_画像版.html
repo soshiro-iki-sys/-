@@ -147,21 +147,19 @@
     letter-spacing: 0;
   }
 
-  /* --- section3: 満足度「○％」→「90％以上！」（信頼バッジ内・タイトル差し替え） --- */
-  .ov-manzoku {
-    left: 80.7%; top: 61.5%; width: 18.5%; height: 2.4%;
-    background: #ffffff;
-    display: flex; align-items: center; justify-content: flex-start;
-    color: #1b2a5a; font-weight: 700; font-size: 2.0cqw; white-space: nowrap;
+  /* --- section3: 満足度バッジを項目ごと削除（カード＋「※自社アンケート」注記を背景で被覆） --- */
+  .ov-remove-manzoku {
+    left: 74.2%; top: 57.8%; width: 25.8%; height: 11.7%;
+    background: #fefefe;
   }
-  .ov-manzoku sup { font-size: 0.95cqw; font-weight: 400; margin-left: 0.15cqw; }
 
-  /* --- section3: 解約の注記差し替え（信頼バッジ内・本文差し替え） --- */
+  /* --- section3: 解約の注記差し替え（信頼バッジ内・本文差し替え／カード内に収める） --- */
   .ov-kaiyaku {
-    left: 59.3%; top: 63.3%; width: 15.3%; height: 3.7%;
+    left: 59.3%; top: 63.4%; width: 15.4%; height: 3.5%;
     background: #ffffff;
-    color: #33384a; font-size: 1.12cqw; line-height: 1.36;
+    color: #33384a; font-size: 1.02cqw; line-height: 1.42;
     text-align: left; font-weight: 500;
+    display: flex; align-items: center;
   }
 </style>
 </head>
@@ -202,8 +200,8 @@
       <a class="cta-hotspot s3-bottom-cta" href="https://your-form-url.example.com" target="_blank" rel="noopener" aria-label="今すぐ無料で申し込む"></a>
       <!-- 先着「○○」→「50」名様 -->
       <div class="ov ov-banner50">50</div>
-      <!-- 満足度「○％」→「90％以上！」 -->
-      <div class="ov ov-manzoku">満足度90％以上！<sup>※</sup></div>
+      <!-- 満足度バッジを項目ごと削除 -->
+      <div class="ov ov-remove-manzoku"></div>
       <!-- 解約の注記差し替え -->
       <div class="ov ov-kaiyaku">※ライトプランはいつでも解約OK。ベーシック・プレミアムは2年間のご利用となります。</div>
     </section>

@@ -138,13 +138,19 @@
 
   /* --- section3: 先着「○○」→「50」名様（赤リボン内） --- */
   .ov-banner50 {
-    left: 64.93%; top: 2.15%; width: 6.80%; height: 2.57%;
+    left: 64.93%; top: 1.62%; width: 6.80%; height: 3.11%;
     display: flex; align-items: center; justify-content: center;
-    background: linear-gradient(180deg, #e6020c 0%, #ec040d 34%, #e5020c 78%, #e00611 100%);
+    background: linear-gradient(180deg, #e4000c 0%, #e8030c 27%, #ec040d 45%, #e5030d 63%, #e4020d 90%, #e00611 100%);
     color: #fce89b;
     font-weight: 800;
-    font-size: 4.0cqw;
     letter-spacing: -.02em;
+  }
+  /* 数字の字面高さ・ベースラインを周囲の焼き込み文字（「先着」「名様限定」）に合わせる */
+  .ov-banner50 span {
+    display: block;
+    font-size: 4.85cqw;
+    line-height: 1;
+    transform: translateY(-0.105cqw);
   }
 
   /* --- section3: 満足度バッジを項目ごと削除（カード＋「※自社アンケート」注記を背景で被覆） --- */
@@ -263,7 +269,7 @@
       <a class="cta-hotspot s3-form-cta" href="https://your-form-url.example.com" target="_blank" rel="noopener" aria-label="今すぐ無料で申し込む"></a>
       <a class="cta-hotspot s3-bottom-cta" href="https://your-form-url.example.com" target="_blank" rel="noopener" aria-label="今すぐ無料で申し込む"></a>
       <!-- 先着「○○」→「50」名様 -->
-      <div class="ov ov-banner50">50</div>
+      <div class="ov ov-banner50"><span>50</span></div>
       <!-- 信頼バッジ行：満足度カードを削除し、残り3枚を均等配置に再構成 -->
       <div class="ov ov-trust-cover"></div>
       <div class="ov ov-trust-row">

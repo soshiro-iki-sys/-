@@ -228,10 +228,15 @@
     box-shadow: 0 2px 6px rgba(95,63,51,.26);
   }
 /* === ロゴ（ヘッダー／フッター） === */
+  /* 区切りは 1px の罫線ではなく、ぼかしたシャドウで表現する。
+     1px 罫線は表示倍率 125%／150%／175% で端数のデバイスピクセルに乗り、
+     太さが揃わずにじむ（実測：150% で 228 の1行＋247 の半端な行）。
+     ぼかしたシャドウなら硬いエッジが無いのでどの倍率でも均一に出る。 */
   .lp-header {
     display: flex; align-items: center; justify-content: space-between;
-    gap: 16px; padding: 13px 22px; background: #fff;
-    border-bottom: 1px solid #ece2d8;
+    gap: 16px; padding: 13px 22px 14px; background: #fff;
+    box-shadow: 0 4px 10px -5px rgba(95, 63, 51, .30);
+    position: relative; z-index: 1;
   }
   .lp-header .lock { display: flex; align-items: center; gap: 12px; }
   .lp-header .lock img { display: block; width: auto; }
@@ -242,8 +247,10 @@
     letter-spacing: .06em; white-space: nowrap;
   }
   .lp-footer {
-    padding: 30px 20px 34px; background: #fff;
-    border-top: 1px solid #ece2d8; text-align: center;
+    padding: 31px 20px 34px; background: #fff;
+    box-shadow: 0 -4px 10px -5px rgba(95, 63, 51, .26);
+    position: relative; z-index: 1;
+    text-align: center;
   }
   .lp-footer img { display: inline-block; height: 76px; width: auto; }
   @media (max-width: 480px) {

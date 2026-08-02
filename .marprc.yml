@@ -1,0 +1,5 @@
+# Marp 共通設定
+# 本フォーマットは2カラム・進捗バー・ステップカードを <div> で組むため html を許可する
+html: true
+allowLocalFiles: true
+themeSet: ./themes

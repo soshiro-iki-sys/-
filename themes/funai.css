@@ -1,0 +1,355 @@
+/* @theme funai */
+/*
+ * 船井総研スタイル（標準フォーマット）
+ * サイズ＝A型 16:9（1280×720px ＝ 33.87×19.05cm）／レイアウト＝B型
+ * 仕様は docs/資料フォーマット定義.md を参照
+ *
+ * 換算： cm × 37.8 = px ／ pt × 1.333 = px
+ */
+
+@import 'default';
+
+:root {
+  --navy: #002060;        /* ブランドネイビー（最重要色） */
+  --navy-sub: #1F497D;    /* 副（枠線・淡い塗り） */
+  --red: #FF0000;         /* 結論・キーワード1語のみ */
+  --yellow: #FFFF00;      /* ネイビー帯の中の強調 */
+  --text: #000000;
+  --muted: #8A8A8A;       /* 出典・注記 */
+  --soft: #E9EEF6;        /* 薄いブルーグレー地 */
+  --line: #C9D2E0;
+}
+
+/* ===== ページ全体 ===== */
+section {
+  width: 1280px;
+  height: 720px;
+  position: relative;
+  /* 上103px＝リード文の開始位置(2.72cm)／下110px＝結論帯の逃げ */
+  padding: 103px 26px 110px 10px;
+  font-family: "Meiryo UI", "Meiryo", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+  font-size: 24px;          /* 18pt＝リード文 */
+  font-weight: 700;         /* 原則すべて太字 */
+  line-height: 1.55;
+  color: var(--text);
+  background: #fff;
+  /* 本文は上から流す（中央寄せにすると章タイトルへ食い込む） */
+  justify-content: flex-start;
+  align-items: stretch;
+}
+
+/* コピーライト（24.71cm, 18.47cm） */
+section::before {
+  content: "Copyright Funai Consulting Inc. All Rights Reserved.";
+  position: absolute;
+  left: 934px;
+  top: 698px;
+  width: 340px;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+/* ページ番号（中央下） */
+section::after {
+  left: 0;
+  right: auto;
+  top: 692px;
+  bottom: auto;
+  width: 1280px;
+  padding: 0;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+/* ===== 章タイトル（0.69cm, 0.19cm / 28pt Bold） ===== */
+h1 {
+  position: absolute;
+  left: 0;
+  top: 7px;
+  width: 1280px;
+  height: 60px;
+  margin: 0;
+  padding: 0 26px;
+  box-sizing: border-box;
+  border: none;
+  border-bottom: 2px solid var(--navy);   /* 区切り線（y=65px・全幅） */
+  font-size: 37px;
+  line-height: 58px;
+  text-align: left;                       /* 中央寄せページでも左寄せを維持 */
+  color: var(--navy);
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* ===== 小見出しタブ（0.23cm, 1.85cm / 16pt Bold・ネイビー地に白抜き） ===== */
+h2 {
+  position: absolute;
+  left: 9px;
+  top: 70px;
+  height: 31px;
+  min-width: 287px;
+  margin: 0;
+  padding: 0 20px;
+  background: var(--navy);
+  color: #fff;
+  font-size: 21px;
+  line-height: 31px;
+  text-align: center;
+}
+
+h3 {
+  font-size: 26px;
+  color: var(--navy);
+  margin: 0 0 10px;
+}
+
+/* ===== リード文・本文（幅は26cm＝983pxで頭打ち） ===== */
+section > p,
+section > ul,
+section > ol {
+  max-width: 983px;
+  margin: 0 0 14px;
+}
+
+strong { color: var(--red); }          /* 赤は1枚2箇所まで */
+a { color: var(--navy-sub); }
+
+ul, ol { margin-left: 0.4em; }
+li { margin: 0.3em 0; }
+ul li::marker { color: var(--navy); }
+
+/* 画像だけの段落は本文幅（983px）の制限を外し、全幅で中央に置く */
+section > p:has(> img:only-child) {
+  max-width: none;
+  width: 1244px;
+  text-align: center;
+}
+img { display: block; margin: 0 auto; }
+
+/* ===== 結論帯（0cm, 16.13cm / 33.87×2.2cm・全幅） ===== */
+blockquote {
+  position: absolute;
+  left: 0;
+  top: 610px;
+  width: 1280px;
+  height: 83px;
+  margin: 0;
+  padding: 0 40px;
+  border: none;
+  background: var(--navy);
+  color: #fff;
+  font-size: 32px;          /* 24pt */
+  line-height: 1.25;
+  font-style: normal;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+blockquote p { margin: 0; max-width: none; }
+blockquote strong { color: var(--yellow); }   /* 帯の中の強調は黄 */
+
+/* 2行のときは高さを 2.4cm(91px) に */
+blockquote.tall { height: 91px; top: 602px; font-size: 27px; }
+
+/* ===== 出典・注記 ===== */
+.src,
+small {
+  position: absolute;
+  left: 26px;
+  top: 575px;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--muted);
+  max-width: 1220px;
+}
+
+/* 右下の商標注記 */
+.tm {
+  position: absolute;
+  right: 26px;
+  top: 575px;
+  left: auto;
+  text-align: right;
+}
+
+/* ===== 表 ===== */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 22px;
+}
+th {
+  background: var(--navy);
+  color: #fff;
+  padding: 10px 16px;
+  text-align: left;
+}
+td {
+  border-bottom: 1px solid var(--line);
+  padding: 9px 16px;
+}
+tr:nth-child(even) td { background: #F4F7FC; }
+
+/* ===== 2カラム（広がった横幅はここで使う） ===== */
+.cols {
+  display: flex;
+  gap: 24px;
+  width: 1244px;
+  max-width: none;
+}
+.cols > * { flex: 1; min-width: 0; }
+.cols.left-narrow > *:first-child { flex: 0 0 400px; }
+
+/* ===== 進捗バー（ステップ解説ページ） ===== */
+.steps {
+  display: flex;
+  gap: 6px;
+  width: 1244px;
+  max-width: none;
+  margin: 0 0 20px;
+}
+.steps > div {
+  flex: 1;
+  padding: 9px 0;
+  background: #DDE3EE;
+  color: #97A3B8;
+  font-size: 24px;
+  text-align: center;
+}
+.steps > div.is-now  { background: var(--navy); color: #fff; }
+.steps > div.is-last { background: var(--red);  color: #fff; }
+
+/* ステップ解説の左カード */
+.step-card {
+  background: var(--navy);
+  color: #fff;
+  text-align: center;
+  padding: 24px 0;
+}
+.step-card.is-last { background: var(--red); }
+.step-card .mark  { font-size: 96px; line-height: 1.1; }
+.step-card .en    { font-size: 18px; font-weight: 400; }
+.step-card .ja    { font-size: 38px; }
+.step-card .pill  {
+  display: inline-block;
+  margin-top: 14px;
+  padding: 6px 28px;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--navy);
+  font-size: 20px;
+}
+
+/* ステップ解説の右ブロック */
+.block { margin-bottom: 14px; padding: 14px 20px; }
+.block .label { font-size: 20px; color: var(--muted); font-weight: 700; }
+.block.plain { background: #fff; border: 1px solid var(--line); }
+.block.soft  { background: var(--soft); }
+.block.fill  { background: var(--navy); color: #fff; }
+.block.fill .label { color: #C9D6EA; }
+
+/* ===== ≪ポイント≫ボックス ===== */
+.point {
+  border: 3px solid #4CAF7D;
+  background: #FDF0F0;
+  padding: 14px 20px;
+  font-size: 22px;
+  max-width: none;
+}
+
+/* ===== 表紙（<!-- _class: title --> ） ===== */
+section.title {
+  padding: 0;
+  background: var(--navy);
+  color: #fff;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+section.title::before { content: none; display: none; }
+section.title::after  { content: none; display: none; }
+section.title h1 {
+  position: static;
+  width: auto;
+  height: auto;
+  border: none;
+  color: #fff;
+  font-size: 60px;
+  white-space: normal;
+}
+section.title h2 {
+  position: static;
+  background: none;
+  color: #fff;
+  font-size: 34px;
+  min-width: 0;
+  height: auto;
+  padding: 0;
+  margin: 10px 0 0;
+}
+section.title p { color: #D6E0F0; font-size: 26px; max-width: none; }
+section.title strong { color: var(--yellow); }
+
+/* ===== メッセージ1枚（<!-- _class: message --> ） ===== */
+section.message {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+section.message p {
+  margin: 0.08em 0;
+  max-width: none;
+  font-size: 88px;          /* 66pt */
+  line-height: 1.3;
+  color: var(--navy);
+}
+section.message.red p { color: var(--red); }
+section.message strong { color: var(--red); }
+
+/* ===== フルカバー転換（<!-- _class: cover --> ） ===== */
+section.cover {
+  padding: 0;
+  background: var(--navy);
+  color: #fff;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+section.cover::before { content: none; display: none; }
+section.cover h1,
+section.cover h2 { display: none; }
+section.cover p {
+  margin: 0.06em 0;
+  max-width: none;
+  font-size: 72px;          /* 54pt */
+  line-height: 1.35;
+  color: #fff;
+}
+section.cover strong { color: var(--yellow); }
+
+/* ===== 目次（<!-- _class: toc --> ・該当章を **強調** で赤に） ===== */
+section.toc ul,
+section.toc ol {
+  font-size: 43px;          /* 32pt */
+  line-height: 2.0;
+  max-width: none;
+  margin-top: 8px;
+}
+section.toc strong { color: var(--red); }
+
+/* ===== 締め（<!-- _class: end --> ） ===== */
+section.end {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+section.end p {
+  font-size: 72px;
+  color: var(--navy);
+  max-width: none;
+}

@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>イエオモイ｜住まいの定額おまかせパック 月額500円〜</title>
+<meta name="description" content="毎年のエアコン費用、もう払わなくていい。エアコン清掃・ドローン屋根点検・エコキュート修理が全部コミコミ、月額たった500円〜。初回エアコン清掃0円キャンペーン実施中。">
+<meta property="og:title" content="イエオモイ｜住まいの定額おまかせパック 月額500円〜">
+<meta property="og:description" content="エアコン清掃・ドローン屋根点検・エコキュート修理が全部コミコミ、月額500円〜。">
+<meta property="og:type" content="website">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #f7f1ea;
+    font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic", Meiryo, sans-serif;
+  }
+  .lp {
+    max-width: 941px;
+    margin: 0 auto;
+    background: #fff;
+  }
+  /* 各セクション（画像＋オーバーレイ） */
+  .section {
+    position: relative;
+    line-height: 0;      /* 画像下の隙間を消す */
+    font-size: 0;
+    container-type: inline-size;  /* cqw単位でオーバーレイを画像に追従させる */
+  }
+  .section img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  /* 画像上の透明クリック領域。位置は画像に対する％で指定 */
+  .cta-hotspot {
+    position: absolute;
+    display: block;
+    /* デバッグ時に位置確認したい場合は下行のコメントを外す
+    background: rgba(255,0,0,.25); */
+    z-index: 2;
+    cursor: pointer;
+  }
+  .cta-hotspot:focus-visible {
+    outline: 3px solid #d84a2e;
+    outline-offset: 2px;
+  }
+
+  /* ===== 各CTAの位置（941×1672px基準） ===== */
+  /* section1: ヒーロー内「今すぐ無料で申し込む」 */
+  .s1-cta { left: 21%; top: 40.8%; width: 58%; height: 4.2%; }
+
+  /* section2: 「イエオモイなら！」枠内「今すぐ申し込む」 */
+  .s2-cta { left: 56.5%; top: 68.5%; width: 33.5%; height: 3.8%; }
+  /* section2: 3プランの各「このプランで申し込む」 */
+  .s2-plan1 { left: 3.5%;  top: 38.5%; width: 27%; height: 3.2%; }
+  .s2-plan2 { left: 35.5%; top: 39.8%; width: 28%; height: 3.5%; }
+  .s2-plan3 { left: 68.5%; top: 38.5%; width: 27%; height: 3.2%; }
+
+  /* section3: フォーム内「今すぐ無料で申し込む」 */
+  .s3-form-cta { left: 60.5%; top: 56.2%; width: 34%; height: 3.3%; }
+  /* section3: 最下部の大きな「今すぐ無料で申し込む」 */
+  .s3-bottom-cta { left: 14%; top: 90.5%; width: 72%; height: 4%; }
+
+  /* 固定フッターCTA（スクロール中も常に表示） */
+  .sticky-cta {
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    z-index: 50;
+    background: rgba(255,255,255,.96);
+    box-shadow: 0 -2px 12px rgba(95,63,51,.16);
+    padding: 10px 12px;
+    display: flex;
+    justify-content: center;
+  }
+  .sticky-cta a {
+    display: block;
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+    background: #d84a2e;
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 1.3;
+    text-decoration: none;
+    padding: 16px 12px;
+    border-radius: 999px;
+    box-shadow: 0 4px 0 #a5321a;
+    transition: transform .08s ease;
+  }
+  .sticky-cta a:active { transform: translateY(2px); box-shadow: 0 2px 0 #a5321a; }
+  .lp { padding-bottom: 84px; } /* 固定CTA分の余白 */
+
+  @media (max-width: 480px) {
+    .sticky-cta a { font-size: 16px; padding: 14px 10px; }
+  }
+
+  /* ===== 画像内テキストの差し替えオーバーレイ（941×1672px基準） =====
+     画像に焼き込まれた文字の上に、背景色で旧文字を隠しつつ新しい文字を表示。
+     フォントサイズは cqw（コンテナ幅の%）で指定し、画像の拡大縮小に追従させる。 */
+  .ov {
+    position: absolute;
+    z-index: 3;
+    box-sizing: border-box;
+    line-height: 1.4;
+    font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic", Meiryo, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* --- section2: お客様の声（3枚のカード内テキスト差し替え） --- */
+  .ov-voice {
+    background: #ffffff;
+    padding: 0 1.9cqw;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    overflow: hidden;
+  }
+  .ov-voice .vname {
+    text-align: center;
+    font-weight: 700;
+    color: #5f3f33;
+    font-size: 2.02cqw;
+    letter-spacing: .02em;
+    margin-bottom: 0.9cqw;
+  }
+  .ov-voice .vbody {
+    text-align: left;
+    color: #33241f;
+    font-size: 1.5cqw;
+    line-height: 1.62;
+    font-weight: 500;
+  }
+  .ov-voice .vbody b { color: #d84a2e; font-weight: 700; }
+  .ov-v1 { left: 2.87%;  top: 85.15%; width: 29.4%; height: 10.6%; }
+  .ov-v2 { left: 34.86%; top: 85.15%; width: 29.2%; height: 10.6%; }
+  .ov-v3 { left: 66.84%; top: 85.15%; width: 29.0%; height: 10.6%; }
+
+  /* --- section3: 先着「○○」→「50」名様（赤リボン内） --- */
+  .ov-banner50 {
+    left: 64.93%; top: 1.62%; width: 6.80%; height: 3.11%;
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(180deg, #d74a2e 0%, #dc4d31 35%, #dc4e32 48%, #d94b2f 71%, #d24b30 96%, #d74a2e 100%);
+    color: #fce69b;
+    font-weight: 800;
+    letter-spacing: -.02em;
+  }
+  /* 数字の字面高さ・ベースラインを周囲の焼き込み文字（「先着」「名様限定」）に合わせる */
+  .ov-banner50 span {
+    display: block;
+    font-size: 4.85cqw;
+    line-height: 1;
+    transform: translateY(-0.105cqw);
+  }
+
+  /* --- section3: 満足度バッジを項目ごと削除（カード＋「※自社アンケート」注記を背景で被覆） --- */
+  .ov-remove-manzoku {
+    left: 74.2%; top: 57.8%; width: 25.8%; height: 11.7%;
+    background: #fefefe;
+  }
+
+  /* --- section3: 解約の注記差し替え（信頼バッジ内・本文差し替え／カード内に収める） --- */
+  .ov-kaiyaku {
+    left: 59.3%; top: 63.4%; width: 15.4%; height: 3.5%;
+    background: #ffffff;
+    color: #33241f; font-size: 1.02cqw; line-height: 1.42;
+    text-align: left; font-weight: 500;
+    display: flex; align-items: center;
+  }
+
+  /* --- section3: フォーム横ミニ料金表のプラン別✕マーク（section2と同配分） ---
+     ✓（青丸）の上に背景色で被覆し、赤い✕を重ねて非対応項目を表現。
+     ライト＝下4項目を✕／ベーシック＝エアコン清掃会員価格のみ✕／プレミアム＝全対応。 */
+  .ov-x {
+    transform: translate(-50%, -50%);
+    width: 1.7%; height: 0.96%;
+    display: flex; align-items: center; justify-content: center;
+    background: #fcfcfc;
+    color: #d84a2e;
+    font-weight: 900;
+    font-size: 1.9cqw;
+    line-height: 1;
+  }
+  .ov-x-lr5 { left: 4.30%; top: 44.54%; }
+  .ov-x-lr6 { left: 4.30%; top: 46.43%; }
+  .ov-x-lr7 { left: 4.30%; top: 48.33%; }
+  .ov-x-lr8 { left: 4.30%; top: 50.14%; }
+  .ov-x-br8 { left: 22.90%; top: 50.14%; }
+
+  /* --- section3: 信頼バッジ行を3枚で均等に再構成（満足度削除に伴う空白解消） --- */
+  .ov-trust-cover { left: 0; top: 59.9%; width: 100%; height: 9.7%; background: #fefefe; }
+  .ov-trust-row {
+    left: 2.45%; top: 60.3%; width: 95.6%; height: 7.2%;
+    display: flex; gap: 2.1%; z-index: 4;
+  }
+  .tcard {
+    flex: 1 1 0; box-sizing: border-box;
+    background: #ffffff; border: 1px solid #ece2d8; border-radius: 1.5cqw;
+    box-shadow: 0 2px 7px rgba(95,63,51,.07);
+    display: flex; align-items: center; gap: 1.0cqw;
+    padding: 0 1.5cqw;
+  }
+  .tcard img { width: 5.4cqw; height: auto; flex: none; display: block; }
+  .tcard > div { min-width: 0; }
+  .tcard .tt { color: #5f3f33; font-weight: 800; font-size: 1.98cqw; line-height: 1.18; letter-spacing: .01em; }
+  .tcard .tb { color: #6d5a51; font-weight: 500; font-size: 1.32cqw; line-height: 1.42; margin-top: 0.5cqw; }
+  .ov-trust-note {
+    left: 2.45%; top: 67.8%; width: 95.6%;
+    text-align: center; color: #a08d82; font-size: 1.16cqw; font-weight: 500; z-index: 4;
+  }
+
+  /* --- section1: 「24時間駆けつけ」注記のプラン名を料金表と統一（スタンダード→ベーシック） --- */
+  .ov-plan-note {
+    left: 77.15%; top: 90.43%; width: 13.18%; height: 3.11%;
+    background: #fefefe;
+    color: #1a1a1a; font-size: 1.66cqw; line-height: 1.34; font-weight: 500;
+    text-align: center;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* --- section1: 対象条件「戸建て限定」バッジ（上部・既存バッジの右隣） --- */
+  .ov-kodate {
+    left: 37.2%; top: 2.33%; width: 18.1%; height: 2.27%;
+    display: flex; align-items: center; justify-content: center;
+    background: #5f3f33; color: #ffffff;
+    font-weight: 800; font-size: 2.3cqw; letter-spacing: .08em;
+    border-radius: 999px;
+    box-shadow: 0 2px 6px rgba(95,63,51,.26);
+  }
+/* === ロゴ（ヘッダー／フッター） === */
+  /* 区切りは 1px の罫線ではなく、ぼかしたシャドウで表現する。
+     1px 罫線は表示倍率 125%／150%／175% で端数のデバイスピクセルに乗り、
+     太さが揃わずにじむ（実測：150% で 228 の1行＋247 の半端な行）。
+     ぼかしたシャドウなら硬いエッジが無いのでどの倍率でも均一に出る。 */
+  .lp-header {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px; padding: 13px 22px 14px; background: #fff;
+    box-shadow: 0 4px 10px -5px rgba(95, 63, 51, .30);
+    position: relative; z-index: 1;
+  }
+  .lp-header .lock { display: flex; align-items: center; gap: 12px; }
+  .lp-header .lock img { display: block; width: auto; }
+  .lp-header .lock .mark { height: 46px; }
+  .lp-header .lock .word { height: 21px; }
+  .lp-header .tag {
+    color: #5f3f33; font-size: 13px; font-weight: 700;
+    letter-spacing: .06em; white-space: nowrap;
+  }
+  .lp-footer {
+    padding: 31px 20px 34px; background: #fff;
+    box-shadow: 0 -4px 10px -5px rgba(95, 63, 51, .26);
+    position: relative; z-index: 1;
+    text-align: center;
+  }
+  .lp-footer img { display: inline-block; height: 76px; width: auto; }
+  @media (max-width: 480px) {
+    .lp-header { padding: 10px 14px; }
+    .lp-header .lock { gap: 9px; }
+    .lp-header .lock .mark { height: 36px; }
+    .lp-header .lock .word { height: 16px; }
+    .lp-header .tag { display: none; }
+    .lp-footer img { height: 62px; }
+  }
+</style>
+</head>
+<body>
+  <main class="lp">
+    <!-- ロゴヘッダー -->
+    <header class="lp-header">
+      <div class="lock">
+        <img class="mark" src="images/logo-mark.png" alt="イエオモイ">
+        <img class="word" src="images/logo-word.png" alt="">
+      </div>
+      <div class="tag">住まいの定額おまかせパック</div>
+    </header>
+    <!-- セクション1 -->
+    <section class="section">
+      <img src="images/section1.png" alt="毎年のエアコン費用、もう払わなくていい。月額たった500円でエアコン清掃・ドローン屋根点検・エコキュート修理が全部コミコミ！住まいの定額おまかせパック。">
+      <a class="cta-hotspot s1-cta" href="https://your-form-url.example.com" target="_blank" rel="noopener" aria-label="今すぐ無料で申し込む"></a>
+      <!-- 対象条件：戸建て限定 -->
+      <div class="ov ov-kodate">戸建て限定</div>
+      <!-- プラン名の表記統一：「スタンダードプラン以上」→「ベーシックプラン以上」 -->
+      <div class="ov ov-plan-note">※ベーシック<br>プラン以上</div>
+    </section>
+
+    <!-- セクション2 -->
+    <section class="section">
+      <img src="images/section2.png" alt="3つのプランから選べる。ライトプラン月額500円、ベーシックプラン月額1,500円、プレミアムプラン月額2,500円。個別に頼むと年間115,000円以上がイエオモイなら月額500円〜。お客様の声。">
+      <a class="cta-hotspot s2-plan1" href="https://your-form-url.example.com?plan=light" target="_blank" rel="noopener" aria-label="ライトプランで申し込む"></a>
+      <a class="cta-hotspot s2-plan2" href="https://your-form-url.example.com?plan=basic" target="_blank" rel="noopener" aria-label="ベーシックプランで申し込む"></a>
+      <a class="cta-hotspot s2-plan3" href="https://your-form-url.example.com?plan=premium" target="_blank" rel="noopener" aria-label="プレミアムプランで申し込む"></a>
+      <a class="cta-hotspot s2-cta" href="https://your-form-url.example.com" target="_blank" rel="noopener" aria-label="今すぐ申し込む"></a>
+      <!-- お客様の声（画像内テキストの差し替え） -->
+      <div class="ov ov-voice ov-v1">
+        <div class="vname">名古屋市・T様</div>
+        <div class="vbody">毎年のエアコン清掃だけでも15,000円以上かかっていたので、<b>月額500円</b>で丸っとお願いできるのは本当に助かります！ドローン屋根点検も無料で安心です。</div>
+      </div>
+      <div class="ov ov-voice ov-v2">
+        <div class="vname">名古屋市・M様</div>
+        <div class="vbody">古くなったエコキュートの交換費用が不安でしたが、会員特典で<b>70%OFF</b>に！想像以上に負担を抑えられて助かりました！</div>
+      </div>
+      <div class="ov ov-voice ov-v3">
+        <div class="vname">名古屋市・S様</div>
+        <div class="vbody">何かあった時にすぐ相談できる窓口があるのは心強いです。<b>24時間駆けつけサービス</b>もあるので、これからも安心して暮らせそうです。</div>
+      </div>
+    </section>
+
+    <!-- セクション3 -->
+    <section class="section">
+      <img src="images/section3.png" alt="限定キャンペーン実施中。あなたの住まいを今日からイエオモイが守ります。すべてコミコミで月額500円〜。無料お申し込みフォーム。住まいの困りごとをまるごとおまかせ。">
+      <a class="cta-hotspot s3-form-cta" href="https://your-form-url.example.com" target="_blank" rel="noopener" aria-label="今すぐ無料で申し込む"></a>
+      <a class="cta-hotspot s3-bottom-cta" href="https://your-form-url.example.com" target="_blank" rel="noopener" aria-label="今すぐ無料で申し込む"></a>
+      <!-- 先着「○○」→「50」名様 -->
+      <div class="ov ov-banner50"><span>50</span></div>
+      <!-- 信頼バッジ行：満足度カードを削除し、残り3枚を均等配置に再構成 -->
+      <div class="ov ov-trust-cover"></div>
+      <div class="ov ov-trust-row">
+        <div class="tcard"><img src="images/icon1.png" alt=""><div><div class="tt">個人情報保護</div><div class="tb">お客様の個人情報は<br>厳重に管理します。</div></div></div>
+        <div class="tcard"><img src="images/icon2.png" alt=""><div><div class="tt">電話対応あり</div><div class="tb">専門スタッフが<br>丁寧に対応します。</div></div></div>
+        <div class="tcard"><img src="images/icon3.png" alt=""><div><div class="tt">解約自由</div><div class="tb">いつでも解約OK。</div></div></div>
+      </div>
+      <div class="ov ov-trust-note">※ライトプランは解約金不要です。ベーシックプラン・プレミアムプランは2年未満の解約に解約金がかかります。</div>
+      <!-- フォーム横ミニ料金表：プラン別の非対応項目に✕（ライト＝下4項目／ベーシック＝エアコン清掃会員価格） -->
+      <div class="ov ov-x ov-x-lr5">✕</div>
+      <div class="ov ov-x ov-x-lr6">✕</div>
+      <div class="ov ov-x ov-x-lr7">✕</div>
+      <div class="ov ov-x ov-x-lr8">✕</div>
+      <div class="ov ov-x ov-x-br8">✕</div>
+    </section>
+    <!-- ロゴフッター -->
+    <footer class="lp-footer">
+      <img src="images/logo-full.png" alt="イエオモイ">
+    </footer>
+  </main>
+
+  <!-- 常時表示の固定CTA -->
+  <div class="sticky-cta">
+    <a href="https://your-form-url.example.com" target="_blank" rel="noopener">今すぐ無料で申し込む ＞</a>
+  </div>
+</body>
+</html>

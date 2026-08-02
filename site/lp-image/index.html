@@ -56,8 +56,6 @@
   .s2-plan2 { left: 35.5%; top: 39.8%; width: 28%; height: 3.5%; }
   .s2-plan3 { left: 68.5%; top: 38.5%; width: 27%; height: 3.2%; }
 
-  /* section3: フォーム内「今すぐ無料で申し込む」 */
-  .s3-form-cta { left: 60.5%; top: 56.2%; width: 34%; height: 3.3%; }
   /* section3: 最下部の大きな「今すぐ無料で申し込む」 */
   .s3-bottom-cta { left: 14%; top: 90.5%; width: 72%; height: 4%; }
 
@@ -261,6 +259,122 @@
     .lp-header .tag { display: none; }
     .lp-footer img { height: 62px; }
   }
+
+/* === section3: 画像に描かれた申し込みフォームを実際に入力できるようにする ===
+   入力欄の位置は section3 の画像を実測した値（941×1672px基準）。
+   枠線 #c9c9ca・地色 #fefefe・プレースホルダ #b4b4b5 も画像から採寸している。
+   .ov-form 自体は pointer-events: none で、操作を受けるのは各欄とボタンだけ。 */
+  .ov-form {
+    /* セクションの「外」に置き、幅基準の負マージン（1672/941＝177.6833%）で
+       画像1枚ぶん上に引き戻して重ねている。セクションの中に入れてしまうと、
+       狭い画面でフォームを通常配置に戻したときにセクションが伸び、
+       ％指定の他のオーバーレイが全部ずれてしまうため。 */
+    position: relative; width: 100%; aspect-ratio: 941 / 1672;
+    margin-top: -177.6833%;
+    container-type: inline-size;
+    z-index: 5; pointer-events: none;
+    font-size: 16px; line-height: 1.5;
+  }
+  .ov-form .fhead { display: none; }
+  .ov-form .fl { position: absolute; pointer-events: auto; }
+  .ov-form .fl > span { display: none; }
+  .ov-form .fld {
+    display: block; width: 100%; height: 100%; box-sizing: border-box;
+    background: #fefefe; color: #33241f;
+    border: 1px solid #c9c9ca; border-radius: 0.64cqw;
+    padding: 0 1.2cqw;
+    font-family: inherit; font-size: 1.59cqw; line-height: 1.2;
+    -webkit-appearance: none; appearance: none; outline: none;
+  }
+  .ov-form .fld::placeholder { color: #b4b4b5; opacity: 1; }
+  .ov-form .fld:focus {
+    border-color: #d84a2e;
+    box-shadow: 0 0 0 0.22cqw rgba(216, 74, 46, .18);
+  }
+  /* select の▼は画像側の見た目に合わせて自前で描く */
+  .ov-form select.fld {
+    padding-right: 3.4cqw;
+    background-image:
+      linear-gradient(45deg, transparent 50%, #7a7a7c 50%),
+      linear-gradient(135deg, #7a7a7c 50%, transparent 50%);
+    background-position: calc(100% - 2.05cqw) 55%, calc(100% - 1.5cqw) 55%;
+    background-size: 0.56cqw 0.56cqw;
+    background-repeat: no-repeat;
+  }
+  .fl-name { left: 62.91%; top: 29.37%; width: 32.84%; height: 2.45%; }
+  .fl-tel  { left: 62.91%; top: 34.75%; width: 32.84%; height: 2.45%; }
+  .fl-mail { left: 62.91%; top: 40.13%; width: 32.84%; height: 2.45%; }
+  .fl-addr { left: 63.02%; top: 45.81%; width: 32.62%; height: 2.45%; }
+  .fl-plan { left: 63.02%; top: 51.32%; width: 32.62%; height: 2.27%; }
+  .ov-form .fbtn {
+    position: absolute; pointer-events: auto;
+    left: 62.49%; top: 54.72%; width: 33.69%; height: 3.65%;
+    display: flex; align-items: center; justify-content: center; gap: 1.6cqw;
+    background: #d84a2e; color: #fff; border: 0; border-radius: 0.85cqw;
+    font-family: inherit; font-weight: 800; font-size: 1.9cqw; letter-spacing: .04em;
+    cursor: pointer; transition: background .12s ease;
+  }
+  .ov-form .fbtn:hover { background: #c33f26; }
+  .ov-form .fbtn:disabled { background: #c0a79f; cursor: default; }
+  .ov-form .fbtn::after { content: "›"; font-size: 2.4cqw; line-height: 0; margin-top: -0.2cqw; }
+  .ov-form .fmsg {
+    position: absolute; left: 62.49%; top: 53.95%; width: 33.69%;
+    text-align: center; font-size: 1.12cqw; line-height: 1.3; color: #a08d82;
+  }
+  .ov-form .fmsg.is-error { color: #d84a2e; font-weight: 700; }
+  /* 送信完了パネル（入力欄の上に被せる） */
+  .ov-form .fdone {
+    position: absolute; left: 61.42%; top: 26.32%; width: 35.71%; height: 32.6%;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 1.2cqw; background: #fefefe; text-align: center;
+  }
+  .ov-form .fdone strong { color: #5f3f33; font-size: 2.2cqw; font-weight: 800; }
+  .ov-form .fdone span { color: #6d5a51; font-size: 1.4cqw; line-height: 1.7; }
+  .ov-form .fdone[hidden] { display: none; }
+
+  /* 画像が縮んで入力できなくなる幅では、絶対配置をやめて通常のフォームとして下に並べる */
+  @media (max-width: 699px) {
+    .ov-form {
+      position: static; width: auto; aspect-ratio: auto; margin-top: 0;
+      pointer-events: auto; padding: 26px 16px 30px; background: #fff;
+    }
+    .ov-form .fhead {
+      display: block; text-align: center; color: #5f3f33;
+      font-size: 19px; font-weight: 800; margin-bottom: 18px;
+    }
+    .ov-form .fl {
+      position: static; display: block;
+      left: auto; top: auto; width: auto; height: auto; margin-bottom: 14px;
+    }
+    .ov-form .fl > span {
+      display: block; color: #5f3f33; font-size: 14px; font-weight: 700; margin-bottom: 5px;
+    }
+    .ov-form .fl > span i {
+      font-style: normal; background: #d84a2e; color: #fff;
+      font-size: 11px; border-radius: 4px; padding: 2px 6px; margin-left: 7px;
+    }
+    .ov-form .fld {
+      height: auto; padding: 12px; font-size: 16px; border-radius: 8px;
+    }
+    .ov-form .fld:focus { box-shadow: 0 0 0 3px rgba(216, 74, 46, .18); }
+    .ov-form select.fld {
+      padding-right: 34px;
+      background-position: calc(100% - 22px) 55%, calc(100% - 16px) 55%;
+      background-size: 6px 6px;
+    }
+    .ov-form .fbtn {
+      position: static; left: auto; top: auto; width: 100%; height: auto;
+      padding: 16px; font-size: 17px; border-radius: 999px; gap: 10px; margin-top: 4px;
+    }
+    .ov-form .fbtn::after { font-size: 22px; margin-top: 0; }
+    .ov-form .fmsg { position: static; left: auto; top: auto; width: auto; font-size: 13px; margin-top: 10px; }
+    .ov-form .fdone {
+      position: static; left: auto; top: auto; width: auto; height: auto;
+      padding: 40px 10px; gap: 10px;
+    }
+    .ov-form .fdone strong { font-size: 20px; }
+    .ov-form .fdone span { font-size: 14px; }
+  }
 </style>
 </head>
 <body>
@@ -276,7 +390,7 @@
     <!-- セクション1 -->
     <section class="section">
       <img src="images/section1.png" alt="毎年のエアコン費用、もう払わなくていい。月額たった500円でエアコン清掃・ドローン屋根点検・エコキュート修理が全部コミコミ！住まいの定額おまかせパック。">
-      <a class="cta-hotspot s1-cta" href="https://your-form-url.example.com" target="_blank" rel="noopener" aria-label="今すぐ無料で申し込む"></a>
+      <a class="cta-hotspot s1-cta" href="#lp-form" aria-label="今すぐ無料で申し込む"></a>
       <!-- 対象条件：戸建て限定 -->
       <div class="ov ov-kodate">戸建て限定</div>
       <!-- プラン名の表記統一：「スタンダードプラン以上」→「ベーシックプラン以上」 -->
@@ -286,10 +400,10 @@
     <!-- セクション2 -->
     <section class="section">
       <img src="images/section2.png" alt="3つのプランから選べる。ライトプラン月額500円、ベーシックプラン月額1,500円、プレミアムプラン月額2,500円。個別に頼むと年間115,000円以上がイエオモイなら月額500円〜。お客様の声。">
-      <a class="cta-hotspot s2-plan1" href="https://your-form-url.example.com?plan=light" target="_blank" rel="noopener" aria-label="ライトプランで申し込む"></a>
-      <a class="cta-hotspot s2-plan2" href="https://your-form-url.example.com?plan=basic" target="_blank" rel="noopener" aria-label="ベーシックプランで申し込む"></a>
-      <a class="cta-hotspot s2-plan3" href="https://your-form-url.example.com?plan=premium" target="_blank" rel="noopener" aria-label="プレミアムプランで申し込む"></a>
-      <a class="cta-hotspot s2-cta" href="https://your-form-url.example.com" target="_blank" rel="noopener" aria-label="今すぐ申し込む"></a>
+      <a class="cta-hotspot s2-plan1" href="#lp-form" data-plan="light" aria-label="ライトプランで申し込む"></a>
+      <a class="cta-hotspot s2-plan2" href="#lp-form" data-plan="basic" aria-label="ベーシックプランで申し込む"></a>
+      <a class="cta-hotspot s2-plan3" href="#lp-form" data-plan="premium" aria-label="プレミアムプランで申し込む"></a>
+      <a class="cta-hotspot s2-cta" href="#lp-form" aria-label="今すぐ申し込む"></a>
       <!-- お客様の声（画像内テキストの差し替え） -->
       <div class="ov ov-voice ov-v1">
         <div class="vname">名古屋市・T様</div>
@@ -308,8 +422,7 @@
     <!-- セクション3 -->
     <section class="section">
       <img src="images/section3.png" alt="限定キャンペーン実施中。あなたの住まいを今日からイエオモイが守ります。すべてコミコミで月額500円〜。無料お申し込みフォーム。住まいの困りごとをまるごとおまかせ。">
-      <a class="cta-hotspot s3-form-cta" href="https://your-form-url.example.com" target="_blank" rel="noopener" aria-label="今すぐ無料で申し込む"></a>
-      <a class="cta-hotspot s3-bottom-cta" href="https://your-form-url.example.com" target="_blank" rel="noopener" aria-label="今すぐ無料で申し込む"></a>
+      <a class="cta-hotspot s3-bottom-cta" href="#lp-form" aria-label="今すぐ無料で申し込む"></a>
       <!-- 先着「○○」→「50」名様 -->
       <div class="ov ov-banner50"><span>50</span></div>
       <!-- 信頼バッジ行：満足度カードを削除し、残り3枚を均等配置に再構成 -->
@@ -327,6 +440,35 @@
       <div class="ov ov-x ov-x-lr8">✕</div>
       <div class="ov ov-x ov-x-br8">✕</div>
     </section>
+    <!-- 画像に描かれたフォームの上に重ねた、実際に入力できるフォーム -->
+    <form class="ov-form" id="lp-form">
+        <p class="fhead">無料お申し込みフォーム</p>
+        <label class="fl fl-name"><span>お名前<i>必須</i></span>
+          <input class="fld" type="text" name="name" placeholder="例）山田 太郎"
+                 autocomplete="name" required></label>
+        <label class="fl fl-tel"><span>電話番号<i>必須</i></span>
+          <input class="fld" type="tel" name="tel" placeholder="例）090-1234-5678"
+                 inputmode="tel" autocomplete="tel" required></label>
+        <label class="fl fl-mail"><span>メールアドレス<i>必須</i></span>
+          <input class="fld" type="email" name="email" placeholder="例）yamada@example.com"
+                 inputmode="email" autocomplete="email" required></label>
+        <label class="fl fl-addr"><span>ご住所（市区町村まで）<i>必須</i></span>
+          <input class="fld" type="text" name="address" placeholder="例）東京都新宿区"
+                 autocomplete="address-level2" required></label>
+        <label class="fl fl-plan"><span>ご希望プラン<i>必須</i></span>
+          <select class="fld" name="plan" required>
+            <option value="">選択してください</option>
+            <option value="light">ライトプラン（月額500円）</option>
+            <option value="basic">ベーシックプラン（月額1,500円）</option>
+            <option value="premium">プレミアムプラン（月額2,500円）</option>
+          </select></label>
+        <button class="fbtn" type="submit">今すぐ無料で申し込む</button>
+        <p class="fmsg" role="status" aria-live="polite"></p>
+        <div class="fdone" hidden>
+          <strong>送信しました</strong>
+          <span>お申し込みありがとうございます。<br>担当者より折り返しご連絡いたします。</span>
+        </div>
+      </form>
     <!-- ロゴフッター -->
     <footer class="lp-footer">
       <img src="images/logo-full.png" alt="イエオモイ">
@@ -335,7 +477,62 @@
 
   <!-- 常時表示の固定CTA -->
   <div class="sticky-cta">
-    <a href="https://your-form-url.example.com" target="_blank" rel="noopener">今すぐ無料で申し込む ＞</a>
+    <a href="#lp-form">今すぐ無料で申し込む ＞</a>
   </div>
+  <script>
+  (function () {
+    // ▼▼▼ 公開前に送信先を設定してください ▼▼▼
+    // 例) Formspree: 'https://formspree.io/f/xxxxxxxx'
+    //     Getform  : 'https://getform.io/f/xxxxxxxx'
+    // 空のままだと送信されず、ボタン下に警告が出ます。
+    var FORM_ENDPOINT = '';
+    // ▲▲▲
+
+    var form = document.getElementById('lp-form');
+    if (!form) { return; }
+    var msg = form.querySelector('.fmsg');
+    var done = form.querySelector('.fdone');
+    var btn = form.querySelector('.fbtn');
+    var plan = form.querySelector('[name="plan"]');
+
+    // プラン別ボタンから来たら、そのプランを選択済みにする
+    Array.prototype.forEach.call(document.querySelectorAll('[data-plan]'), function (el) {
+      el.addEventListener('click', function () { plan.value = el.getAttribute('data-plan'); });
+    });
+    var q = (location.search.match(/[?&]plan=([^&]+)/) || [])[1];
+    if (q) { plan.value = decodeURIComponent(q); }
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      msg.textContent = '';
+      msg.classList.remove('is-error');
+      if (!form.checkValidity()) { form.reportValidity(); return; }
+      if (!FORM_ENDPOINT) {
+        msg.textContent = '送信先が未設定です（FORM_ENDPOINT を設定してください）';
+        msg.classList.add('is-error');
+        return;
+      }
+      var label = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = '送信中…';
+      fetch(FORM_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: new FormData(form)
+      }).then(function (r) {
+        if (!r.ok) { throw new Error(r.status); }
+        done.hidden = false;
+        Array.prototype.forEach.call(form.querySelectorAll('.fl, .fbtn, .fmsg'), function (el) {
+          el.style.display = 'none';
+        });
+      }).catch(function () {
+        msg.textContent = '送信に失敗しました。時間をおいてお試しください。';
+        msg.classList.add('is-error');
+        btn.disabled = false;
+        btn.textContent = label;
+      });
+    });
+  })();
+  </script>
 </body>
 </html>

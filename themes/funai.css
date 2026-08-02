@@ -27,7 +27,7 @@ section {
   position: relative;
   /* 上103px＝リード文の開始位置(2.72cm)／下110px＝結論帯の逃げ */
   padding: 103px 26px 110px 10px;
-  font-family: "Meiryo UI", "Meiryo", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+  font-family: "Meiryo UI", "Meiryo", sans-serif;   /* 全要素をMeiryo UIに統一 */
   font-size: 24px;          /* 18pt＝リード文 */
   font-weight: 700;         /* 原則すべて太字 */
   line-height: 1.55;
@@ -37,6 +37,19 @@ section {
   justify-content: flex-start;
   align-items: stretch;
 }
+
+/* 見出し・表・箇条書き・擬似要素まで例外なくMeiryo UIを継承させる */
+section *,
+section *::before,
+section *::after,
+section::before,
+section::after { font-family: inherit; }
+
+/* 枠線・余白を幅に含める。指定した px がそのまま外寸になる */
+section,
+section *,
+section *::before,
+section *::after { box-sizing: border-box; }
 
 /* コピーライト（24.71cm, 18.47cm） */
 section::before {
@@ -150,15 +163,17 @@ blockquote {
   align-items: center;
   justify-content: center;
 }
+/* 直下がインライン要素だと flex が行ごとに分割するため、必ず <p> で包むこと */
 blockquote p { margin: 0; max-width: none; }
-blockquote strong { color: var(--yellow); }   /* 帯の中の強調は黄 */
+blockquote strong,
+blockquote b { color: var(--yellow); }        /* 帯の中の強調は黄 */
 
-/* 2行のときは高さを 2.4cm(91px) に */
-blockquote.tall { height: 91px; top: 602px; font-size: 27px; }
+/* 2行のときは高さを 2.4cm(91px) に。1行あたり44文字以内に収めること */
+blockquote.tall { height: 91px; top: 602px; font-size: 26px; }
 
 /* ===== 出典・注記 ===== */
-.src,
-small {
+/* .src / .tm のみ絶対配置。素の <small>（表の中など）は文中の小書きとして扱う */
+.src {
   position: absolute;
   left: 26px;
   top: 575px;
@@ -166,6 +181,11 @@ small {
   font-weight: 400;
   color: var(--muted);
   max-width: 1220px;
+}
+small {
+  font-size: 0.78em;
+  font-weight: 400;
+  color: var(--muted);
 }
 
 /* 右下の商標注記 */

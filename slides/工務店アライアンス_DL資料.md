@@ -2,122 +2,119 @@
 marp: true
 theme: funai
 size: 16:9
-paginate: true
+paginate: false
 ---
 
 <style>
 /* ===== 本資料の専用パーツ（テーマ本体は汚さない） ===== */
 
 /* 3点カード */
-.cards { display:flex; gap:20px; width:1244px; max-width:none; margin-top:6px; }
-.cards > div { flex:1; border:2px solid #002060; padding:18px 20px 20px; }
-.cards .no { display:inline-block; background:#002060; color:#fff; font-size:20px;
-             padding:2px 14px; margin-bottom:12px; }
-.cards .ttl { font-size:26px; color:#002060; line-height:1.35; margin-bottom:10px; }
-.cards .txt { font-size:19px; font-weight:400; line-height:1.6; }
+.cards { display:flex; gap:20px; width:1236px; }
+.cards > div { flex:1; border:2px solid #002060; padding:16px 18px 18px; }
+.cards .no { display:inline-block; background:#002060; color:#fff; font-size:19px;
+             padding:2px 14px; margin-bottom:10px; }
+.cards .ttl { font-size:25px; color:#002060; line-height:1.35; margin-bottom:9px; }
+.cards .txt { font-size:18px; font-weight:400; line-height:1.6; }
 
 /* 分割カード（2列。.cols の中では1列に積む） */
-.quad { display:flex; flex-wrap:wrap; gap:14px; width:1244px; max-width:none; }
+.quad { display:flex; flex-wrap:wrap; gap:14px; width:1236px; }
 .quad > div { flex:0 0 calc(50% - 9px); border-left:10px solid #002060;
-              background:#F4F7FC; padding:12px 18px; }
+              background:#F2F5FA; padding:11px 17px; }
 .cols .quad { width:100%; }
 .cols .quad > div { flex:0 0 100%; }
-.quad .cat { font-size:18px; color:#5B6B85; }
-.quad .ttl { font-size:25px; color:#002060; margin:2px 0 5px; }
-.quad .txt { font-size:18px; font-weight:400; line-height:1.5; }
-.quad .risk { font-size:17px; font-weight:400; color:#C0392B; margin-top:6px; }
-
-/* 目次 */
-.idx { width:1100px; max-width:none; }
-.idx > div { display:flex; align-items:baseline; gap:20px; border-bottom:2px solid #D5DCE8;
-             padding:13px 6px; }
-.idx .ch { flex:0 0 130px; background:#002060; color:#fff; font-size:22px;
-           text-align:center; padding:5px 0; }
-.idx .ttl { flex:1; font-size:29px; color:#002060; }
-.idx .pg { flex:0 0 120px; text-align:right; font-size:21px; color:#5B6B85; }
+.quad .cat { font-size:17px; color:#5B6B85; }
+.quad .ttl { font-size:24px; color:#002060; margin:2px 0 5px; }
+.quad .txt { font-size:17.5px; font-weight:400; line-height:1.5; }
+.quad .risk { font-size:16.5px; font-weight:400; color:#C0392B; margin-top:5px; }
 
 /* 座組フロー図 */
-.flow { width:100%; }
 .flow .cust { width:300px; margin:0 auto; background:#002060; color:#fff;
-              font-size:22px; text-align:center; padding:9px 0; }
+              font-size:21px; text-align:center; padding:8px 0; }
 .flow .up { display:flex; justify-content:space-between; text-align:center;
-            font-size:17px; font-weight:400; margin:12px 0; }
+            font-size:16px; font-weight:400; margin:11px 0; }
 .flow .up > div { flex:1; line-height:1.45; }
-.flow .up span { font-size:15px; color:#5B6B85; }
+.flow .up span { font-size:14px; color:#5B6B85; }
 .flow .row { display:flex; gap:16px; }
-.flow .node { flex:1; background:#002060; color:#fff; font-size:22px;
-              text-align:center; padding:14px 0; line-height:1.35; }
-.flow .node em { display:block; font-style:normal; font-size:15px; color:#C9D6EA; }
-.flow .mid { margin-top:14px; font-size:17px; font-weight:400; }
-.flow .mid .to   { background:#FDECEC; border-left:6px solid #FF0000; padding:9px 12px;
-                   margin-bottom:8px; }
-.flow .mid .from { background:#EDF1F8; border-left:6px solid #1F497D; padding:9px 12px; }
+.flow .node { flex:1; background:#002060; color:#fff; font-size:21px;
+              text-align:center; padding:12px 0; line-height:1.35; }
+.flow .node em { display:block; font-style:normal; font-size:14px; color:#C9D6EA; }
+.flow .mid { margin-top:12px; font-size:16px; font-weight:400; }
+.flow .mid .to   { background:#FDECEC; border-left:6px solid #FF0000; padding:8px 11px;
+                   margin-bottom:7px; }
+.flow .mid .from { background:#EDF1F8; border-left:6px solid #1F497D; padding:8px 11px; }
 
 /* 棒グラフ */
-.chart { display:flex; align-items:flex-end; gap:26px; height:300px;
-         width:1000px; max-width:none; margin:14px 0 0 40px; border-bottom:2px solid #002060; }
+.chart { display:flex; align-items:flex-end; gap:26px; height:270px;
+         width:1000px; margin:10px 0 0 40px; border-bottom:2px solid #002060; }
 .chart > div { flex:1; display:flex; flex-direction:column; justify-content:flex-end;
                align-items:center; height:100%; }
-.chart .v { font-size:20px; color:#002060; margin-bottom:5px; }
+.chart .v { font-size:19px; color:#002060; margin-bottom:5px; }
 .chart i { display:block; width:100%; background:#002060; }
 .chart .last i { background:#FF0000; }
-.chart .x { font-size:19px; color:#333; margin-top:8px; }
+.chart .x { font-size:18px; color:#333; margin-top:7px; }
 
 /* 方程式 */
-.eq { width:1244px; max-width:none; text-align:center; border:3px solid #002060;
-      padding:16px 0; font-size:31px; color:#002060; }
+.eq { width:1236px; text-align:center; border:3px solid #002060;
+      padding:13px 0; font-size:30px; color:#002060; }
 .eq b { color:#FF0000; }
-.calc { display:flex; align-items:center; justify-content:center; gap:24px;
-        width:1244px; max-width:none; margin-top:16px; }
-.calc .box { border:2px solid #98A7BE; padding:12px 22px; text-align:center; font-size:20px;
+.calc { display:flex; align-items:center; justify-content:center; gap:22px;
+        width:1236px; margin-top:14px; }
+.calc .box { border:2px solid #98A7BE; padding:11px 20px; text-align:center; font-size:19px;
              font-weight:400; line-height:1.5; }
-.calc .box .hd { font-size:22px; font-weight:700; color:#002060; margin-bottom:6px; }
-.calc .box .rs { font-size:34px; font-weight:700; color:#002060; margin-top:6px; }
+.calc .box .hd { font-size:21px; font-weight:700; color:#002060; margin-bottom:5px; }
+.calc .box .rs { font-size:32px; font-weight:700; color:#002060; margin-top:5px; }
 .calc .box.after { border-color:#FF0000; }
 .calc .box.after .rs { color:#FF0000; }
-.calc .arw { font-size:26px; color:#002060; text-align:center; line-height:1.3; }
+.calc .arw { font-size:24px; color:#002060; text-align:center; line-height:1.3; }
 
 /* 表を詰める */
-table.tight { font-size:19px; }
-table.tight th, table.tight td { padding:7px 12px; }
+table.tight { font-size:18.5px; }
+table.tight th, table.tight td { padding:6px 12px; }
 table.tight td.q { color:#002060; }
-table.dense { font-size:17px; }
-table.dense th, table.dense td { padding:6px 11px; line-height:1.5; }
-table.dense td.q { color:#002060; font-size:18px; }
-.cols table { width:100%; }
+table.dense { font-size:16.5px; }
+table.dense th, table.dense td { padding:5px 10px; line-height:1.5; }
+table.dense td.q { color:#002060; font-size:17.5px; }
 
 /* チェックリスト */
-.check { display:flex; gap:26px; width:1244px; max-width:none; font-weight:400; }
+.check { display:flex; gap:26px; width:1236px; font-weight:400; }
 .check > div { flex:1; }
-.check .grp { font-size:20px; font-weight:700; color:#fff; background:#002060;
-              padding:3px 14px; margin:9px 0 5px; }
-.check p { font-size:18.5px; line-height:1.5; margin:4px 0; max-width:none; }
+.check .grp { font-size:19px; font-weight:700; color:#fff; background:#002060;
+              padding:3px 14px; margin:8px 0 4px; }
+.check p { font-size:18px; line-height:1.5; margin:3px 0; }
 
-/* CTA */
-.cta { display:flex; gap:22px; width:1244px; max-width:none; margin-top:10px; }
-.cta > div { flex:1; border:2px solid #002060; padding:16px 20px; }
-.cta .hd { background:#002060; color:#fff; font-size:21px; padding:4px 14px;
-           display:inline-block; margin-bottom:10px; }
-.cta .big { font-size:34px; color:#002060; }
-.cta .txt { font-size:18px; font-weight:400; line-height:1.6; }
+/* 次の一歩 */
+.step { display:flex; gap:22px; width:1236px; margin-top:12px; }
+.step > div { flex:1; border:2px solid #002060; padding:14px 18px; }
+.step .hd { background:#002060; color:#fff; font-size:20px; padding:3px 14px;
+            display:inline-block; margin-bottom:9px; }
+.step .txt { font-size:18px; font-weight:400; line-height:1.6; }
 </style>
 
+<!-- ============ P1 表紙 ============ -->
 <!-- _class: title -->
-<!-- _paginate: false -->
 
-# 工務店アライアンスで<br>太陽光・蓄電池の受注を伸ばす5つの変数
+<div class="cover">
+<img src="../assets/表紙_サンプル.jpg">
+<div class="panel"></div>
+<div class="g-left"></div><div class="g-top"></div>
+<div class="g-bottom"></div><div class="g-mask"></div><div class="g-right"></div>
+<div class="logo"></div>
+<div class="kicker">住宅用太陽光＆蓄電池</div>
+</div>
 
-## 受注件数の方程式と実践KPI
+# 工務店アライアンス<br>成功のポイントとは？
 
-2026年8月 発行　株式会社船井総合研究所
+## 太陽光・蓄電池の受注を伸ばす5つの変数<br>受注件数の方程式と実践KPI
 
 ---
+
+<!-- ============ P2 導入 ============ -->
 
 # はじめに
 
 ## この資料でわかること
 
-本資料は、太陽光・蓄電池の販売店が**工務店との業務提携（アライアンス）で受注を伸ばす**ための実務書です。次の3点に絞ってお伝えします。
+### 太陽光・蓄電池の販売店が、工務店との業務提携で受注を伸ばすための実務書です
 
 <div class="cards">
 <div>
@@ -139,34 +136,36 @@ table.dense td.q { color:#002060; font-size:18px; }
 
 > 提携の「やり方」ではなく、<b>どの変数を改善すべきか</b>が分かる資料です
 
+<div class="pageno">2</div>
+
 ---
+
+<!-- ============ P3 目次 ============ -->
+<!-- _class: toc -->
 
 # 目次
 
-## 本資料の構成
+1. 本レポートで解説するアライアンスとは？
+2. なぜ今なのか｜市場と制度の変化
+3. 工務店が動けない4つの理由
+4. 受注件数の方程式と打ち手
 
-<div class="idx">
-<div><div class="ch">第1章</div><div class="ttl">アライアンスとは何か</div><div class="pg">P.4 〜 P.5</div></div>
-<div><div class="ch">第2章</div><div class="ttl">なぜ今なのか｜市場と制度の変化</div><div class="pg">P.6 〜 P.8</div></div>
-<div><div class="ch">第3章</div><div class="ttl">工務店が動けない4つの理由</div><div class="pg">P.9 〜 P.11</div></div>
-<div><div class="ch">第4章</div><div class="ttl">受注件数の方程式と打ち手</div><div class="pg">P.12 〜 P.14</div></div>
-<div><div class="ch">まとめ</div><div class="ttl">次の一歩／会社紹介</div><div class="pg">P.15</div></div>
-</div>
-
-> 第4章の<b>方程式と診断チェックリスト</b>が本資料の中心です
+<div class="pageno">3</div>
 
 ---
 
-# 第1章　アライアンスとは何か
+<!-- ============ P4 定義 ============ -->
 
-## 1-1　定義
+# 1. 本レポートで解説するアライアンスとは？
 
-アライアンスとは、**工務店が持つ「顧客との接点と信頼」と、販売店が持つ「商品・提案・施工・アフターの実行力」を組み合わせ、双方の顧客に価値を提供する継続的な業務提携**を指します。
+## アライアンスの定義
 
-一度きりの案件紹介でも、元請けからの工事受注でもありません。**顧客名簿という資産を軸に、両社が中長期で収益を分け合う関係**です。この違いを最初に押さえておくことが、提携交渉の出発点になります。
+### 顧客名簿という資産を軸に、両社が中長期で収益を分け合う継続的な業務提携
+
+工務店が持つ「顧客との接点と信頼」と、販売店が持つ「商品・提案・施工・アフターの実行力」を組み合わせ、双方の顧客に価値を提供する関係です。一度きりの案件紹介でも、元請けからの工事受注でもありません。
 
 <table class="tight">
-<tr><th style="width:210px"></th><th>下請け</th><th>単発の紹介</th><th style="background:#FF0000">アライアンス</th></tr>
+<tr><th style="width:200px"></th><th>下請け</th><th>単発の紹介</th><th style="background:#FF0000">アライアンス</th></tr>
 <tr><td class="q">関係性</td><td>発注者と受注者の上下関係</td><td>都度のスポット取引</td><td>対等な継続的パートナー</td></tr>
 <tr><td class="q">顧客との接点</td><td>元請け経由。自社は表に出ない</td><td>紹介された案件のみ</td><td>顧客名簿単位で継続的に接触</td></tr>
 <tr><td class="q">価格の決定権</td><td>元請けが決定</td><td>案件ごとに交渉</td><td>提携時に条件を取り決め</td></tr>
@@ -176,13 +175,17 @@ table.dense td.q { color:#002060; font-size:18px; }
 
 > 目指すのは案件の獲得ではなく、<b>案件が生まれ続ける関係</b>をつくること
 
+<div class="pageno">4</div>
+
 ---
 
-# 第1章　アライアンスとは何か
+<!-- ============ P5 座組 ============ -->
 
-## 1-2　座組と役割分担
+# 1. 本レポートで解説するアライアンスとは？
 
-工務店は**営業の関与度を選べます**。「紹介だけ」から「自社で営業し施工だけ依頼」まで、相手の体制に合わせて設計できる点がこのモデルの要です。
+## 座組と役割分担
+
+### 工務店は「紹介だけ」から「自社で営業し施工だけ依頼」まで関与度を選べる
 
 <div class="cols">
 <div>
@@ -207,7 +210,7 @@ table.dense td.q { color:#002060; font-size:18px; }
 <div>
 
 <table class="dense">
-<tr><th style="width:105px"></th><th>工務店</th><th>販売店（自社）</th></tr>
+<tr><th style="width:100px"></th><th>工務店</th><th>販売店（自社）</th></tr>
 <tr><td class="q">提供する<br>もの</td><td>顧客接点<br>地域での信頼<br>顧客名簿</td><td>商品調達／提案・見積<br>施工・アフター<br>補助金申請</td></tr>
 <tr><td class="q">収益</td><td>紹介手数料<br><small>販売金額の5〜7％が目安</small></td><td>工事売上<br>継続的な提案機会</td></tr>
 <tr><td class="q">リスク</td><td>顧客満足度の低下<br><small>施工品質は販売店に依存</small></td><td>提携先の紹介停滞<br>個人情報の管理責任</td></tr>
@@ -218,13 +221,17 @@ table.dense td.q { color:#002060; font-size:18px; }
 
 > 工務店の不安は「自社の顧客を任せること」。<b>そこを消す設計</b>が成否を決める
 
+<div class="pageno">5</div>
+
 ---
 
-# 第2章　なぜ今なのか
+<!-- ============ P6 市場環境 ============ -->
 
-## 2-1　市場環境｜新設住宅着工戸数の減少
+# 2. なぜ今なのか｜市場と制度の変化
 
-工務店の主戦場である新築市場は縮小が続いています。**1棟あたりの単価を上げるか、既存顧客から追加受注を得るか**——工務店はどちらかを選ばざるを得ません。
+## 新築着工棟数の推移
+
+### 新設住宅着工戸数は減少が続き、1棟あたりの単価か既存顧客からの追加受注が問われる
 
 <div class="chart">
 <div><span class="v">90.5</span><i style="height:82%"></i><span class="x">2019年</span></div>
@@ -237,21 +244,25 @@ table.dense td.q { color:#002060; font-size:18px; }
 
 <small class="src">新設住宅着工戸数（万戸・暦年）／出典：国土交通省「建築着工統計調査報告」　※数値は公表資料でご確認ください</small>
 
-> 棟数が減る市場で、<b>1顧客あたりの生涯取引額</b>をどう伸ばすかが問われている
+> 人口減少に伴う新築市場の縮小に対し、<b>従来の新築事業だけに依存した経営が岐路に</b>
+
+<div class="pageno">6</div>
 
 ---
 
-# 第2章　なぜ今なのか
+<!-- ============ P7 制度環境 ============ -->
 
-## 2-2　制度環境｜ネットゼロと2027年ZEH定義の見直し
+# 2. なぜ今なのか｜市場と制度の変化
 
-国のネットゼロ政策により、住宅の省エネ要件は段階的に引き上げられます。なかでも**2027年のZEH定義見直しで蓄電池が設備要件に加わる**点が決定的です。
+## ネットゼロと2027年ZEH定義の見直し
+
+### 2027年のZEH定義見直しで、蓄電池が設備要件に加わる
 
 <div class="cols">
 <div>
 
 <table class="dense">
-<tr><th style="width:190px">ZEH（戸建）</th><th>現行定義</th><th style="background:#FF0000">2027年〜の新定義</th></tr>
+<tr><th style="width:185px">ZEH（戸建）</th><th>現行定義</th><th style="background:#FF0000">2027年〜の新定義</th></tr>
 <tr><td class="q">断熱性能</td><td>断熱等級5</td><td>断熱等級6</td></tr>
 <tr><td class="q">一次エネ消費量削減率<br><small>（省エネのみ）</small></td><td>20％</td><td>35％</td></tr>
 <tr><td class="q">設備要件</td><td>—</td><td>① 高度エネマネ<br>② 蓄電池<small>（PVありの場合）</small></td></tr>
@@ -274,24 +285,31 @@ table.dense td.q { color:#002060; font-size:18px; }
 
 > 「まだ先の話」では手遅れに。<b>2027年の定義変更は目前</b>
 
+<div class="pageno">7</div>
+
 ---
 
+<!-- ============ P8 章の締め ============ -->
 <!-- _class: message -->
 
-# 第2章　なぜ今なのか
+# 2. なぜ今なのか｜市場と制度の変化
 
-## 2-3　第2章まとめ
+## 第2章まとめ
 
 必要性は感じている。
 **しかし、動けていない。**
 
+<div class="pageno">8</div>
+
 ---
 
-# 第3章　工務店が動けない4つの理由
+<!-- ============ P9 課題の全体像 ============ -->
 
-## 3-1　課題の全体像
+# 3. 工務店が動けない4つの理由
 
-制度も市場も創蓄提案を求めています。それでも大半の工務店が動けていません。理由は意欲ではなく、**人材・知識・収益・運用の4つの構造的な壁**にあります。
+## 課題の全体像
+
+### 動けない理由は意欲ではなく、人材・知識・収益・運用の4つの構造的な壁にある
 
 <div class="quad">
 <div>
@@ -320,11 +338,15 @@ table.dense td.q { color:#002060; font-size:18px; }
 
 > 動けない理由は「やる気」ではなく<b>構造</b>。だから外部との組み合わせで解ける
 
+<div class="pageno">9</div>
+
 ---
 
-# 第3章　工務店が動けない4つの理由
+<!-- ============ P10 課題の深掘り ============ -->
 
-## 3-2　課題の深掘り
+# 3. 工務店が動けない4つの理由
+
+## 課題の深掘り
 
 <div class="quad">
 <div>
@@ -355,16 +377,20 @@ table.dense td.q { color:#002060; font-size:18px; }
 
 > 4つの課題はすべて<b>「自社だけで抱えるから解けない」</b>という共通点を持つ
 
+<div class="pageno">10</div>
+
 ---
 
-# 第3章　工務店が動けない4つの理由
+<!-- ============ P11 だからこそ ============ -->
 
-## 3-3　だからこそのアライアンス
+# 3. 工務店が動けない4つの理由
 
-4つの課題は、**販売店が既に持っている機能をそのまま当てれば解消できます**。新しく何かを開発する必要はありません。
+## だからこそのアライアンス
+
+### 4つの課題は、販売店が既に持っている機能をそのまま当てれば解消できる
 
 <table class="tight">
-<tr><th style="width:150px"></th><th style="width:420px">工務店の課題</th><th>アライアンスによる解決</th></tr>
+<tr><th style="width:140px"></th><th style="width:400px">工務店の課題</th><th>アライアンスによる解決</th></tr>
 <tr>
 <td class="q">① 人　材</td>
 <td>提案する人がいない。採用もできない</td>
@@ -392,13 +418,17 @@ table.dense td.q { color:#002060; font-size:18px; }
 <b>実績や規模は関係ない。営業マン1名の販売店でも提携は成立している</b></p>
 </blockquote>
 
+<div class="pageno">11</div>
+
 ---
 
-# 第4章　受注件数の方程式と打ち手
+<!-- ============ P12 方程式 ============ -->
 
-## 4-1　受注件数の方程式
+# 4. 受注件数の方程式と打ち手
 
-アライアンスの受注件数は、次の**5つの変数の掛け算**で決まります。掛け算であることが本質です。
+## 受注件数の方程式
+
+### アライアンスの受注件数は、5つの変数の掛け算で決まる
 
 <div class="eq">
 受注件数 ＝ <b>①提携社数</b> × <b>②顧客名簿数</b> × <b>③紹介率</b> × <b>④商談率</b> × <b>⑤成約率</b>
@@ -424,14 +454,18 @@ table.dense td.q { color:#002060; font-size:18px; }
 各変数1.5倍で受注は約7.6倍。<b>一点突破より全変数の底上げ</b>が効く</p>
 </blockquote>
 
+<div class="pageno">12</div>
+
 ---
 
-# 第4章　受注件数の方程式と打ち手
+<!-- ============ P13 打ち手一覧 ============ -->
 
-## 4-2　5変数の打ち手一覧
+# 4. 受注件数の方程式と打ち手
+
+## 5変数の打ち手一覧
 
 <table class="dense">
-<tr><th style="width:130px">変数</th><th style="width:250px">見るべきKPI</th><th>具体施策</th></tr>
+<tr><th style="width:125px">変数</th><th style="width:245px">見るべきKPI</th><th>具体施策</th></tr>
 <tr>
 <td class="q">① 提携社数</td>
 <td>アタックリスト数<br>面談率／提携率／継続率<br><small>目安：訪問120社→締結3社（2.5％）</small></td>
@@ -461,13 +495,17 @@ table.dense td.q { color:#002060; font-size:18px; }
 
 > 「背中を見て覚えろ」からの脱却。<b>売れる営業の育成は仕組み</b>
 
+<div class="pageno">13</div>
+
 ---
 
-# 第4章　受注件数の方程式と打ち手
+<!-- ============ P14 診断チェックリスト ============ -->
 
-## 4-3　自社診断チェックリスト
+# 4. 受注件数の方程式と打ち手
 
-各項目に「はい／いいえ」でお答えください。**いいえが多い変数が、いま最優先で手を打つべき箇所**です。
+## 自社診断チェックリスト
+
+### 「いいえ」が多い変数が、いま最優先で手を打つべき箇所
 
 <div class="check">
 <div>
@@ -498,7 +536,11 @@ table.dense td.q { color:#002060; font-size:18px; }
 
 > <b>13個以上</b>「はい」なら仕組みは完成間近。<b>7個以下</b>なら伸びしろは大きい
 
+<div class="pageno">14</div>
+
 ---
+
+<!-- ============ P15 まとめ ============ -->
 
 # まとめ
 
@@ -508,9 +550,11 @@ table.dense td.q { color:#002060; font-size:18px; }
 受注件数 ＝ <b>①提携社数</b> × <b>②顧客名簿数</b> × <b>③紹介率</b> × <b>④商談率</b> × <b>⑤成約率</b>
 </div>
 
-アライアンスは、自社の「売りたい」ではなく**工務店の「困っている」から始まります**。まず方程式で自社の弱い変数を特定し、勉強会という形で価値提供から入る。そして仕組み化で属人性をなくす——この順序が成功の型です。
+### 自社の「売りたい」ではなく、工務店の「困っている」から始める
 
-<div class="cta">
+まず方程式で自社の弱い変数を特定し、勉強会という形で価値提供から入る。そして仕組み化で属人性をなくす——この順序が成功の型です。
+
+<div class="step">
 <div>
 <div class="hd">STEP 1</div>
 <div class="txt"><b>自社の数値を方程式に入れる</b><br>P.14のチェックリストで弱い変数を特定してください。</div>
@@ -520,12 +564,52 @@ table.dense td.q { color:#002060; font-size:18px; }
 <div class="txt"><b>勉強会を1本企画する</b><br>メーカーをゲストに、地域の工務店を招く形から始めるのが取り組みやすい方法です。</div>
 </div>
 <div>
-<div class="hd">無料経営相談</div>
-<div class="big">0120-958-270</div>
-<div class="txt">受付：平日 9時45分〜17時30分<br>船井総研 経営相談 で検索</div>
+<div class="hd">STEP 3</div>
+<div class="txt"><b>紹介率を計測する</b><br>提携先ごとに年間棟数と紹介件数を並べ、阻害要因を特定します。</div>
 </div>
 </div>
 
-<small class="src">株式会社船井総合研究所／中堅・中小企業を対象に専門コンサルタントを擁する日本最大級の経営コンサルティング会社　https://www.funaisoken.co.jp/</small>
+> 第二の集客軸の策定。そして<b>さらなる業績拡大へ</b>
 
-> ご相談は<b>無料</b>。WEB・お電話をお選びいただけます
+<div class="pageno">15</div>
+
+---
+
+<!-- ============ P16 お問い合わせ ============ -->
+<!-- _class: contact -->
+
+<div class="contact-wrap">
+
+<div class="c-lead">
+経営に課題を感じている、コンサルティング内容や依頼方法が知りたい、専門家から事業に関するアドバイスが欲しい<br>
+船井総合研究所では皆様の相談を <b>無料</b> で承ります。
+</div>
+<div class="c-note">※お電話、WEBをお選びいただけます</div>
+
+<div class="c-row">
+<div class="c-col">
+<div class="c-hd">お電話でのお問い合わせ・ご相談</div>
+<div class="c-sub">下記のフリーダイヤルからご連絡ください。</div>
+<div class="c-tel">0120-958-270</div>
+<div class="c-time">【受付時間】平日 9時45分〜17時30分（土日祝、年末年始を除く）</div>
+</div>
+<div class="c-col">
+<div class="c-hd left">WEBでのお問い合わせ・ご相談</div>
+<div class="c-sub left">下記ボタン、URLをクリックしてサイトへアクセスください。</div>
+<div class="c-btn">無料　経営相談に申し込む</div>
+<div class="c-url">https://www.funaisoken.co.jp/form/consulting</div>
+</div>
+</div>
+
+<div class="c-search"><span class="c-box">船井総研　経営相談</span>　検索や船井総合研究所ウェブサイトURLからも上記ページへアクセスいただけます。</div>
+
+<div class="c-foot">
+<div class="c-company">株式会社船井総合研究所　会社概要<br><span>https://www.funaisoken.co.jp/info/company</span></div>
+<div class="c-disc">
+◆ 本資料に掲載のセミナーはすでに終了している場合があります。内容にご不明な点がある際は、別途お問い合わせください。◆ 本資料に掲載の情報は作成時点のものであり、将来的な内容を保証するものではありません。◆ 本資料に掲載の情報を目的とし、弊社承諾なく転載・改変することを禁じております。◆ 本資料に掲載の情報を利用したことによって発生する損害について、弊社は責任を負いかねます。◆ 本資料の内容は将来予告なく変更、または廃止されることがあります。<br>
+◆ 本資料には生成AIにより生成した情報やPIXTAより提供された画像が含まれている場合があります。
+</div>
+<div class="c-logo"></div>
+</div>
+
+</div>

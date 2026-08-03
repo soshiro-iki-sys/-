@@ -78,6 +78,20 @@ table.dense th, table.dense td { padding:6px 11px; line-height:1.5; }
 .check .grp { font-size:19px; color:#fff; background:#404040; padding:3px 14px; margin:8px 0 4px; }
 .check p { font-size:18px; line-height:1.5; margin:3px 0; }
 
+/* 3段ロジック（金利ページ） */
+.logic { display:flex; gap:16px; width:1236px; align-items:stretch; }
+.logic > .bx { flex:1; border:1px solid #000; padding:0 0 12px; }
+.logic .no { background:#404040; color:#fff; font-size:18px; padding:5px 0; text-align:center; }
+.logic .bx.hit .no { background:#FF0000; }
+.logic .ttl { font-size:22px; color:#002060; text-align:center; margin:10px 0 8px; line-height:1.35; }
+.logic .bx.hit .ttl { color:#FF0000; }
+.logic .in { padding:0 14px; font-size:17px; line-height:1.55; }
+.logic table { font-size:16px; }
+.logic th, .logic td { padding:4px 8px; }
+.logic .big { text-align:center; font-size:26px; color:#002060; margin:8px 0 4px; }
+.logic .bx.hit .big { color:#FF0000; }
+.logic .ar { flex:0 0 26px; align-self:center; text-align:center; font-size:26px; color:#002060; }
+
 /* 次の一歩 */
 .step { display:flex; gap:22px; width:1236px; margin-top:12px; }
 .step > div { flex:1; border:1px solid #000; padding:14px 18px; }
@@ -262,13 +276,70 @@ table.dense th, table.dense td { padding:6px 11px; line-height:1.5; }
 
 ---
 
-<!-- ============ P7 4つの課題 ============ -->
+<!-- ============ P7 金利上昇 ============ -->
+
+# 2. アライアンスをやるべき理由
+
+## 金利上昇が、工務店を「追加受注」に向かわせている
+
+### 金利が1％上がると施主の予算は約600万円縮む。棟数だけでなく1棟単価も落ちている
+
+<div class="logic">
+<div class="bx">
+<div class="no">① 施主に起きていること</div>
+<div class="ttl">借りられる額が縮む</div>
+<div class="in">
+<table>
+<tr><th>金利</th><th>月々返済</th><th>借入可能額</th></tr>
+<tr><td>0.5％</td><td>103,834円</td><td>4,000万円</td></tr>
+<tr><td>1.0％</td><td>112,914円</td><td>3,678万円</td></tr>
+<tr><td>1.5％</td><td>122,474円</td><td>3,391万円</td></tr>
+</table>
+<div class="big">▲609万円</div>
+同じ月10.4万円の返済で借りられる額<br><small>※4,000万円・35年・元利均等</small>
+</div>
+</div>
+<div class="ar">▶</div>
+<div class="bx">
+<div class="no">② 工務店に起きていること</div>
+<div class="ttl">棟数も単価も落ちる</div>
+<div class="in">
+着工棟数が減るうえに、施主の予算縮小で<b>1棟あたりの単価も下がる</b>。掛け算で粗利額が縮みます。<br><br>
+建物本体で挽回するのは難しく、<b>1顧客あたりの取引額を上げる</b>しか手がありません。<br><br>
+だから工務店は、いま追加受注の商材を探しています。
+</div>
+</div>
+<div class="ar">▶</div>
+<div class="bx hit">
+<div class="no">③ ではなぜ太陽光なのか</div>
+<div class="ttl">月々の支払いはむしろ下がる</div>
+<div class="in">
+「予算が縮むなら設備は削られるのでは？」——逆です。<br><br>
+太陽光150万円をローンに乗せても返済増は
+<div class="big">月4,593円</div>
+電気代の削減がこれを上回れば、<b>ローン＋光熱費の総額はむしろ下がる</b>。金利上昇局面ほど刺さる提案です。
+</div>
+</div>
+</div>
+
+<small class="src">※借入可能額・返済額は元利均等返済での試算。電気代の削減額は設置容量・地域・電気料金単価により異なります。</small>
+
+<blockquote class="tall">
+<p>金利上昇で工務店の粗利は縮み、施主は「月々いくらか」に敏感になっている<br>
+<b>その両方に効くのが太陽光・蓄電池。だが工務店にはそれを売る力がない</b></p>
+</blockquote>
+
+<div class="pageno">7</div>
+
+---
+
+<!-- ============ P8 4つの課題 ============ -->
 
 # 2. アライアンスをやるべき理由
 
 ## 工務店が抱える4つの課題
 
-### 新築着工棟数の減少と金利上昇で、工務店も施主からの追加受注を高めたい。しかし動けていない
+### 追加受注を取りたい。しかし工務店は動けていない。理由は4つの構造的な壁にある
 
 <div class="quad">
 <div>
@@ -295,11 +366,11 @@ table.dense th, table.dense td { padding:6px 11px; line-height:1.5; }
 
 > 動けない理由は「やる気」ではなく<b>構造</b>。だから外部との組み合わせで解ける
 
-<div class="pageno">7</div>
+<div class="pageno">8</div>
 
 ---
 
-<!-- ============ P8 課題の深掘り ============ -->
+<!-- ============ P9 課題の深掘り ============ -->
 
 # 2. アライアンスをやるべき理由
 
@@ -334,11 +405,11 @@ table.dense th, table.dense td { padding:6px 11px; line-height:1.5; }
 
 > 4つの課題はすべて<b>「自社だけで抱えるから解けない」</b>という共通点を持つ
 
-<div class="pageno">8</div>
+<div class="pageno">9</div>
 
 ---
 
-<!-- ============ P9 だからこそ ============ -->
+<!-- ============ P10 だからこそ ============ -->
 
 # 2. アライアンスをやるべき理由
 
@@ -375,11 +446,11 @@ table.dense th, table.dense td { padding:6px 11px; line-height:1.5; }
 <b>実績や規模は関係ない。営業マン1名の販売店でも提携は成立している</b></p>
 </blockquote>
 
-<div class="pageno">9</div>
+<div class="pageno">10</div>
 
 ---
 
-<!-- ============ P10 章の締め ============ -->
+<!-- ============ P11 章の締め ============ -->
 <!-- _class: message -->
 
 # 2. アライアンスをやるべき理由
@@ -389,11 +460,11 @@ table.dense th, table.dense td { padding:6px 11px; line-height:1.5; }
 必要性は感じている。
 **しかし、動けていない。**
 
-<div class="pageno">10</div>
+<div class="pageno">11</div>
 
 ---
 
-<!-- ============ P11 方程式 ============ -->
+<!-- ============ P12 方程式 ============ -->
 
 # 3. アライアンス成功のポイント
 
@@ -425,11 +496,11 @@ table.dense th, table.dense td { padding:6px 11px; line-height:1.5; }
 各変数1.5倍で受注は約7.6倍。<b>一点突破より全変数の底上げ</b>が効く</p>
 </blockquote>
 
-<div class="pageno">11</div>
+<div class="pageno">12</div>
 
 ---
 
-<!-- ============ P12 5変数の打ち手 ============ -->
+<!-- ============ P13 5変数の打ち手 ============ -->
 
 # 3. アライアンス成功のポイント
 
@@ -440,7 +511,7 @@ table.dense th, table.dense td { padding:6px 11px; line-height:1.5; }
 <tr>
 <td>① 提携社数</td>
 <td>アタックリスト数<br>面談率／提携率／継続率</td>
-<td>地域密着の工務店を第一ターゲットに、SEO・MEO／SUUMO／工務店団体／商工会議所・銀行からリストアップ。訪問のゴールを「提携」ではなく「勉強会への招待」に下げる（詳細はP13）</td>
+<td>地域密着の工務店を第一ターゲットに、SEO・MEO／SUUMO／工務店団体／商工会議所・銀行からリストアップ。訪問のゴールを「提携」ではなく「勉強会への招待」に下げる（詳細はP14）</td>
 </tr>
 <tr>
 <td>② 顧客名簿数</td>
@@ -466,11 +537,11 @@ table.dense th, table.dense td { padding:6px 11px; line-height:1.5; }
 
 > 「背中を見て覚えろ」からの脱却。<b>売れる営業の育成は仕組み</b>
 
-<div class="pageno">12</div>
+<div class="pageno">13</div>
 
 ---
 
-<!-- ============ P13 勉強会 ============ -->
+<!-- ============ P14 勉強会 ============ -->
 
 # 3. アライアンス成功のポイント
 
@@ -513,11 +584,11 @@ table.dense th, table.dense td { padding:6px 11px; line-height:1.5; }
 
 > 訪問のゴールは「提携」ではなく<b>「勉強会への招待」</b>。ハードルを下げるから続く
 
-<div class="pageno">13</div>
+<div class="pageno">14</div>
 
 ---
 
-<!-- ============ P14 チェックリスト ============ -->
+<!-- ============ P15 チェックリスト ============ -->
 
 # 3. アライアンス成功のポイント
 
@@ -554,11 +625,11 @@ table.dense th, table.dense td { padding:6px 11px; line-height:1.5; }
 
 > <b>13個以上</b>「はい」なら仕組みは完成間近。<b>7個以下</b>なら伸びしろは大きい
 
-<div class="pageno">14</div>
+<div class="pageno">15</div>
 
 ---
 
-<!-- ============ P15 まとめ ============ -->
+<!-- ============ P16 まとめ ============ -->
 
 # まとめ
 
@@ -573,7 +644,7 @@ table.dense th, table.dense td { padding:6px 11px; line-height:1.5; }
 <div class="step">
 <div>
 <div class="hd">STEP 1</div>
-<div class="txt"><b>自社の数値を方程式に入れる</b><br>P.14のチェックリストで弱い変数を特定してください。</div>
+<div class="txt"><b>自社の数値を方程式に入れる</b><br>P.15のチェックリストで弱い変数を特定してください。</div>
 </div>
 <div>
 <div class="hd">STEP 2</div>
@@ -587,11 +658,11 @@ table.dense th, table.dense td { padding:6px 11px; line-height:1.5; }
 
 > 第二の集客軸の策定。そして<b>さらなる業績拡大へ</b>
 
-<div class="pageno">15</div>
+<div class="pageno">16</div>
 
 ---
 
-<!-- ============ P16 お問い合わせ ============ -->
+<!-- ============ P17 お問い合わせ ============ -->
 <!-- _class: contact -->
 
 <div class="contact-wrap">

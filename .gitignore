@@ -20,3 +20,6 @@ output/
 .DS_Store
 Thumbs.db
 .vscode/
+
+# 研修資料のPowerPointはGitで管理する
+!slides/*.pptx

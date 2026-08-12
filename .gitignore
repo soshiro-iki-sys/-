@@ -10,6 +10,9 @@ output/
 # LPは手書きのソースなのでGitで管理する
 !lp/*.html
 
+# フォーマット見本のPowerPointはGitで管理する
+!templates/*.pptx
+
 # Vercel公開用の静的サイト（site/）もGitで管理する
 !site/**/*.html
 

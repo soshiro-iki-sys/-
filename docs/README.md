@@ -32,6 +32,7 @@
 |---|---|---|---|
 | 第2回 | `slides/2026営業研修_第2回_聞く姿勢づくり＆必要性訴求①.pptx` | 35 | `slides/build/build_session2.py` |
 | 第3回 | `slides/2026営業研修_第3回_必要性訴求②＆ロープレ.pptx` | 29 | `slides/build/build_session3.py` |
+| 第4回 | `slides/2026営業研修_第4回_時期・料金訴求＆ロープレ.pptx` | 31 | `slides/build/build_session4.py` |
 
 ## 商談の全体像（これだけは覚える）
 

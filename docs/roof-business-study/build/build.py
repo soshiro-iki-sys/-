@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 """屋根ビジネス研究会_法則で学ぶ学習資料.pptx ビルダー"""
+import deck_lib
 from deck_lib import *
 from content import *
+
+# 旧レイアウトは固定行高を前提にしているため、行高を保ったまま文字だけ自動縮小する
+deck_lib.TABLE_FIXED = True
 from pptx.enum.text import PP_ALIGN, MSO_ANCHOR
 from pptx.enum.shapes import MSO_SHAPE
 
@@ -24,8 +28,8 @@ CH4 = "第4部 定着チェック"
 s = prs.slides.add_slide(prs.slide_layouts[6])
 rect(s, 0, 0, SW, SH, fill=NAVY)
 rect(s, 1.0, 2.35, 8.0, 0.035, fill=ORANGE)
-textbox(s, 1.0, 1.35, 8.0, 0.5, [('Roof Reform-Manual', 16, WHITE, False)], anchor=MSO_ANCHOR.MIDDLE)
-textbox(s, 1.0, 1.75, 8.0, 0.62, [('屋根ビジネス研究会　船井流マニュアル', 20, ORANGE, True)], anchor=MSO_ANCHOR.MIDDLE)
+textbox(s, 1.0, 1.32, 8.0, 0.40, [('Roof Reform-Manual', 16, WHITE, False)], anchor=MSO_ANCHOR.MIDDLE)
+textbox(s, 1.0, 1.76, 8.0, 0.56, [('屋根ビジネス研究会　船井流マニュアル', 20, ORANGE, True)], anchor=MSO_ANCHOR.MIDDLE)
 textbox(s, 1.0, 2.60, 8.0, 1.5, [('法則で学ぶ', 40, WHITE, True), ('学習資料', 40, WHITE, True)],
         anchor=MSO_ANCHOR.TOP, spacing=1.05)
 textbox(s, 1.0, 4.35, 8.0, 1.2,
@@ -80,13 +84,13 @@ table(s, MARGIN, 1.70, CW,
        ["収益", "粗利率30％前後", "粗利率35〜37％", "粗利率40％"],
        ["商圏", "商圏発想なし", "商圏発想なし", "1拠点50万人"]],
       col_w=[1.0, 2.6, 2.7, 3.1], row_h=0.36, size=11, first_col_fill=BLUE)
-label(s, MARGIN, 4.55, CW, 0.42,
+label(s, MARGIN, 4.66, CW, 0.40,
       "⇒ 他リフォーム会社・他塗装店と違い、“屋根”に特化して集客・営業を行う",
       13, WHITE, True, fill=NAVY)
-label(s, MARGIN, 5.15, 4.6, 1.5,
+label(s, MARGIN, 5.20, 4.6, 1.46,
       ["【事業コンセプト】", "地域の住宅の屋根を守り、", "安心して暮らせる住環境を提供する"],
       12, NAVY, True, fill=WHITE, line=NAVY, spacing=1.35)
-label(s, 5.10, 5.15, 4.6, 1.5,
+label(s, 5.10, 5.20, 4.6, 1.46,
       ["【ライフサイクル】", "元請け屋根ビジネスは“成長期”。", "競合が乱立する前に地域一番店シェアを取る"],
       12, NAVY, True, fill=WHITE, line=NAVY, spacing=1.35)
 source(s, "Ⅰ.事業コンセプト P.4,7,10")
@@ -181,13 +185,13 @@ for nm, items in tri:
     label(s, x, 3.12, 3.02, 2.05, bullets(items), 11, BLACK, False,
           PP_ALIGN.LEFT, MSO_ANCHOR.TOP, fill=WHITE, line=BLUE, spacing=1.5)
     x += 3.19
-label(s, MARGIN, 5.35, CW, 0.36, "この分解ができると、打ち手はこう変わる", 12, WHITE, True, fill=NAVY, align=PP_ALIGN.LEFT)
-table(s, MARGIN, 5.75, CW,
+label(s, MARGIN, 5.16, CW, 0.34, "この分解ができると、打ち手はこう変わる", 12, WHITE, True, fill=NAVY, align=PP_ALIGN.LEFT)
+table(s, MARGIN, 5.56, CW,
       [["低い因数", "やってはいけない指示", "本来の打ち手"],
        ["現場調査数", "「もっと訪問しろ」", "エリア別反響率を出し、悪いエリアを削る"],
        ["契約率", "「気合いを入れろ」", "阻害要因のどれで落ちたかを案件ごとに記録する"],
        ["客単価", "「高いものを売れ」", "屋根材の品揃えと施工事例の価格帯を増やす"]],
-      col_w=[1.9, 3.0, 4.5], row_h=0.31, size=11, first_col_fill=BLUE)
+      col_w=[1.9, 3.0, 4.5], row_h=0.30, size=11, first_col_fill=BLUE)
 source(s, "Ⅰ.事業コンセプト P.5,13／Ⅲ.集客 P.11,12／Ⅳ.営業 P.19,27")
 
 
@@ -277,9 +281,9 @@ label(s, MARGIN, 1.12, CW, 0.40,
 rows = [["阻害要因", "顧客の中で起きていること", "原典に書かれた打ち手"]]
 for a, b, c in OBSTACLES:
     rows.append([a.replace('\n', ''), b, c])
-table(s, MARGIN, 1.66, CW, rows, col_w=[1.55, 3.0, 4.85], row_h=0.62, size=10,
+table(s, MARGIN, 1.62, CW, rows, col_w=[1.55, 3.0, 4.85], row_h=0.55, size=10,
       header_size=11, first_col_fill=BLUE)
-label(s, MARGIN, 6.10, CW, 0.58,
+label(s, MARGIN, 6.10, CW, 0.56,
       ["アプローチブックを“順に読み上げる”のは、この7つを漏れなく潰すための設計である。",
        "渡すだけでは読まれず、要因が残ったまま商談が終わる。"],
       11, NAVY, False, PP_ALIGN.LEFT, MSO_ANCHOR.MIDDLE, fill=WHITE, line=DKRED, spacing=1.35)
@@ -311,7 +315,7 @@ table(s, MARGIN, 4.32, CW,
        ["近隣挨拶", "15％", "約3件", "やり切れるかが最大の分岐点"],
        ["その他", "5％", "約1件", "タウンメール×1/100・DM×10％"]],
       col_w=[1.7, 1.0, 2.0, 4.7], row_h=0.36, size=11, first_col_fill=BLUE)
-label(s, MARGIN, 6.55, CW, 0.30,
+label(s, MARGIN, 6.48, CW, 0.28,
       "※ リフォーム事業のKPIは新規の現場調査数。販促に意欲的に取り組むことが前提である",
       10, NAVY, False, PP_ALIGN.LEFT)
 source(s, "Ⅲ.集客 P.2,3,4,34")
@@ -374,7 +378,7 @@ label(s, 5.10, 5.10, 4.60, 1.35,
       ["流入顧客属性の最適化", "「屋根のことを真剣に考えている」",
        "「優良施工業者を探している」層を集める", "同業他商圏の事例・入札KW・検索KWを使う"],
       11, BLACK, False, PP_ALIGN.LEFT, MSO_ANCHOR.TOP, fill=WHITE, line=BLUE, spacing=1.45)
-label(s, MARGIN, 6.55, CW, 0.30,
+label(s, MARGIN, 6.48, CW, 0.28,
       "※ 目標から逆算する：売上目標→必要契約数→必要現調数→媒体別集客数→CV数→セッション数×CVR",
       10, NAVY, False, PP_ALIGN.LEFT)
 source(s, "Ⅲ.集客 P.12〜32")
@@ -394,7 +398,7 @@ table(s, MARGIN, 1.62, CW,
         "チラシ配布枚数×1/7,000\n総来場数×10〜20％が現調"],
        ["④通常販促\n（安定）", "店舗認知と\n来店・現調獲得", "定番チラシの作成・折込\nOB向けDM",
         "チラシ×1/10,000\nタウンメール×1/100"]],
-      col_w=[1.9, 1.6, 3.6, 2.7], row_h=0.72, size=10, header_size=11, first_col_fill=BLUE)
+      col_w=[1.9, 1.6, 3.6, 2.7], row_h=0.58, size=10, header_size=11, first_col_fill=BLUE)
 label(s, MARGIN, 4.62, 4.60, 0.36, "イベント運営の要点", 12, WHITE, True, fill=NAVY)
 label(s, MARGIN, 5.02, 4.60, 1.62,
       bullets(["イベントは年3〜4回（多いと飽きられる）", "チラシはB3サイズ・表面に商品は載せない",
@@ -491,13 +495,13 @@ items8 = ["① エントランス（ウェルカムボード）", "② 屋根模
 for i, it in enumerate(items8):
     label(s, MARGIN + (i % 2) * 4.78, 2.02 + (i // 2) * 0.42, 4.62, 0.36, it, 11, BLACK, False,
           PP_ALIGN.LEFT, fill=WHITE, line=BLUE)
-label(s, MARGIN, 3.98, CW, 0.36, "3種類のPOPと、それぞれが潰す不安", 12, WHITE, True, fill=NAVY, align=PP_ALIGN.LEFT)
-table(s, MARGIN, 4.38, CW,
+label(s, MARGIN, 3.88, CW, 0.34, "3種類のPOPと、それぞれが潰す不安", 12, WHITE, True, fill=NAVY, align=PP_ALIGN.LEFT)
+table(s, MARGIN, 4.28, CW,
       [["POPの種類", "役割", "潰している阻害要因"],
        ["①知識系POP", "屋根材や劣化症状を知ってもらい、会社選びの\nポイントと判断基準を伝える", "プラン・時期"],
        ["②会社紹介系POP", "高額商材ゆえ、安心できる会社であることを訴求\n（会社紹介・強み・スタッフ紹介）", "会社・自分"],
        ["③施工事例＆\n　お客様の声", "家ごとに違う完成像を伝える。量・質ともに重要\n完工アンケートで口コミも掲載する", "金額・競合"]],
-      col_w=[1.9, 5.4, 2.1], row_h=0.60, size=10, header_size=11, first_col_fill=BLUE)
+      col_w=[1.9, 5.4, 2.1], row_h=0.50, size=10, header_size=11, first_col_fill=BLUE)
 label(s, MARGIN, 6.42, CW, 0.34,
       "家模型の目的：家の構造を理解し基礎知識を身につけてもらう（屋根裏の釘・雨漏り箇所を赤で示す）",
       11, WHITE, True, fill=ORANGE)
@@ -574,13 +578,13 @@ label(s, 5.10, 1.96, 4.60, 2.00,
        "",
        "→ 必ずその場で次アポを取得する"],
       11, BLACK, False, PP_ALIGN.LEFT, MSO_ANCHOR.TOP, fill=WHITE, line=DKRED, spacing=1.3)
-label(s, MARGIN, 4.12, CW, 0.36, "相見積もり対策の“地雷” ─ 3種類", 12, WHITE, True, fill=NAVY, align=PP_ALIGN.LEFT)
-table(s, MARGIN, 4.52, CW,
+label(s, MARGIN, 4.00, CW, 0.34, "相見積もり対策の“地雷” ─ 3種類", 12, WHITE, True, fill=NAVY, align=PP_ALIGN.LEFT)
+table(s, MARGIN, 4.40, CW,
       [["種類", "内容", "参考トーク"],
        ["見積地雷", "見積書の書き方・一式表記などの\n注意点を先に告知しておく", "（自社の見積の見方を先に説明しておく）"],
        ["工法地雷", "その屋根に適さない工法を\n先に指摘しておく", "「この屋根材は塗装では正しく施工できません。\n他社が塗装で提案してきたら気を付けてください」"],
        ["システム地雷", "保証・アフター・施工体制などの\n仕組み面の注意点を告知", "（自社のアフター体制を基準として示しておく）"]],
-      col_w=[1.5, 3.5, 4.4], row_h=0.60, size=10, header_size=11, first_col_fill=BLUE)
+      col_w=[1.5, 3.5, 4.4], row_h=0.50, size=10, header_size=11, first_col_fill=BLUE)
 label(s, MARGIN, 6.42, CW, 0.34,
       "禁止事項：(1) 自爆しない　(2) あからさまな他社批判は慎む　(3) 「こう聞いて」と他社に言わせない",
       11, WHITE, True, fill=DKRED)
@@ -603,23 +607,23 @@ def quiz_slide(title, qs, page, answer=False):
         rows = [["No", "設問", "解答", "根拠"]]
         for no, q, a, src in qs:
             rows.append([no, q, a, src])
-        table(s, MARGIN, 1.16, CW, rows, col_w=[0.5, 3.1, 3.9, 1.9], row_h=0.50,
+        table(s, MARGIN, 1.14, CW, rows, col_w=[0.5, 3.1, 3.9, 1.9], row_h=0.46,
               size=9, header_size=10, first_col_fill=BLUE)
     else:
         rows = [["No", "設問", "解答欄"]]
         for no, q, a, src in qs:
             rows.append([no, q, ""])
-        table(s, MARGIN, 1.16, CW, rows, col_w=[0.5, 5.0, 3.9], row_h=0.50,
+        table(s, MARGIN, 1.14, CW, rows, col_w=[0.5, 5.0, 3.9], row_h=0.46,
               size=10, header_size=10, first_col_fill=BLUE)
     return s
 
 # P29-P30 設問
 s = quiz_slide("理解度チェック（1/2） ─ Q1〜Q10", QUIZ[:10], nxt())
-label(s, MARGIN, 6.42, CW, 0.34, "目標：18問／20問以上。誤答は必ず原典の該当ページに戻って確認する",
+label(s, MARGIN, 6.34, CW, 0.32, "目標：18問／20問以上。誤答は必ず原典の該当ページに戻って確認する",
       11, WHITE, True, fill=ORANGE)
 source(s, "全4編")
 s = quiz_slide("理解度チェック（2/2） ─ Q11〜Q20", QUIZ[10:], nxt())
-label(s, MARGIN, 6.42, CW, 0.34, "Q13が答えられない場合は、第2部 P.17（7つの阻害要因）に戻る",
+label(s, MARGIN, 6.34, CW, 0.32, "Q13が答えられない場合は、第2部 P.17（7つの阻害要因）に戻る",
       11, WHITE, True, fill=ORANGE)
 source(s, "全4編")
 
@@ -637,7 +641,7 @@ label(s, MARGIN, 1.12, CW, 0.38,
 rows = [["", "起きたこと", "破られている法則", "打ち手"]]
 for no, body, law, fix in CASES:
     rows.append([no, body.replace('\n', ''), law, fix])
-table(s, MARGIN, 1.62, CW, rows, col_w=[0.85, 3.5, 2.15, 3.4], row_h=0.72,
+table(s, MARGIN, 1.58, CW, rows, col_w=[0.85, 3.5, 2.15, 3.4], row_h=0.62,
       size=10, header_size=11, first_col_fill=BLUE)
 label(s, MARGIN, 6.30, CW, 0.42,
       "失注が出たら、必ず「7つの阻害要因のどれで落ちたか」を1つ特定して記録する。",
@@ -650,7 +654,7 @@ label(s, MARGIN, 1.12, CW, 0.38, "1日30分×7日。読むだけで終わらせ�
 rows = [["", "テーマ", "読む範囲", "その日のゴール"]]
 for d, th, rg, goal in ROADMAP:
     rows.append([d, th, rg, goal])
-table(s, MARGIN, 1.62, CW, rows, col_w=[0.85, 2.5, 3.3, 3.25], row_h=0.62,
+table(s, MARGIN, 1.58, CW, rows, col_w=[0.85, 2.5, 3.3, 3.25], row_h=0.55,
       size=10, header_size=11, first_col_fill=BLUE)
 label(s, MARGIN, 6.10, CW, 0.60,
       ["Day7で18問未満だった場合は、間違えた設問の該当法則（第2部）だけを読み直す。",

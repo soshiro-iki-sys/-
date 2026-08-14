@@ -902,3 +902,30 @@ page_no[0] += 1
 os.makedirs(os.path.dirname(OUT), exist_ok=True)
 prs.save(OUT)
 print('saved:', OUT, '/ slides:', len(prs.slides.__iter__.__self__._sldIdLst))
+
+# ---------------------------------------------------------------- content-type fix
+def ensure_jpg_content_type(path):
+    """テンプレートが jpg を image/png と誤宣言しているため、python-pptx が
+    保存時に Default を落とすことがある。表紙画像が壊れるので明示的に直す。"""
+    import zipfile, shutil, re, tempfile
+    with zipfile.ZipFile(path) as z:
+        names = z.namelist()
+        ct = z.read('[Content_Types].xml').decode('utf-8')
+        needs = any(n.lower().endswith('.jpg') for n in names)
+        if not needs or 'Extension="jpg"' in ct:
+            if 'Extension="jpg" ContentType="image/jpeg"' in ct or not needs:
+                return False
+        data = {n: z.read(n) for n in names}
+    ct = re.sub(r'<Default Extension="jpg"[^/]*/>', '', ct)
+    ct = ct.replace('<Default Extension="png"',
+                    '<Default Extension="jpg" ContentType="image/jpeg"/><Default Extension="png"', 1)
+    data['[Content_Types].xml'] = ct.encode('utf-8')
+    tmp = path + '.tmp'
+    with zipfile.ZipFile(tmp, 'w', zipfile.ZIP_DEFLATED) as z:
+        for n in names:
+            z.writestr(n, data[n])
+    shutil.move(tmp, path)
+    return True
+
+if ensure_jpg_content_type(OUT):
+    print('fixed [Content_Types].xml (jpg -> image/jpeg)')

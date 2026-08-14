@@ -33,6 +33,11 @@
 | 第2回 | `slides/2026営業研修_第2回_聞く姿勢づくり＆必要性訴求①.pptx` | 35 | `slides/build/build_session2.py` |
 | 第3回 | `slides/2026営業研修_第3回_必要性訴求②＆ロープレ.pptx` | 29 | `slides/build/build_session3.py` |
 | 第4回 | `slides/2026営業研修_第4回_時期・料金訴求＆ロープレ.pptx` | 31 | `slides/build/build_session4.py` |
+| 第5回 | `slides/2026営業研修_第5回_総仕上げ通しロープレ.pptx` | 25 | `slides/build/build_session5.py` |
+
+全5回そろいました（第1回は実施済みのため対象外）。
+ビルダーの実行には、アプローチブックのページ画像とピラミッド図が必要です。
+手順は `slides/build/build_session2.py` の冒頭を参照してください。
 
 ## 商談の全体像（これだけは覚える）
 

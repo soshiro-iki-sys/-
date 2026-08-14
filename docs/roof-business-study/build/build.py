@@ -685,6 +685,6 @@ textbox(s, MARGIN, 7.05, CW, 0.3,
         [('Copyright©2020 Funai Consulting Inc. All rights reserved.', 9, WHITE, False)], align=PP_ALIGN.LEFT)
 nxt()
 
-OUT = "../屋根ビジネス研究会_法則で学ぶ学習資料.pptx"
+OUT = "../屋根ビジネス研究会_法則で学ぶ学習資料_現場向け.pptx"
 prs.save(OUT)
 print("saved:", OUT, "slides:", len(prs.slides.__iter__.__self__._sldIdLst), "pages counted:", P)

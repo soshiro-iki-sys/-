@@ -31,6 +31,7 @@
 | 回 | ファイル | 枚数 | ビルダー |
 |---|---|---|---|
 | 第2回 | `slides/2026営業研修_第2回_聞く姿勢づくり＆必要性訴求①.pptx` | 35 | `slides/build/build_session2.py` |
+| 第3回 | `slides/2026営業研修_第3回_必要性訴求②＆ロープレ.pptx` | 29 | `slides/build/build_session3.py` |
 
 ## 商談の全体像（これだけは覚える）
 

@@ -7,9 +7,13 @@
     "pdf": "marp --theme themes/sales.css --allow-local-files",
     "pptx": "marp --pptx --theme themes/sales.css --allow-local-files",
     "html": "marp --theme themes/sales.css --allow-local-files",
-    "watch": "marp --theme themes/sales.css --watch --preview"
+    "watch": "marp --theme themes/sales.css --watch --preview",
+    "build:nagaoka": "node scripts/build.js"
   },
   "devDependencies": {
     "@marp-team/marp-cli": "^3.4.0"
+  },
+  "dependencies": {
+    "pptxgenjs": "^4.0.1"
   }
 }

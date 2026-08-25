@@ -1,6 +1,6 @@
 /* P1〜P16 */
 module.exports = function (K) {
-  const { pres, note, NAVY, NAVY2, RED, HRED, YEL, WHITE, BLACK, PALE, PINK, GRAY2, INK, SOFT, F,
+  const { pres, note, deco, NAVY, NAVY2, RED, HRED, YEL, WHITE, BLACK, PALE, PINK, GRAY2, INK, SOFT, F,
     SW, SH, ML, CW, contentSlide, card, band, bulletRow, statCard, table, th, lbl, val, blank,
     compareTable, agendaSlide, fitSize } = K;
   const CH1 = "1.長岡市のエネルギー事情と災害対策";
@@ -10,6 +10,7 @@ module.exports = function (K) {
     const s = pres.addSlide();
     s.addShape(pres.ShapeType.rect, { x: 0, y: 0, w: SW, h: SH, fill: { color: NAVY }, line: { color: NAVY, width: 0 } });
     s.addShape(pres.ShapeType.rect, { x: 0, y: 1.98, w: SW, h: 4.16, fill: { color: NAVY2 }, line: { color: NAVY2, width: 0 } });
+    K.deco(s, "title");
     s.addText("雪国でも大丈夫？　電気代が上がり続ける今こそ知りたい", {
       x: 0.4, y: 1.28, w: SW - 0.8, h: 0.5, fontFace: F, fontSize: 22, bold: true, color: YEL,
       align: "center", valign: "middle", margin: 0,

@@ -1,6 +1,6 @@
 /* P33〜P46 */
 module.exports = function (K) {
-  const { pres, note, NAVY, RED, HRED, YEL, WHITE, BLACK, PALE, PINK, GRAY2, INK, SOFT, F,
+  const { pres, note, deco, NAVY, RED, HRED, YEL, WHITE, BLACK, PALE, PINK, GRAY2, INK, SOFT, F,
     SW, SH, ML, CW, contentSlide, card, band, bulletRow, statCard, table, th, lbl, val, blank,
     agendaSlide, twoColSlide, fitSize } = K;
   const CH3 = "3.太陽光・蓄電池のデメリットと弊社の対策";
@@ -289,6 +289,7 @@ module.exports = function (K) {
   {
     const s = pres.addSlide();
     s.addShape(pres.ShapeType.rect, { x: 0, y: 0, w: SW, h: SH, fill: { color: NAVY }, line: { color: NAVY, width: 0 } });
+    K.deco(s, "divider");
     s.addShape(pres.ShapeType.line, { x: 3.6, y: 2.3, w: 4.5, h: 0, line: { color: WHITE, width: 1.5 } });
     s.addText("本日はお忙しいところご来場いただき\n誠にありがとうございました", {
       x: 0.6, y: 2.62, w: SW - 1.2, h: 1.8, fontFace: F, fontSize: 34, bold: true, color: WHITE,

@@ -11,7 +11,10 @@ const F = "Meiryo UI";
 const SW = 11.69, SH = 8.27;
 const ML = 0.16;
 const CW = SW - ML * 2;
-const BAR_Y = 7.12, BAR_H = SH - BAR_Y;
+const BAR_Y = 7.36, BAR_H = SH - BAR_Y;          // 結論バー（元資料の1行版と同じ）
+const RULE_Y = 0.61, RULE_H = 0.07;               // タイトル下の青線（白紙レイアウト）
+const FOOT_Y = 8.05, FOOT_H = SH - FOOT_Y;        // 最下部の青帯（白紙／章扉レイアウト）
+const LOGO_X = 9.21, LOGO_Y = 0.04, LOGO_W = 2.3, LOGO_H = 0.5;  // 右上ロゴ枠（マスター）
 
 const pres = new PptxGenJS();
 pres.defineLayout({ name: "A4LAND", width: SW, height: SH });
@@ -39,10 +42,32 @@ function fitSize(text, w, max, min) {
   return Math.max(min, Math.min(max, Math.floor((w * 72) / we)));
 }
 
+/* ---------- レイアウト装飾（元資料のスライドマスター相当） ----------
+   白紙レイアウト  : タイトル下の青線 ＋ 最下部の青帯 ＋ 右上ロゴ
+   1_アジェンダ    : 最下部の青帯 ＋ 右上ロゴ
+   タイトルスライド: 右上ロゴのみ                                        */
+function deco(s, kind) {
+  if (kind === "content") {
+    s.addShape(pres.ShapeType.rect, {
+      x: 0, y: RULE_Y, w: SW, h: RULE_H, fill: { color: NAVY }, line: { color: NAVY, width: 0 },
+    });
+  }
+  if (kind === "content" || kind === "divider") {
+    s.addShape(pres.ShapeType.rect, {
+      x: 0, y: FOOT_Y, w: SW, h: FOOT_H, fill: { color: NAVY }, line: { color: NAVY, width: 0 },
+    });
+  }
+  // 右上ロゴ枠（ロゴ画像に差し替える場所。現状は社名を配置）
+  s.addText("株式会社ヤシロ", {
+    x: LOGO_X, y: LOGO_Y, w: LOGO_W, h: LOGO_H, fontFace: F, fontSize: 15, bold: true,
+    color: kind === "content" ? NAVY : WHITE, align: "right", valign: "middle", margin: 0,
+  });
+}
+
 /* ---------- 共通グリッド ---------- */
 function chapterTitle(s, text) {
   s.addText(text, {
-    x: ML, y: 0.03, w: CW, h: 0.61, fontFace: F, fontSize: 30, bold: true,
+    x: ML, y: 0.02, w: LOGO_X - ML - 0.1, h: 0.55, fontFace: F, fontSize: 30, bold: true,
     color: BLACK, margin: 0, valign: "middle", align: "left",
   });
 }
@@ -67,7 +92,7 @@ function lead(s, text) {
 
 function source(s, text) {
   s.addText(text, {
-    x: ML, y: 6.78, w: CW, h: 0.26, fontFace: F, fontSize: 10.5,
+    x: ML, y: 7.04, w: CW, h: 0.26, fontFace: F, fontSize: 10.5,
     color: MUTE, margin: 0, valign: "middle", align: "right",
   });
 }
@@ -91,6 +116,7 @@ function footerBar(s, text) {
 
 function contentSlide(o) {
   const s = pres.addSlide();
+  deco(s, "content");
   chapterTitle(s, o.chapter);
   if (o.chip) chip(s, o.chip);
   s.bodyY = o.lead ? lead(s, o.lead) : 1.3;
@@ -204,23 +230,20 @@ const AGENDA = [
 ];
 function agendaSlide(active) {
   const s = pres.addSlide();
+  deco(s, "content");
   chapterTitle(s, "本日の目次");
-  const y0 = 1.42, h = 0.94, gap = 0.2;
+  const y0 = 1.52, h = 1.06;
   AGENDA.forEach((t, i) => {
-    const y = y0 + i * (h + gap);
     const on = i === active;
-    card(s, 1.5, y, 8.7, h, { fill: on ? PINK : WHITE, line: on ? HRED : GRAY, lw: on ? 2.5 : 1 });
-    s.addShape(pres.ShapeType.ellipse, {
-      x: 1.76, y: y + (h - 0.56) / 2, w: 0.56, h: 0.56,
-      fill: { color: on ? HRED : NAVY }, line: { color: on ? HRED : NAVY, width: 0 },
-    });
-    s.addText(String(i + 1), {
-      x: 1.76, y: y + (h - 0.56) / 2, w: 0.56, h: 0.56, fontFace: F, fontSize: 20, bold: true,
-      color: WHITE, align: "center", valign: "middle", margin: 0,
+    const col = on ? HRED : BLACK;
+    const y = y0 + i * h;
+    s.addText((i + 1) + ".", {
+      x: 0.62, y, w: 0.72, h, fontFace: F, fontSize: 36, bold: true, color: col,
+      align: "right", valign: "middle", margin: 0,
     });
     s.addText(t, {
-      x: 2.54, y, w: 7.4, h, fontFace: F, fontSize: on ? 26 : 24, bold: true,
-      color: on ? HRED : BLACK, align: "left", valign: "middle", margin: 0,
+      x: 1.5, y, w: SW - 1.9, h, fontFace: F, fontSize: 36, bold: true, color: col,
+      align: "left", valign: "middle", margin: 0,
     });
   });
   return s;
@@ -230,6 +253,7 @@ function agendaSlide(active) {
 function dividerSlide(lines, size) {
   const s = pres.addSlide();
   s.addShape(pres.ShapeType.rect, { x: 0, y: 0, w: SW, h: SH, fill: { color: NAVY }, line: { color: NAVY, width: 0 } });
+  deco(s, "divider");
   const runs = lines.map((t, i) => ({
     text: t || " ",
     options: {
@@ -248,7 +272,7 @@ function twoColSlide(o) {
     footer: o.footer, note: o.note, source: o.source,
   });
   const cy = Math.max(s.bodyY + 0.18, 1.86), cw = 5.36;
-  const ch = (o.source ? 6.64 : 6.94) - cy;
+  const ch = (o.source ? 6.92 : 7.16) - cy;
   const lx = 0.42, rx = SW - 0.42 - cw;
   tabCard(s, lx, cy, cw, ch, o.leftTitle, o.leftColor || RED);
   tabCard(s, rx, cy, cw, ch, o.rightTitle, o.rightColor || NAVY);
@@ -262,8 +286,8 @@ function twoColSlide(o) {
 module.exports = {
   pres, notes, note, wideLen, fitSize,
   NAVY, NAVY2, RED, HRED, YEL, WHITE, BLACK, PALE, PINK, GRAY, GRAY2, INK, MUTE, SOFT, F,
-  SW, SH, ML, CW, BAR_Y, BAR_H,
-  chapterTitle, chip, lead, source, footerBar, contentSlide,
+  SW, SH, ML, CW, BAR_Y, BAR_H, RULE_Y, RULE_H, FOOT_Y, FOOT_H, LOGO_X, LOGO_Y, LOGO_W, LOGO_H,
+  deco, chapterTitle, chip, lead, source, footerBar, contentSlide,
   card, tabCard, band, bulletRow, statCard, table, th, lbl, val, blank,
   compareTable, agendaSlide, dividerSlide, twoColSlide, AGENDA,
 };

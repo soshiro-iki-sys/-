@@ -8,6 +8,7 @@ from pptx.util import Cm, Pt, Emu
 from pptx.dml.color import RGBColor
 from pptx.enum.text import PP_ALIGN, MSO_ANCHOR, MSO_AUTO_SIZE
 from pptx.enum.shapes import MSO_SHAPE, MSO_CONNECTOR
+from pptx.enum.dml import MSO_LINE_DASH_STYLE
 from pptx.oxml.ns import qn
 
 # ---------- パレット ----------
@@ -248,26 +249,47 @@ def interlude(lines, size=60):
 
 
 
-def action_page(head, tag, lead_parts, kpis, owner, question, rows=6):
-    """施策ごとの「具体的な取り組み」記入ページ。内容は空欄のまま器だけ作る。"""
-    s = slide_blank(); header(s, head, tag, '協議')
+GRAY = RGBColor(0xBF, 0xBF, 0xBF)
+SOFT = RGBColor(0xF2, 0xF2, 0xF2)
+
+
+def photo(s, x, y, w, h, label='写 真'):
+    """後から写真を差し込むための枠。破線＋淡いグレー地で「ここに入る」と分かる形にする。"""
+    sh = shape(s, x, y, w, h, fill=SOFT, line=NAVY, lw=1.0)
+    sh.line.dash_style = MSO_LINE_DASH_STYLE.DASH
+    para(sh.text_frame, [(label, 16, GRAY)], PP_ALIGN.CENTER, first=True)
+    return sh
+
+
+def case_page(tag, lead_parts, results, question, owner='営業'):
+    """施策ごとの事例紹介ページ。取り組み内容は空欄、写真は後から差し込む前提の枠を置く。"""
+    s = slide_blank(); header(s, 'Ⅲ. 施策', tag, '報告')
     lead(s, lead_parts)
-    plain(s, LM, 4.05, CW, 1.20,
-          [[('効かせるKPI｜', 18, WHITE), ('　'.join(kpis), 18, YEL)]],
+    # POINT 帯（要点は1行で後から記入）
+    sh = shape(s, LM, 4.05, 3.31, 1.28, fill=RED, line=RED, lw=1.0)
+    para(sh.text_frame, [('P O I N T', 18, WHITE)], PP_ALIGN.CENTER, first=True)
+    plain(s, 3.62, 4.05, 23.66, 1.28, [[('', 18, INK)]], fill=WHITE, line=NAVY,
+          lw=1.0, align=PP_ALIGN.LEFT)
+    # 企業概要
+    plain(s, LM, 5.55, CW, 1.20,
+          [[('〇社＠◯◯市', 18, YEL), ('　／　業態 ◯◯　／　従業員【　】名　／　年間棟数【　】棟',
+                                    18, WHITE)]],
           fill=NAVY, line=NAVY, lw=1.0)
-    cols = [(0.19, 2.50), (2.69, 16.50), (19.19, 4.00), (23.19, 4.09)]
-    for (x, w), t in zip(cols, ['No.', '具体的な取り組み', '担　当', '着手時期']):
-        plain(s, x, 5.45, w, 1.00, [[(t, 16, WHITE)]], fill=NAVY, line=NAVY, lw=1.0)
-    y = 6.45
-    for i in range(1, rows + 1):
-        plain(s, 0.19, y, 2.50, 1.45, [[(str(i), 16, NAVY)]], fill=PALE, line=NAVY, lw=1.0)
-        for x, w in cols[1:]:
-            plain(s, x, y, w, 1.45, [[('', 16, INK)]], fill=WHITE, line=NAVY, lw=1.0)
-        y += 1.45
-    note(s, owner, '具体的な取り組み内容（この場で洗い出す）', '—')
+    # 取り組み3本（写真＋説明）
+    for i, x in enumerate([LM, 9.47, 18.74], start=1):
+        sh = shape(s, x, 7.00, 8.54, 1.10, fill=NAVY, line=NAVY, lw=1.0)
+        para(sh.text_frame, [('取り組み %d' % i, 18, WHITE)], PP_ALIGN.CENTER, first=True)
+        photo(s, x, 8.10, 8.54, 3.60)
+        plain(s, x, 11.70, 8.54, 2.30, [[('', 16, INK)]], fill=WHITE, line=NAVY,
+              lw=1.0, align=PP_ALIGN.LEFT)
+    # 成果
+    plain(s, LM, 14.20, CW, 1.00,
+          [[('成果｜', 16, WHITE), (results, 16, YEL)]], fill=NAVY, line=NAVY, lw=1.0)
+    note(s, owner, '事例企業名、取り組み内容、写真、成果の実績値', '—')
     issue(s, '論点｜', question)
-    notes(s, '具体策の記入ページ。打合せでその場で埋める前提のため、内容は空欄のままにしてある。'
-             '効かせるKPIは「KPI前提と事例」ページと対応させること。主担当：%s。' % owner)
+    notes(s, '事例紹介ページ。取り組み内容と写真は後から差し込む前提で枠だけ用意している。'
+             '写真枠は破線の箱を差し替えて配置すること。事例企業名は確定後に〇社＠◯◯市から差し替える。'
+             '主担当：%s。' % owner)
     return s
 
 
@@ -440,12 +462,12 @@ note(s, '営業', '面会率・商談率・提携率の実測')
 issue(s, '論点｜', '月次の訪問数目標と、担当の割り当て')
 notes(s, '提携社数 = 訪問数 × 面会率 × 商談率 × 提携率／未確定：面会率・商談率・提携率。主担当：営業。')
 
-# --- 10 訪問｜具体策 ---
-action_page('Ⅲ. 施策', '訪問｜具体策',
-            [('■　訪問で具体的に何をやるかを、', 20, INK),
-             ('この場で洗い出す', 24, RED)],
-            ['面会率', '商談率', '提携率'], '営業',
-            '最初に着手する取り組みはどれか')
+# --- 10 事例｜訪問 ---
+case_page('事例｜訪問',
+          [('■　訪問で成果を出している', 20, INK), ('〇社＠◯◯市', 24, RED),
+           ('の取り組み', 20, INK)],
+          '面会率【　】％　→　商談率【　】％　→　提携率【　】％',
+          '自社に取り込む取り組みはどれか', '営業')
 
 # --- 11 DLレポート ---
 s = slide_blank(); header(s, 'Ⅲ. 施策', 'DLレポート', '協議')
@@ -474,12 +496,12 @@ note(s, 'マーケ', '広告予算、CTR・DL率のベンチマーク')
 issue(s, '論点｜', '広告予算をいくらまで認めるか')
 notes(s, '獲得リード数 =（広告露出＋メルマガ配信）× クリック率 × DL率／未確定：広告予算、CTR、DL率。主担当：マーケ。')
 
-# --- 12 DLレポート｜具体策 ---
-action_page('Ⅲ. 施策', 'DLレポート｜具体策',
-            [('■　どのレポートを作り、', 20, INK), ('どう配るか', 24, RED),
-             ('を洗い出す', 20, INK)],
-            ['クリック率', 'DL率'], 'マーケ',
-            '第1号レポートのテーマを何にするか')
+# --- 12 事例｜DLレポート ---
+case_page('事例｜DLレポート',
+          [('■　DLレポートで成果を出している', 20, INK), ('〇社＠◯◯市', 24, RED),
+           ('の取り組み', 20, INK)],
+          'クリック率【　】％　→　DL率【　】％　→　獲得リード【　　】件',
+          '第1号レポートの型として、どれを踏襲するか', 'マーケ')
 
 # --- 13 育成ハブ＆刈り取り ---
 s = slide_blank(); header(s, 'Ⅲ. 施策', '育成ハブ＆刈り取り', '協議')
@@ -510,12 +532,12 @@ notes(s, '提携社数 = 総リスト数 × 反応率 × 商談化率 × 提携�
          'セミナーはDM単独でも成立する企画設計が前提で、テレアポは集客の上積みと位置づける。'
          '未確定：DM反応率、セミナー参加率、参加者からの提携率。主担当：マーケ／営業。')
 
-# --- 14 育成・刈り取り｜具体策 ---
-action_page('Ⅲ. 施策', '育成・刈り取り｜具体策',
-            [('■　メルマガ・テレアポ・セミナーで', 20, INK),
-             ('何をやるか', 24, RED), ('を洗い出す', 20, INK)],
-            ['メルマガ開封率', 'セミナー参加率', '参加者からの提携率'], 'マーケ／営業',
-            '初回セミナーの企画テーマをどうするか')
+# --- 14 事例｜育成・刈り取り ---
+case_page('事例｜育成・刈り取り',
+          [('■　メルマガ・セミナーで成果を出している', 20, INK), ('〇社＠◯◯市', 24, RED),
+           ('の取り組み', 20, INK)],
+          '開封率【　】％　→　セミナー参加率【　】％　→　参加者からの提携率【　】％',
+          '初回セミナーの企画として、どれを踏襲するか', 'マーケ／営業')
 
 # --- 15 提携後の名簿引き出し ---
 s = slide_blank(); header(s, 'Ⅲ. 施策', '提携後の名簿引き出し', '協議')
@@ -537,12 +559,12 @@ note(s, '営業', '名簿提出率、ハガキ発送の実費単価')
 issue(s, '論点｜', 'ハガキ発送費を自社負担とするか')
 notes(s, '獲得名簿数 = 提携社数 × 1社あたり平均名簿数 × 名簿提出率／未確定：名簿提出率、ハガキ実費単価。主担当：営業。')
 
-# --- 16 名簿回収｜具体策 ---
-action_page('Ⅲ. 施策', '名簿回収｜具体策',
-            [('■　提携先から名簿を引き出すために、', 20, INK),
-             ('何をやるか', 24, RED), ('を洗い出す', 20, INK)],
-            ['名簿提出率', '1社あたり平均名簿数'], '営業',
-            'ハガキの文面と発送タイミングをどうするか')
+# --- 16 事例｜名簿回収 ---
+case_page('事例｜名簿回収',
+          [('■　名簿回収で成果を出している', 20, INK), ('〇社＠◯◯市', 24, RED),
+           ('の取り組み', 20, INK)],
+          '名簿提出率【　】％　→　1社あたり平均名簿数【　　】件',
+          '自社の名簿回収に、そのまま使えるのはどれか', '営業')
 
 # --- 17 KPI前提と事例 ---
 s = slide_blank(); header(s, 'Ⅳ. 数値', 'KPI前提と事例', '協議')

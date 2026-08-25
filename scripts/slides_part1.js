@@ -177,10 +177,65 @@ module.exports = function (K) {
     });
   }
 
+  /* ===== P8 電気代の推移（総務省 家計調査） ===== */
+  {
+    const s = contentSlide({
+      chapter: CH1, chip: "電気代の推移",
+      lead: "電気代は全国で上がり続けており、新潟県を含む北陸地方も例外ではない。",
+      source: "※北陸地方・二人以上の世帯ベース（家計調査の地方区分では新潟県は北陸地方に含まれる）　出典：総務省「家計調査」を基に作成",
+      footer: "電気代は「上がり続ける」前提で考える時代です",
+    });
+    card(s, 0.24, 1.9, 11.21, 4.86, { fill: WHITE, line: NAVY, lw: 2 });
+    s.addText("北陸地方の平均電気代推移（二人以上の世帯・月額）", {
+      x: 2.5, y: 2.02, w: 6.7, h: 0.46, fontFace: F, fontSize: 18, bold: true, color: WHITE,
+      fill: { color: NAVY }, align: "center", valign: "middle", margin: 0,
+    });
+    const labels = ["2020年", "2021年", "2022年", "2023年", "2024年", "2025年", "直近12ヵ月平均\n2025/4〜2026/3"];
+    const values = [10324, 10587, 15517, 13096, 12104, 13951, 17166];
+    s.addChart(pres.ChartType.bar, [{ name: "平均電気代", labels, values }], {
+      x: 0.42, y: 2.54, w: 8.6, h: 2.96, barDir: "col", barGapWidthPct: 55,
+      chartColors: [NAVY, NAVY, "3B6FB6", NAVY, NAVY, NAVY, RED], varyColors: true,
+      showTitle: false, showLegend: false,
+      showValue: true, dataLabelPosition: "outEnd", dataLabelFontFace: F, dataLabelFontSize: 11,
+      dataLabelColor: INK, dataLabelFormatCode: '"約"#,##0"円"',
+      catAxisLabelFontFace: F, catAxisLabelFontSize: 11, catAxisLabelColor: INK,
+      valAxisLabelFontFace: F, valAxisLabelFontSize: 11, valAxisLabelColor: INK,
+      valAxisMinVal: 0, valAxisMaxVal: 20000, valAxisMajorUnit: 4000,
+      valAxisLabelFormatCode: "#,##0",
+      valGridLine: { color: "D9D9D9", size: 1 }, catGridLine: { style: "none" },
+    });
+    s.addText("（円/月）", {
+      x: 0.42, y: 2.2, w: 1.3, h: 0.28, fontFace: F, fontSize: 12, bold: true, color: INK,
+      align: "left", valign: "middle", margin: 0,
+    });
+    card(s, 9.14, 2.66, 2.14, 0.82, { fill: RED, line: RED, lw: 0 });
+    s.addText("最新は\nさらに高い", {
+      x: 9.14, y: 2.66, w: 2.14, h: 0.82, fontFace: F, fontSize: 15, bold: true, color: WHITE,
+      align: "center", valign: "middle", margin: 0, lineSpacingMultiple: 1.1,
+    });
+    card(s, 9.14, 3.72, 2.14, 0.94, { fill: WHITE, line: RED, lw: 2 });
+    s.addText([
+      { text: "2020年比", options: { fontFace: F, fontSize: 14, bold: true, color: RED, breakLine: true } },
+      { text: "約66", options: { fontFace: F, fontSize: 26, bold: true, color: RED } },
+      { text: "％増", options: { fontFace: F, fontSize: 15, bold: true, color: RED } },
+    ], { x: 9.14, y: 3.72, w: 2.14, h: 0.94, align: "center", valign: "middle", margin: 0, lineSpacingMultiple: 1.05 });
+    s.addShape(pres.ShapeType.line, { x: 0.5, y: 5.62, w: 10.69, h: 0, line: { color: "D9D9D9", width: 1 } });
+    s.addText([
+      { text: "2025年平均でも月", options: { fontFace: F, fontSize: 17, bold: true, color: BLACK } },
+      { text: "13,951円", options: { fontFace: F, fontSize: 22, bold: true, color: RED } },
+      { text: "。さらに直近12ヵ月平均は月", options: { fontFace: F, fontSize: 17, bold: true, color: BLACK } },
+      { text: "17,166円", options: { fontFace: F, fontSize: 22, bold: true, color: RED } },
+      { text: "と", options: { fontFace: F, fontSize: 17, bold: true, color: BLACK, breakLine: true } },
+      { text: "なっており、電気代負担は高止まりしています。", options: { fontFace: F, fontSize: 17, bold: true, color: BLACK } },
+    ], { x: 0.6, y: 5.74, w: 10.49, h: 0.92, align: "left", valign: "middle", margin: 0, lineSpacingMultiple: 1.15 });
+    s.addNotes("北陸地方の系列は元テンプレート（総務省 家計調査ベース）の値を踏襲しています。登壇前に e-Stat で再取得して裏を取ってください。");
+    note(8, "グラフ", "北陸地方の平均電気代推移（総務省 家計調査から再取得して裏取り）");
+  }
+
   /* ===== P8 東北電力の2023年値上げ ===== */
   {
     const s = contentSlide({
-      chapter: CH1, chip: "東北電力の電気代",
+      chapter: CH1, chip: "東北電力の値上げ",
       lead: "東北電力は2023年6月、規制料金を平均25.47％値上げした。",
       source: "出典：東北電力「小売規制料金見直しの概要」（2023年6月1日実施）／モデルケースは従量電灯B・30A・260kWh/月",
       footer: "使い方は変わっていないのに、請求額だけが増えました",

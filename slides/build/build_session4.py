@@ -87,7 +87,8 @@ def lines(tf, items, size=16, color=BLACK, bold=False, space=5, font=GOTHIC, lin
             color=opts.pop('color', color), font=opts.pop('font', font),
             hl=opts.pop('hl', None))
 
-def rect(slide, x, y, w, h, fill=None, line=None, shape=MSO_SHAPE.RECTANGLE, lw=1.0):
+def rect(slide, x, y, w, h, fill=None, line=None, shape=MSO_SHAPE.RECTANGLE, lw=1.0,
+         anchor=MSO_ANCHOR.TOP):
     s = slide.shapes.add_shape(shape, Inches(x), Inches(y), Inches(w), Inches(h))
     if fill: s.fill.solid(); s.fill.fore_color.rgb = RGBColor.from_string(fill)
     else: s.fill.background()
@@ -97,6 +98,7 @@ def rect(slide, x, y, w, h, fill=None, line=None, shape=MSO_SHAPE.RECTANGLE, lw=
         s.line.fill.background()
     s.shadow.inherit = False
     tf = s.text_frame; tf.word_wrap = True
+    tf.vertical_anchor = anchor
     tf.margin_left = tf.margin_right = Inches(0.08)
     tf.margin_top = tf.margin_bottom = Inches(0.04)
     return s, tf
@@ -241,12 +243,12 @@ def talk_slide(s, no_title, talks, conc=None, note=None):
     lines(tf, [(no_title, {'size': 24, 'bold': True})])
     y = 1.92
     for label, body, h in talks:
-        _, tf = rect(s, 0.45, y, 8.05, h, fill=LTGRAY)
+        _, tf = rect(s, 0.45, y, 8.05, h, fill=LTGRAY, anchor=MSO_ANCHOR.MIDDLE)
         for i, ln in enumerate(body):
             p = para(tf, first=(i == 0), space_after=3)
             run(p, ln, size=14)
-        _, tf2 = rect(s, 8.68, y, 1.72, 0.38, fill=ORANGE)
-        lines(tf2, [(label, {'size': 12, 'bold': True, 'color': WHITE,
+        _, tf2 = rect(s, 8.68, y, 1.72, h, fill=ORANGE, anchor=MSO_ANCHOR.MIDDLE)
+        lines(tf2, [(label, {'size': 13, 'bold': True, 'color': WHITE,
                              'align': PP_ALIGN.CENTER})])
         y += h + 0.16
     if conc: conclusion(s, conc)
@@ -256,7 +258,7 @@ def talk_slide(s, no_title, talks, conc=None, note=None):
 s = new_slide('本日のゴール')
 box, tf = tb(s, 0.45, 1.45, 9.9, 0.62)
 lines(tf, [('「今が一番お得だ」と思わせ、払える金額として着地させる',
-            {'size': 28, 'bold': True, 'color': RED})])
+            {'size': 24, 'bold': True, 'color': RED})])
 _, tf = rect(s, 0.45, 2.35, 9.95, 3.05, fill=LTGREEN)
 lines(tf, [
     ('研修が終わったときの「できる状態」', {'size': 18, 'bold': True, 'space': 10}),
@@ -266,8 +268,11 @@ lines(tf, [
     ('④　アプローチブックを閉じて、見積りへ自然に受け渡せる', {'size': 19}),
 ])
 _, tf = rect(s, 0.45, 5.65, 9.95, 0.85, fill=None, line=RED, lw=1.5)
-lines(tf, [('本日の範囲：営業ルール ⑬〜⑳　／　アプローチブック p.23〜p.26 ＋ 見積り',
-            {'size': 21, 'bold': True, 'align': PP_ALIGN.CENTER})])
+lines(tf, [
+    ('本日の範囲', {'size': 14, 'bold': True, 'color': GRAY, 'align': PP_ALIGN.CENTER, 'space': 3}),
+    ('営業ルール ⑬〜⑳　／　アプローチブック p.23〜p.26 ＋ 見積り',
+     {'size': 19, 'bold': True, 'align': PP_ALIGN.CENTER}),
+])
 notes(s, '・本日で20のルールが全部つながる。次回は通しロープレだけだと予告しておく\n'
          '・金額の話は「安く見せる」ではなく「払える形にする」ことだと最初に握る')
 
@@ -290,14 +295,14 @@ notes(s, '・8ルールと多い。⑲⑳は厳密なルールではなく推奨
 # ================================================================ 4. 前回の振り返り
 s = new_slide('前回の振り返り')
 box, tf = tb(s, 0.45, 1.42, 9.9, 0.45)
-lines(tf, [('第3回「必要性訴求②＆ロープレ」で押さえたこと', {'size': 24, 'bold': True})])
+lines(tf, [('第3回「災害対策・商品説明・経済メリット」で押さえたこと', {'size': 22, 'bold': True})])
 _, tf = rect(s, 0.45, 2.00, 4.85, 2.30, fill=LTGRAY)
 lines(tf, [
     ('必要性訴求②（⑩〜⑫）', {'size': 17, 'bold': True, 'space': 8}),
-    ('・災害は「事実 → 事例 → サラッと次へ」。3分で抜ける', {'size': 14, 'space': 5}),
-    ('・⑪にページが無いのは、一般論では意味が無いから', {'size': 14, 'space': 5}),
-    ('・創る → 貯める → 夜に使う', {'size': 14, 'space': 5}),
-    ('・このサイクルはセットでしか成立しない', {'size': 14, 'bold': True, 'color': RED}),
+    ('・災害は「事実→事例→サラッと次へ」。3分で抜ける', {'size': 14, 'space': 5}),
+    ('・FABのBは「お客様が主語」', {'size': 14, 'space': 5}),
+    ('・経済メリットは2通りの伝え方を使い分ける', {'size': 14, 'space': 5}),
+    ('・金額で勝とうとせず、安心感で選ばれる', {'size': 14, 'bold': True, 'color': RED}),
 ])
 _, tf = rect(s, 5.55, 2.00, 4.85, 2.30, fill=LTYEL)
 lines(tf, [
@@ -311,8 +316,8 @@ lines(tf, [
 _, tf = rect(s, 0.45, 4.60, 9.95, 1.75, fill=LTYEL, line='BF8F00')
 lines(tf, [
     ('宿題の確認（10分）', {'size': 18, 'bold': True, 'space': 8}),
-    ('① 災害事例を90秒で言ってみてください（2名指名）', {'size': 16, 'space': 6}),
-    ('② アプローチブック p.9〜p.21 の結論の一文を、通しで言えますか', {'size': 16, 'space': 6}),
+    ('① 担当顧客1件のFABのBを、3本言ってみてください（2名指名）', {'size': 16, 'space': 6}),
+    ('② 伝え方①②の両方を、シミュレーションを見ずに説明できますか', {'size': 16, 'space': 6}),
     ('③ 実商談で、災害パートに何分使いましたか', {'size': 16}),
 ])
 
@@ -415,7 +420,7 @@ points_box(s, 5.35, 3.78, 5.05, 2.50, [
     ('10年後に設置すると、その10年で144万円の電気代を払うだけ（月12,000円の場合）', {'bold': True, 'size': 13}),
     'その間、売電収入も自家消費による電気代削減の恩恵も受けられない',
     '設置までの10年で、電気代の支払いと売電単価の減少というデメリットしかない',
-    ('この「機会損失」を具体的に認識させ、待つことのデメリットを明確にする', {'bold': True, 'color': RED, 'size': 13}),
+    ('「機会損失」を認識させ、待つデメリットを明確にする', {'bold': True, 'color': RED, 'size': 13}),
 ])
 conclusion(s, '設置を遅くするにつれ、経済メリットは少なくなります！')
 
@@ -461,8 +466,8 @@ lines(tf, [
 _, tf = rect(s, 0.45, 4.70, 9.95, 1.55, fill=LTGRAY)
 lines(tf, [
     ('【必要性】は、もう作れているはずです', {'size': 17, 'bold': True, 'space': 8}),
-    ('最新のものが欲しい／バッテリーの持ちをよくしたい／いい画質で写真を撮りたい ── これがスマホの必要性。',
-     {'size': 15, 'space': 5}),
+    ('最新のものが欲しい／バッテリーの持ちをよくしたい／いい画質で写真を撮りたい。', {'size': 15, 'space': 3}),
+    ('これがスマホの必要性です。', {'size': 15, 'space': 5}),
     ('太陽光＋蓄電池で言えば、①〜⑫でここまで作ってきました。あとは「いつ」の問題だけです。',
      {'size': 15, 'bold': True}),
 ])
@@ -476,10 +481,10 @@ box, tf = tb(s, 0.45, 5.85, 4.55, 0.3)
 lines(tf, [('アプローチブック p.24　待っても安くならないの？', {'size': 12, 'color': GRAY})])
 goal_box(s, 5.35, 2.50, 5.05, 1.15, ['待っても物価は安くなるどころか、上がっていく一方なのですね'])
 points_box(s, 5.35, 3.78, 5.05, 2.50, [
-    ('消費者物価指数は2020年1月を100として、2026年3月時点で112.7', {'bold': True, 'size': 13}),
+    ('消費者物価指数は2020年1月を100として、2026年3月で112.7', {'bold': True, 'size': 13}),
     '6年で物価は12.7％上昇。電気代だけでなく世の中全体が上がっている',
     '「太陽光・蓄電池だけが将来大幅に安くなる」という期待は現実的ではない',
-    ('待って価格がわずかに下がるのを期待するより、今導入して高騰リスクを回避する方が賢明', {'bold': True, 'color': RED, 'size': 13}),
+    ('わずかな値下がりを待つより、今導入して高騰リスクを回避する方が賢明', {'bold': True, 'color': RED, 'size': 13}),
 ])
 conclusion(s, '待っていても必ずしも安くなるとは限らないのです')
 
@@ -528,7 +533,7 @@ points_box(s, 5.35, 3.78, 5.05, 2.50, [
     ('実質負担額 ＝ 設置費用 − メリット', {'bold': True, 'size': 14}),
     '太陽光が生み出す経済メリットが、導入時の実質的な負担を軽くする（設置費用は太陽光が稼いでくれる）',
     '家賃を払いたくないから持ち家を買う。電気代を払いたくないから創蓄を導入する',
-    ('創蓄は支払っている最中も経済メリットが出るのが、住宅ローンとの違い', {'bold': True, 'color': RED, 'size': 13}),
+    ('支払い中も経済メリットが出るのが、住宅ローンとの違い', {'bold': True, 'color': RED, 'size': 13}),
 ])
 conclusion(s, '持ち家と同じように、長期的な財産になるものなのです')
 
@@ -580,7 +585,7 @@ rows = [
     ['', '⑰太陽光設置容量の確認', '設置容量を確認することで設置後のイメージを膨らませる'],
     ['', '⑱概算見積りの提示', '月々1万円程度の予算で提案し、金額面でのハードルを大きく下げる'],
     ['', '⑲正式見積りの提示', '成約率最大化のために、正式見積りの提出で即決を促す'],
-    ['', '⑳後始末の実施', '契約後のアフターフォローをしっかり行うことでお客様の不安を払拭する'],
+    ['', '⑳後始末の実施', '契約後のアフターフォローで、お客様の不安を払拭する'],
 ]
 for r in rows[1:]:
     for i in range(len(r)):
@@ -589,7 +594,7 @@ table(s, 0.30, 1.95, 10.25, [1.30, 3.05, 5.90], rows, font_size=12.5, row_h=0.52
 _, tf = rect(s, 0.30, 5.00, 4.95, 1.45, fill=LTYEL, line='BF8F00')
 lines(tf, [
     ('ここからアプローチブックを離れます', {'size': 17, 'bold': True, 'color': RED, 'space': 6}),
-    ('使うのはシミュレーション・概算見積・カタログ・契約書・お礼状です。', {'size': 14}),
+    ('使うのはシミュレーション・概算見積・カタログです。', {'size': 14}),
 ])
 _, tf = rect(s, 5.60, 5.00, 4.95, 1.45, fill=LTGRAY)
 lines(tf, [
@@ -628,7 +633,7 @@ lines(tf, [('ことあるごとに聞かれます。使いやすい「かわし�
 rows = [
     ['', 'かわし方', '評価'],
     ['①', '「改めてご自宅にあったお見積りをお出ししたいので…」',
-     '最も理にかなっているが、「ザックリでいいから教えて」と言われやすいのが難点'],
+     '最も理にかなっているが、「ザックリでいいから」と言われやすいのが難点'],
     ['②', '「上に確認を取らないと分からなくて…」',
      '使い勝手は良いが、皆さんのお立場とのバランスになる'],
     ['③', '「この後のお話で、一通り出てきますので…」',

@@ -87,7 +87,8 @@ def lines(tf, items, size=16, color=BLACK, bold=False, space=5, font=GOTHIC, lin
             color=opts.pop('color', color), font=opts.pop('font', font),
             hl=opts.pop('hl', None))
 
-def rect(slide, x, y, w, h, fill=None, line=None, shape=MSO_SHAPE.RECTANGLE, lw=1.0):
+def rect(slide, x, y, w, h, fill=None, line=None, shape=MSO_SHAPE.RECTANGLE, lw=1.0,
+         anchor=MSO_ANCHOR.TOP):
     s = slide.shapes.add_shape(shape, Inches(x), Inches(y), Inches(w), Inches(h))
     if fill: s.fill.solid(); s.fill.fore_color.rgb = RGBColor.from_string(fill)
     else: s.fill.background()
@@ -97,6 +98,7 @@ def rect(slide, x, y, w, h, fill=None, line=None, shape=MSO_SHAPE.RECTANGLE, lw=
         s.line.fill.background()
     s.shadow.inherit = False
     tf = s.text_frame; tf.word_wrap = True
+    tf.vertical_anchor = anchor
     tf.margin_left = tf.margin_right = Inches(0.08)
     tf.margin_top = tf.margin_bottom = Inches(0.04)
     return s, tf
@@ -241,12 +243,12 @@ def talk_slide(s, no_title, talks, conc=None, note=None):
     lines(tf, [(no_title, {'size': 24, 'bold': True})])
     y = 1.92
     for label, body, h in talks:
-        _, tf = rect(s, 0.45, y, 8.05, h, fill=LTGRAY)
+        _, tf = rect(s, 0.45, y, 8.05, h, fill=LTGRAY, anchor=MSO_ANCHOR.MIDDLE)
         for i, ln in enumerate(body):
             p = para(tf, first=(i == 0), space_after=3)
             run(p, ln, size=14)
-        _, tf2 = rect(s, 8.68, y, 1.72, 0.38, fill=ORANGE)
-        lines(tf2, [(label, {'size': 12, 'bold': True, 'color': WHITE,
+        _, tf2 = rect(s, 8.68, y, 1.72, h, fill=ORANGE, anchor=MSO_ANCHOR.MIDDLE)
+        lines(tf2, [(label, {'size': 13, 'bold': True, 'color': WHITE,
                              'align': PP_ALIGN.CENTER})])
         y += h + 0.16
     if conc: conclusion(s, conc)
@@ -256,7 +258,7 @@ def talk_slide(s, no_title, talks, conc=None, note=None):
 s = new_slide('本日のゴール')
 box, tf = tb(s, 0.45, 1.45, 9.9, 0.62)
 lines(tf, [('アプローチブック26ページを、止まらずに1人で通せる',
-            {'size': 28, 'bold': True, 'color': RED})])
+            {'size': 25, 'bold': True, 'color': RED})])
 _, tf = rect(s, 0.45, 2.35, 9.95, 3.05, fill=LTGREEN)
 lines(tf, [
     ('研修が終わったときの「できる状態」', {'size': 18, 'bold': True, 'space': 10}),
@@ -294,8 +296,8 @@ rows = [
     ['第1回', '業界商材の知識講座', '−', '−', '知識は「自信」の材料'],
     ['第2回', '聞く姿勢づくり＆必要性訴求①', '①〜⑨', 'p.2〜p.17',
      '先に聞くから、聞いてもらえる／下げてから上げる'],
-    ['第3回', '必要性訴求②＆ロープレ', '⑩〜⑫', 'p.18〜p.21',
-     '災害は事実→事例→サラッと次へ／創る・貯める・使う'],
+    ['第3回', '災害対策・商品説明・経済メリット', '⑩〜⑫', 'p.18〜p.21',
+     '災害は3分で抜ける／FABのBは「お客様が主語」／経済メリットは2通り'],
     ['第4回', '時期・料金訴求＆ロープレ', '⑬〜⑳', 'p.23〜p.26＋見積り',
      '「いつ導入するのが賢いか」へ転換／総額は最後'],
     [('第5回', {'bold': True, 'color': RED}), ('総仕上げ通しロープレ', {'bold': True, 'color': RED}),

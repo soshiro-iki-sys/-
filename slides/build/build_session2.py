@@ -92,7 +92,8 @@ def lines(tf, items, size=16, color=BLACK, bold=False, space=5, font=GOTHIC, lin
             color=opts.pop('color', color), font=opts.pop('font', font),
             hl=opts.pop('hl', None))
 
-def rect(slide, x, y, w, h, fill=None, line=None, shape=MSO_SHAPE.RECTANGLE, lw=1.0):
+def rect(slide, x, y, w, h, fill=None, line=None, shape=MSO_SHAPE.RECTANGLE, lw=1.0,
+         anchor=MSO_ANCHOR.TOP):
     s = slide.shapes.add_shape(shape, Inches(x), Inches(y), Inches(w), Inches(h))
     if fill: s.fill.solid(); s.fill.fore_color.rgb = RGBColor.from_string(fill)
     else: s.fill.background()
@@ -102,6 +103,7 @@ def rect(slide, x, y, w, h, fill=None, line=None, shape=MSO_SHAPE.RECTANGLE, lw=
         s.line.fill.background()
     s.shadow.inherit = False
     tf = s.text_frame; tf.word_wrap = True
+    tf.vertical_anchor = anchor
     tf.margin_left = tf.margin_right = Inches(0.08)
     tf.margin_top = tf.margin_bottom = Inches(0.04)
     return s, tf
@@ -453,12 +455,12 @@ def talk_slide(s, no_title, talks, conc=None, note=None):
     lines(tf, [(no_title, {'size': 24, 'bold': True})])
     y = 1.92
     for label, body, h in talks:
-        _, tf = rect(s, 0.45, y, 8.05, h, fill=LTGRAY)
+        _, tf = rect(s, 0.45, y, 8.05, h, fill=LTGRAY, anchor=MSO_ANCHOR.MIDDLE)
         for i, ln in enumerate(body):
             p = para(tf, first=(i == 0), space_after=3)
             run(p, ln, size=14)
-        _, tf2 = rect(s, 8.68, y, 1.72, 0.38, fill=ORANGE)
-        lines(tf2, [(label, {'size': 12, 'bold': True, 'color': WHITE,
+        _, tf2 = rect(s, 8.68, y, 1.72, h, fill=ORANGE, anchor=MSO_ANCHOR.MIDDLE)
+        lines(tf2, [(label, {'size': 13, 'bold': True, 'color': WHITE,
                              'align': PP_ALIGN.CENTER})])
         y += h + 0.16
     if conc: conclusion(s, conc)

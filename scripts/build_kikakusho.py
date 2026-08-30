@@ -109,11 +109,7 @@ def footer(s, page, strip=True):
     para(tf, [(COPY, 8, WHITE, False, 'Arial')], PP_ALIGN.RIGHT, first=True)
 
 
-KIND = {'決裁': (RED, WHITE), '協議': (NAVY, WHITE),
-        '報告': (PALE, NAVY), '記録': (PALE, NAVY)}
-
-
-def header(s, title, tag, kind=None):
+def header(s, title, tag):
     tf = textbox(s, 0.56, 0.19, 12.78, 1.53)
     para(tf, [(title, 28, INK)], PP_ALIGN.LEFT, first=True)
     c = s.shapes.add_connector(MSO_CONNECTOR.STRAIGHT, Cm(0), Cm(1.72), Cm(W), Cm(1.72))
@@ -121,10 +117,6 @@ def header(s, title, tag, kind=None):
     s.shapes.add_picture(LOGO, Cm(24.56), Cm(0.19), Cm(2.72), Cm(1.40))
     sh = shape(s, LM, 1.85, 7.20, 0.81, fill=NAVY)
     para(sh.text_frame, [(tag, 16, WHITE)], PP_ALIGN.CENTER, first=True)
-    if kind:
-        bg, fg = KIND[kind]
-        b = shape(s, 7.55, 1.85, 2.60, 0.81, fill=bg, line=NAVY, lw=1.0)
-        para(b.text_frame, [(kind, 16, fg)], PP_ALIGN.CENTER, first=True)
 
 
 def lead(s, parts, h=1.10):
@@ -211,34 +203,26 @@ def cover():
 
 def toc():
     s = slide_blank()
-    header(s, '目次', '本日の検討範囲', '報告')
+    header(s, '目次', '本日の検討範囲')
     items = [
-        ('①', 'Ⅰ. 結論', '決めていただきたいこと', 'P3', '決裁'),
-        ('②', 'Ⅱ. 戦略', 'センターピンはどこか', 'P4', '協議'),
-        ('③', 'Ⅲ. 施策', 'どう獲り、育て、刈るか', 'P8', '協議'),
-        ('④', 'Ⅳ. 数値', 'いくら投じ、いくら返るか', 'P14', '決裁'),
-        ('⑤', 'Ⅴ. 実行', '誰が、いつまでに', 'P17', '協議'),
+        ('①', 'Ⅰ. 結論', '決めていただきたいこと', 'P3'),
+        ('②', 'Ⅱ. 戦略', 'センターピンはどこか', 'P4'),
+        ('③', 'Ⅲ. 施策', 'どう獲り、育て、刈るか', 'P8'),
+        ('④', 'Ⅳ. 数値', 'いくら投じ、いくら返るか', 'P14'),
+        ('⑤', 'Ⅴ. 実行', '誰が、いつまでに', 'P17'),
     ]
     y = 4.30
-    for num, label, sub, pg, kind in items:
+    for num, label, sub, pg in items:
         tf = textbox(s, 1.67, y, 1.94, 1.40)
         para(tf, [(num, 32, INK)], PP_ALIGN.CENTER, first=True)
-        tf = textbox(s, 3.89, y, 6.60, 1.40)
+        tf = textbox(s, 3.89, y, 7.50, 1.40)
         para(tf, [(label, 28, INK)], PP_ALIGN.LEFT, first=True)
-        tf = textbox(s, 10.70, y, 8.60, 1.40)
+        tf = textbox(s, 11.60, y, 11.00, 1.40)
         para(tf, [('～ ' + sub + ' ～', 18, NAVY)], PP_ALIGN.LEFT, first=True)
-        tf = textbox(s, 19.50, y, 2.40, 1.40)
+        tf = textbox(s, 23.00, y, 4.28, 1.40)
         para(tf, [(pg, 20, NAVY)], PP_ALIGN.RIGHT, first=True)
-        bg, fg = KIND[kind]
-        b = shape(s, 22.20, y + 0.20, 3.60, 1.00, fill=bg, line=NAVY, lw=1.0)
-        para(b.text_frame, [(kind, 16, fg)], PP_ALIGN.CENTER, first=True)
         y += 1.94
-    plain(s, LM, 14.20, CW, 1.00,
-          [[('※ 区分', 16, INK), ('　決裁', 16, RED), ('＝この場で承認をいただく／', 16, INK),
-            ('協議', 16, NAVY), ('＝意見をいただき方針を決める／', 16, INK),
-            ('報告', 16, NAVY), ('＝共有のみ', 16, INK)]],
-          fill=PALE, lw=1.0, align=PP_ALIGN.LEFT)
-    notes(s, '各章の区分（決裁／協議／報告）を明示し、打合せの進行に使う。')
+    notes(s, '各章の掲載ページを示す。')
     return s
 
 
@@ -272,7 +256,7 @@ def photo(s, x, y, w, h, label='写 真'):
 
 def case_page(tag, lead_parts, results, owner):
     """施策ごとの事例紹介ページ。POINT欄と成果帯だけを置き、中央は写真・本文用に空けておく。"""
-    s = slide_blank(); header(s, 'Ⅲ. 施策', tag, '報告')
+    s = slide_blank(); header(s, 'Ⅲ. 施策', tag)
     lead(s, lead_parts)
     sh = shape(s, LM, 4.05, 3.31, 1.28, fill=RED, line=RED, lw=1.0)
     para(sh.text_frame, [('P O I N T', 18, WHITE)], PP_ALIGN.CENTER, first=True)
@@ -287,7 +271,7 @@ def case_page(tag, lead_parts, results, owner):
 
 def exec_page(tag, lead_parts, items, target, question, owner):
     """施策ごとの実行ページ。何を・誰が・いつから・どこまでやるかを1枚に落とす。"""
-    s = slide_blank(); header(s, 'Ⅴ. 実行', tag, '協議')
+    s = slide_blank(); header(s, 'Ⅴ. 実行', tag)
     lead(s, lead_parts)
     cols = [(0.19, 1.80), (1.99, 13.80), (15.79, 4.00), (19.79, 3.60), (23.39, 3.89)]
     for (x, w), t in zip(cols, ['No.', '実行すること', '担　当', '開始時期', '月次目標']):
@@ -318,7 +302,7 @@ cover()
 toc()
 
 # --- 3 エグゼクティブサマリー ---
-s = slide_blank(); header(s, 'Ⅰ. 結論', 'エグゼクティブサマリー', '決裁')
+s = slide_blank(); header(s, 'Ⅰ. 結論', 'エグゼクティブサマリー')
 lead(s, [('■　提携24社 × 1社あたり名簿68件 → 粗利', 20, INK),
          ('2,600万円', 24, RED)])
 for x, hd, val in [(LM, '① 提携社数', '24社'),
@@ -338,7 +322,7 @@ issue(s, '論点｜', '粗利目標をいくらに置くか')
 notes(s, 'KGI＝粗利額。全数値が確定してから最後に執筆する。主担当：起案者。')
 
 # --- 4 背景と課題 ---
-s = slide_blank(); header(s, 'Ⅱ. 戦略', '背景と課題', '報告')
+s = slide_blank(); header(s, 'Ⅱ. 戦略', '背景と課題')
 lead(s, [('■　個人向け集客はもう伸びない。だから、', 20, INK),
          ('名簿を持つ企業と組む', 24, RED)])
 card(s, 0.29, 4.10, 13.17, 1.60, 5.20, [('これまで｜個人向け集客', 24, WHITE)],
@@ -357,7 +341,7 @@ issue(s, '論点｜', '個人向け集客をどこまで縮小するか')
 notes(s, '現状のリード獲得単価を自社実績から出す。CPA高騰の根拠データを別紙添付。主担当：経営企画。')
 
 # --- 5 センターピンの定義 ---
-s = slide_blank(); header(s, 'Ⅱ. 戦略', 'センターピンの定義', '協議')
+s = slide_blank(); header(s, 'Ⅱ. 戦略', 'センターピンの定義')
 lead(s, [('■　勝敗を決めるのは、たった1つの数字＝', 20, INK), ('総名簿数', 24, RED)])
 sh = shape(s, LM, 4.20, CW, 1.50, fill=NAVY, line=NAVY, lw=1.5)
 para(sh.text_frame, [('セ ン タ ー ピ ン', 24, YEL)], PP_ALIGN.CENTER, first=True)
@@ -378,7 +362,7 @@ issue(s, '論点｜', '総名簿数の目標値をいくつに置くか')
 notes(s, '総名簿数 = 提携社数 × 1社あたり名簿数。未確定：目標提携社数、1社あたり想定名簿数。主担当：起案者。')
 
 # --- 6 KPIツリー ---
-s = slide_blank(); header(s, 'Ⅱ. 戦略', 'KPIツリー', '協議')
+s = slide_blank(); header(s, 'Ⅱ. 戦略', 'KPIツリー')
 lead(s, [('■　粗利（KGI）は、名簿数（中間KPI）と施策KPIに', 20, INK),
          ('分解できる', 24, RED)])
 plain(s, LM, 4.05, CW, 1.50,
@@ -405,7 +389,7 @@ issue(s, '論点｜', '月次で追うKPIをどの4つに絞るか')
 notes(s, 'KGI（粗利）→ 中間KPI（総名簿数）→ 施策KPI の3階層。各率は「KPI前提と事例」ページと一致させる。主担当：経営企画。')
 
 # --- 7 全体構造図 ---
-s = slide_blank(); header(s, 'Ⅱ. 戦略', '全体構造図', '報告')
+s = slide_blank(); header(s, 'Ⅱ. 戦略', '全体構造図')
 lead(s, [('■　獲得 → 育成 → 刈り取り → 回収。この', 20, INK),
          ('4段', 24, RED), ('で名簿が積み上がる', 20, INK)])
 for x, hd, lines in [(0.19, '① 獲　得', ['訪問・飛び込み', 'DLレポート']),
@@ -431,7 +415,7 @@ issue(s, '論点｜', 'どの段から着手するか')
 notes(s, '獲得→育成ハブ→刈り取り→名簿回収。各段の転換率は「KPI前提と事例」ページで管理。主担当：起案者。')
 
 # --- 8 訪問・飛び込み営業 ---
-s = slide_blank(); header(s, 'Ⅲ. 施策', '訪問・飛び込み営業', '協議')
+s = slide_blank(); header(s, 'Ⅲ. 施策', '訪問・飛び込み営業')
 lead(s, [('■　断られても名刺は必ず獲る。それがそのまま', 20, INK),
          ('メルマガの母数', 24, RED), ('になる', 20, INK)])
 card(s, LM, 4.05, CW, 1.30, 2.40, [('提携社数の公式', 20, YEL)],
@@ -462,7 +446,7 @@ case_page('事例｜訪問',
           'リスト120件 → 商談15件（12.5％）→ 提携3社（20％）', '営業')
 
 # --- 10 DLレポート ---
-s = slide_blank(); header(s, 'Ⅲ. 施策', 'DLレポート', '協議')
+s = slide_blank(); header(s, 'Ⅲ. 施策', 'DLレポート')
 lead(s, [('■　訪問で回れない', 20, INK), ('1,920社', 24, RED),
          ('に、フォーム営業で届ける', 20, INK)])
 card(s, LM, 4.05, CW, 1.30, 2.40, [('獲得リード数の公式', 20, YEL)],
@@ -496,7 +480,7 @@ case_page('事例｜DLレポート',
           'クリック率【　】％　→　DL率【　】％　→　獲得リード【　　】件', 'マーケ')
 
 # --- 12 育成ハブ＆刈り取り ---
-s = slide_blank(); header(s, 'Ⅲ. 施策', '育成ハブ＆刈り取り', '協議')
+s = slide_blank(); header(s, 'Ⅲ. 施策', '育成ハブ＆刈り取り')
 lead(s, [('■　メルマガで育て、テレアポで送客し、', 20, INK),
          ('セミナーで刈り取る', 24, RED)])
 for x, hd, lines in [(LM, 'STEP 1｜週1メルマガ', ['事例・DL案内・', 'セミナー告知を', '交互に配信する']),
@@ -530,7 +514,7 @@ case_page('事例｜育成・刈り取り',
           '配信7,775通 → 開封16.9％ → クリック13社 → DL 9件', 'マーケ／営業')
 
 # --- 14 KPI前提と事例 ---
-s = slide_blank(); header(s, 'Ⅳ. 数値', 'KPI前提と事例', '協議')
+s = slide_blank(); header(s, 'Ⅳ. 数値', 'KPI前提と事例')
 lead(s, [('■　各施策のKPIと、その', 20, INK), ('根拠となる事例', 24, RED),
          ('まとめ', 20, INK)])
 c14 = [(0.19, 6.00), (6.19, 7.00), (13.19, 5.00), (18.19, 9.09)]
@@ -567,7 +551,7 @@ notes(s, '施策ごとにKPIと事例をひとまとめにした前提条件表�
          '事例企業名は確定後に差し替える（現状は〇社＠◯◯市）。主担当：経営企画。')
 
 # --- 15 収支シミュレーション ---
-s = slide_blank(); header(s, 'Ⅳ. 数値', '収支シミュレーション', '決裁')
+s = slide_blank(); header(s, 'Ⅳ. 数値', '収支シミュレーション')
 lead(s, [('■　この1年間での', 20, INK), ('目標数値', 24, RED),
          ('です。投資は年452万円', 20, INK)])
 card(s, LM, 4.57, CW, 1.20, 1.90, [('売上の公式', 18, YEL)],
@@ -595,7 +579,7 @@ notes(s, '売上 = 名簿数 × アポ率 × 商談化率 × 成約率 × 平均
          '悲観値・標準値・楽観値の3ケースで置く。主担当：経営企画。')
 
 # --- 16 パートナー収益試算 ---
-s = slide_blank(); header(s, 'Ⅳ. 数値', 'パートナー収益試算', '協議')
+s = slide_blank(); header(s, 'Ⅳ. 数値', 'パートナー収益試算')
 lead(s, [('■　提携先が儲からなければ、', 20, INK), ('提携率の前提が崩れる', 24, RED)])
 card(s, LM, 4.05, CW, 1.30, 2.40, [('提携先の年間手数料', 20, YEL)],
      [[('年間手数料 ＝ 預けた名簿', 20, INK), ('195件', 20, RED),
@@ -617,7 +601,7 @@ notes(s, '年間手数料 = 名簿数 × 点検実施率 × 手数料単価。'
          'ここが弱いと「訪問」「育成ハブ＆刈り取り」ページの提携率の前提が崩れる。主担当：営業。')
 
 # --- 17 ロードマップ ---
-s = slide_blank(); header(s, 'Ⅴ. 実行', 'ロードマップ', '協議')
+s = slide_blank(); header(s, 'Ⅴ. 実行', 'ロードマップ')
 lead(s, [('■　', 20, INK), ('3ヶ月', 24, RED), ('で、提携が生まれる状態をつくる', 20, INK)])
 for x, hd, lines in [(LM, '1ヶ月目', ['訪問開始', 'DL第1号を制作']),
                      (9.47, '2ヶ月目', ['メルマガ配信開始', 'DL広告を出稿']),

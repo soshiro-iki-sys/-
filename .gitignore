@@ -17,3 +17,6 @@ output/
 .DS_Store
 Thumbs.db
 .vscode/
+
+# Python のキャッシュ
+__pycache__/

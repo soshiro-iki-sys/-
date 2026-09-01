@@ -854,8 +854,8 @@ exec_page('実行｜メルマガ',
            ('まで落とす', T_LEAD, INK)],
           [('配信リストをCRMに一本化する（訪問名刺・DL者）', '', '', '―'),
            ('年間の配信カレンダーを作る（週1回・曜日固定）', '', '', '―'),
-           ('配信フォーマットを決める（事例＋DL＋告知）', '', '', '―'),
-           ('事例ストックを作る（営業から月2本吸い上げる）', '', '', '2本／月'),
+           ('配信フォーマットを2型で固定する（通常回／告知回）', '', '', '―'),
+           ('お役立ち情報のネタをストックする（5種類から）', '', '', '4本／月'),
            ('毎週配信し、開封・クリックを記録する（月2,900通）', '', '', '4本／月'),
            ('クリックした先を週次で営業へ渡す', '', '', '4件／月')],
           '配信 2,900通　→　開封 490件（16.9％）　→　クリック 4件',
@@ -864,60 +864,78 @@ exec_page('実行｜メルマガ',
 
 # --- 21 見本｜メルマガ ---
 s = slide_blank(); header(s, 'Ⅴ. 実行', '見本｜メルマガ')
-lead(s, [('■　毎週の1通は、', T_LEAD, INK), ('3ブロック固定', T_LEADEM, RED),
-         ('。事例 → DL → 勉強会の順に並べる', T_LEAD, INK)])
-MW = W2
-shape(s, M, CT, MW, CB - CT, fill=SOFT, line=NAVY, lw=1.5)
-IX, IW = M + 0.30, MW - 0.60
-plain(s, IX, CT + 0.30, IW, 0.85,
-      [[('件名：【事例】工事を持たずに、太陽光で年間粗利◯◯万円', T_SUB, INK)]],
-      fill=WHITE, line=NAVY, lw=1.0, align=PP_ALIGN.LEFT)
-tf = textbox(s, IX, 5.30, IW, 0.55)
-para(tf, [('差出人：船井総研 住宅エネルギーチーム　／　2026年◯月◯日', T_SUB, NAVY)],
-     PP_ALIGN.LEFT, first=True)
-_y = 6.00
-for _hd, _bd in [
-        ('① 今週の事例',
-         ['山梨県のT社は、施工体制を持たないまま太陽光の提案を始め、',
-          '半年で3社と締結。きっかけは1件の飛び込み訪問でした。']),
-        ('② お役立ち資料（DL）のご案内',
-         ['新レポート「工務店のための太陽光・蓄電池 提携モデル解説」を',
-          '公開しました。全12ページ・無料でDLいただけます。'])]:
-    plain(s, IX, _y, IW, 0.78, [[(_hd, T_SUB, WHITE)]], fill=NAVY, line=NAVY, lw=1.0,
-          align=PP_ALIGN.LEFT)
-    tf = textbox(s, IX + 0.20, _y + 0.88, IW - 0.40, 1.45, MSO_ANCHOR.TOP)
-    for _i, _t in enumerate(_bd):
-        para(tf, [(_t, T_SUB, INK)], PP_ALIGN.LEFT, 1.4, first=(_i == 0))
-    _y += 2.55
-plain(s, M + (MW - 6.70) / 2, 11.05, 6.70, 0.85,
-      [[('▶　資料をダウンロードする', T_SUB, WHITE)]], fill=RED, line=RED, lw=1.0)
-plain(s, IX, 12.10, IW, 0.78, [[('③ 勉強会のご案内', T_SUB, WHITE)]],
-      fill=NAVY, line=NAVY, lw=1.0, align=PP_ALIGN.LEFT)
-tf = textbox(s, IX + 0.20, 12.98, IW - 0.40, 1.45, MSO_ANCHOR.TOP)
-para(tf, [('◯月◯日（◯）オンラインで「太陽光・蓄電池 収益化セミナー」を', T_SUB, INK)],
-     PP_ALIGN.LEFT, 1.4, first=True)
-para(tf, [('開催します。定員30社・参加費無料です。', T_SUB, INK)], PP_ALIGN.LEFT, 1.4)
-tf = textbox(s, IX + 0.20, 14.50, IW - 0.40, 0.50)
-para(tf, [('配信元：株式会社船井総合研究所　／　配信停止はこちら', T_SUB, GRAY)],
-     PP_ALIGN.LEFT, first=True)
-card(s, X2[1], CT, W2, 1.10, 3.60, [('配信ルール', T_TAG, WHITE)],
-     [[('・毎週◯曜◯時に固定して配信する', T_BODY, INK)],
-      [('・1通＝3ブロック構成で固定する', T_BODY, INK)],
-      [('・件名は「【事例】」から始める', T_BODY, INK)],
-      [('・本文は3分で読み切れる長さに収める', T_BODY, INK)]],
-     head_size=T_TAG, body_size=T_BODY, body_spc=1.6)
-card(s, X2[1], 9.15, W2, 1.10, CB - 10.25, [('3ブロックの狙い', T_TAG, WHITE)],
-     [[('・① 事例｜提携先の成果を見せて信用をつくる', T_BODY, INK)],
-      [('・② DL｜新しいレポートへ誘導し、DLを増やす', T_BODY, INK)],
-      [('・③ 告知｜勉強会へ送客し、提携の場に連れていく', T_BODY, INK)],
-      [('・②③のクリック者は、週次で営業へ渡す', T_BODY, INK)],
-      [('・事例は営業から月2本吸い上げてストックする', T_BODY, INK)]],
-     head_size=T_TAG, body_size=T_BODY, body_spc=1.6)
-rec('マーケ', '配信曜日・時刻、初回配信日、差出人名義')
-keymsg(s, '形を固定するから、毎週続けられる。')
-notes(s, 'メルマガのたたき台。件名・差出人・3ブロック（事例／DL告知／勉強会告知）・CTA・'
-         'フッターまでの誌面イメージ。右は配信ルールと各ブロックの狙い。'
-         '形を固定することで制作負荷を下げ、週1配信を継続できるようにする。主担当：マーケ。')
+lead(s, [('■　配信は', T_LEAD, INK), ('通常回', T_LEADEM, RED), ('と', T_LEAD, INK),
+         ('告知回', T_LEADEM, RED), ('の2パターンに固定する', T_LEAD, INK)])
+MTOP, MBOT = CT, 12.75
+
+
+def _mail(x, w, label, subject, blocks):
+    """メール誌面のモック。blocks は (見出し, [本文行], CTA文字列 or None)。"""
+    plain(s, x, MTOP, w, 0.85, [[(label, T_SUB, YEL)]], fill=NAVY, line=NAVY, lw=1.5)
+    shape(s, x, MTOP + 0.85, w, MBOT - MTOP - 0.85, fill=SOFT, line=NAVY, lw=1.5)
+    ix, iw = x + 0.28, w - 0.56
+    plain(s, ix, 5.15, iw, 0.80, [[(subject, T_SUB, INK)]],
+          fill=WHITE, line=NAVY, lw=1.0, align=PP_ALIGN.LEFT)
+    tf = textbox(s, ix, 6.00, iw, 0.70)
+    para(tf, [('差出人：船井総研 住宅エネルギーチーム', T_SUB, NAVY)], PP_ALIGN.LEFT, first=True)
+    y = 6.80
+    for hd, body, cta in blocks:
+        plain(s, ix, y, iw, 0.66, [[(hd, T_SUB, WHITE)]], fill=NAVY, line=NAVY, lw=1.0,
+              align=PP_ALIGN.LEFT)
+        y += 0.72
+        bh = 0.68 * len(body) + 0.05
+        tf = textbox(s, ix + 0.18, y, iw - 0.36, bh, MSO_ANCHOR.TOP)
+        for i, t in enumerate(body):
+            para(tf, [(t, T_SUB, INK)], PP_ALIGN.LEFT, 1.3, first=(i == 0))
+        y += bh + 0.06
+        if cta:
+            plain(s, x + (w - 6.20) / 2, y, 6.20, 0.66, [[(cta, T_SUB, WHITE)]],
+                  fill=RED, line=RED, lw=1.0)
+            y += 0.74
+
+
+_mail(X2[0], W2, 'パターン①｜通常回　お役立ち情報 ＋ DL',
+      '件名：【　　　　　　　　　　　　　　　　　　　】',
+      [('① お役立ち情報　※ネタは下の5種類から1つ',
+        ['【　　　　　　　　　　　　　　　　　　　　　】',
+         '【　　　　　　　　　　　　　　　　　　　　　】'], None),
+       ('② お役立ち資料（DL）のご案内',
+        ['新レポート「工務店のための太陽光・蓄電池 提携モデル',
+         '解説」を公開しました。全12ページ・無料です。'],
+        '▶　資料をダウンロードする')])
+_mail(X2[1], W2, 'パターン②｜告知回　お役立ち情報 ＋ DL ＋ 勉強会',
+      '件名：【勉強会】◯月◯日 太陽光・蓄電池 収益化セミナー',
+      [('① お役立ち情報　※ネタは下の5種類から1つ',
+        ['【　　　　　　　　　　　　　　　　　　　　　】'], None),
+       ('② お役立ち資料（DL）のご案内',
+        ['新レポート「提携モデル解説」を公開しました。'],
+        '▶　資料をダウンロードする'),
+       ('③ 勉強会のご案内',
+        ['◯月◯日（◯）オンライン開催。定員30社・無料。'],
+        '▶　勉強会に申し込む')])
+plain(s, M, 12.95, CW, 0.85,
+      [[('お役立ち情報のネタ　―　事例だけに寄せない。5種類から毎回1つ選ぶ', T_BODY, WHITE)]],
+      fill=NAVY, line=NAVY, lw=1.0)
+X5, W5 = cols(5, 0.28)
+for x, hd, line in zip(X5,
+        ['① 成功事例', '② 制度・補助金', '③ 市場データ', '④ トーク集', '⑤ Ｑ ＆ Ａ'],
+        ['・工務店・不動産の事例', '・今年使える補助金と締切', '・設置動向と価格の推移',
+         '・施主・オーナーへの伝え方', '・提携先からよく出る質問']):
+    plain(s, x, 13.80, W5, 0.66, [[(hd, T_SUB, WHITE)]], fill=NAVY, line=NAVY, lw=1.0)
+    plain(s, x, 14.46, W5, CB - 14.46, [[(line, T_SUB, INK)]],
+          fill=PALE, line=NAVY, lw=1.0, align=PP_ALIGN.LEFT)
+rec('マーケ', '工務店・不動産会社の成功事例、配信曜日・時刻、初回配信日')
+keymsg(s, 'ネタは毎回替える。器は2つだけに固定する。')
+notes(s, 'メルマガのたたき台。配信は2パターンだけに固定する。'
+         '①通常回＝お役立ち情報＋DL案内、②告知回＝お役立ち情報＋DL案内＋勉強会告知。'
+         'なお既存のメルマガ実績（開封16.9％→クリック0.8％→DL70％）は、'
+         '住宅用太陽光・蓄電池の販売店に配信したもので、'
+         '今回の配信先である工務店・不動産会社の事例ではない。'
+         '①の枠には工務店・不動産会社の成功事例を入れる想定で空欄にしてある。'
+         'お役立ち情報は事例に限らず、制度・補助金／市場データ／トーク集／Q&Aの5種類から'
+         '毎回1つ選ぶ。配信ルールは、毎週◯曜◯時に固定、件名は【　】から始める、'
+         '本文は3分で読み切れる長さ、CTAは1通1つ。'
+         '②③のクリック者は週次で営業へ渡す。主担当：マーケ。')
 
 # --- 22 実行｜セミナー ---
 exec_page('実行｜セミナー',

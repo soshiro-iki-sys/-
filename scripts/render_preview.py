@@ -85,9 +85,23 @@ for idx, s in enumerate(prs.slides, 1):
         name = sh.name or ''
         if 'Arrow' in name or 'ARROW' in st:
             if fill:
-                d.polygon([(x + w * .5, y), (x + w, y + h * .5), (x + w * .75, y + h * .5),
+                prst = ''
+                g = sh.element.find('.//' + qn('a:prstGeom'))
+                if g is not None:
+                    prst = g.get('prst') or ''
+                if prst == 'rightArrow':
+                    pts = [(x, y + h * .25), (x + w * .5, y + h * .25), (x + w * .5, y),
+                           (x + w, y + h * .5), (x + w * .5, y + h),
+                           (x + w * .5, y + h * .75), (x, y + h * .75)]
+                elif prst == 'downArrow':
+                    pts = [(x + w * .25, y), (x + w * .75, y), (x + w * .75, y + h * .5),
+                           (x + w, y + h * .5), (x + w * .5, y + h), (x, y + h * .5),
+                           (x + w * .25, y + h * .5)]
+                else:
+                    pts = [(x + w * .5, y), (x + w, y + h * .5), (x + w * .75, y + h * .5),
                            (x + w * .75, y + h), (x + w * .25, y + h),
-                           (x + w * .25, y + h * .5), (x, y + h * .5)], fill=fill)
+                           (x + w * .25, y + h * .5), (x, y + h * .5)]
+                d.polygon(pts, fill=fill)
             continue
         if fill or lc:
             d.rectangle([x, y, x + w, y + h], fill=fill,

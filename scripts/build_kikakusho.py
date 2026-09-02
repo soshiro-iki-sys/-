@@ -777,77 +777,56 @@ keymsg(s, '投資452万円に対し、標準ケースで粗利2,060万円。')
 notes(s, '売上 = 獲得名簿数 × アポ率 × 商談化率 × 成約率 × 平均単価。'
          '悲観値・標準値・楽観値の3ケースで置く。主担当：経営企画。')
 
-# --- 16 投資と回収 ---
-s = slide_blank(); header(s, 'Ⅳ. 数値', '投資と回収')
-lead(s, [('■　投資は年', T_LEAD, INK), ('452万円', T_LEADEM, RED),
-         ('。回収は提携', T_LEAD, INK), ('4社', T_LEADEM, RED), ('で足りる', T_LEAD, INK)])
-plain(s, X2[0], CT, W2, 1.30, [[('投資の内訳（年額）', T_HEAD, WHITE)]],
-      fill=NAVY, line=NAVY, lw=1.5)
-cwI = [5.60, 3.30, 4.40]
-cxI = [X2[0]]
+# --- 16 投資の内訳 ---
+s = slide_blank(); header(s, 'Ⅳ. 数値', '投資の内訳')
+lead(s, [('■　初年度に出ていく現金は年', T_LEAD, INK), ('452万円', T_LEADEM, RED),
+         ('。中身はこの3つだけ', T_LEAD, INK)])
+cwI = [9.00, 5.00, 12.92]
+cxI = [M]
 for w in cwI[:-1]:
     cxI.append(cxI[-1] + w)
-for x, w, t in zip(cxI, cwI, ['項　目', '年　額', '備　考']):
-    plain(s, x, 5.35, w, 0.95, [[(t, T_BODY, WHITE)]], fill=NAVY, line=NAVY, lw=1.0)
-_y = 6.30
-for _it, _am, _nt, _last in [('FB広告（DL訴求）', '360万円', '月30万円 × 12ヶ月', False),
-                             ('セールスブレイカー', '72万円', '月6万円・25％OFF', False),
-                             ('セミナー運営', '20万円', '年4回・オンライン', False),
-                             ('合　計', '452万円', '―', True)]:
+for x, w, t in zip(cxI, cwI, ['項　目', '年　額', '内訳・備考']):
+    plain(s, x, CT, w, 1.00, [[(t, T_TAG, WHITE)]], fill=NAVY, line=NAVY, lw=1.0)
+_y = CT + 1.00
+for _it, _am, _nt, _last in [
+        ('FB広告（DL訴求）', '360万円', '月30万円 × 12ヶ月。DL申込LPへの誘導に使う', False),
+        ('セールスブレイカー', '72万円', '月6万円 × 12ヶ月。25％OFF適用時の価格', False),
+        ('セミナー運営', '20万円', '年4回 × 5万円。オンライン開催（Zoomウェビナー）', False),
+        ('合　計', '452万円', '―', True)]:
     _fl = PALE if _last else WHITE
-    plain(s, cxI[0], _y, cwI[0], 0.95, [[(_it, T_BODY, NAVY if _last else INK)]],
+    plain(s, cxI[0], _y, cwI[0], 1.30, [[(_it, T_TAG, NAVY if _last else INK)]],
           fill=_fl, line=NAVY, lw=1.0, align=PP_ALIGN.LEFT)
-    plain(s, cxI[1], _y, cwI[1], 0.95, [[(_am, T_BODY, RED)]], fill=_fl, line=NAVY, lw=1.0)
-    plain(s, cxI[2], _y, cwI[2], 0.95, [[(_nt, T_SUB, NAVY)]], fill=_fl, line=NAVY, lw=1.0)
-    _y += 0.95
-plain(s, X2[1], CT, W2, 1.30, [[('回収シミュレーション', T_HEAD, WHITE)]],
-      fill=NAVY, line=NAVY, lw=1.5)
-cwR = [3.10, 3.30, 3.50, 3.40]
-cxR = [X2[1]]
-for w in cwR[:-1]:
-    cxR.append(cxR[-1] + w)
-for x, w, t in zip(cxR, cwR, ['年　次', '投　資', '粗利（KGI）', '回収倍率']):
-    plain(s, x, 5.35, w, 0.95, [[(t, T_BODY, WHITE)]], fill=NAVY, line=NAVY, lw=1.0)
-_y = 6.30
-for _yr, _iv, _gp, _rt, _last in [('1年目', '452万円', '2,060万円', '4.6倍', False),
-                                  ('2年目', '452万円', '4,280万円', '9.5倍', False),
-                                  ('3年目', '452万円', '5,460万円', '12.1倍', False),
-                                  ('3年累計', '1,356万円', '11,800万円', '8.7倍', True)]:
-    _fl = PALE if _last else WHITE
-    plain(s, cxR[0], _y, cwR[0], 0.95, [[(_yr, T_BODY, NAVY if _last else INK)]],
-          fill=_fl, line=NAVY, lw=1.0)
-    plain(s, cxR[1], _y, cwR[1], 0.95, [[(_iv, T_BODY, INK)]], fill=_fl, line=NAVY, lw=1.0)
-    plain(s, cxR[2], _y, cwR[2], 0.95, [[(_gp, T_BODY, RED)]], fill=_fl, line=NAVY, lw=1.0)
-    plain(s, cxR[3], _y, cwR[3], 0.95, [[(_rt, T_BODY, RED)]], fill=_fl, line=NAVY, lw=1.0)
-    _y += 0.95
-card(s, X2[0], 10.40, W2, 1.20, CB - 11.60, [('かからない費用', T_HEAD, WHITE)],
-     [[('・人件費　既存の体制で回すため増えない', T_BODY, INK)],
-      [('・DL・メルマガの制作費　当社が引き受ける', T_BODY, INK)],
+    plain(s, cxI[1], _y, cwI[1], 1.30, [[(_am, T_LEAD, RED)]], fill=_fl, line=NAVY, lw=1.0)
+    plain(s, cxI[2], _y, cwI[2], 1.30, [[(_nt, T_BODY, NAVY)]], fill=_fl, line=NAVY,
+          lw=1.0, align=PP_ALIGN.LEFT)
+    _y += 1.30
+card(s, X2[0], 10.55, W2, 1.20, CB - 11.75, [('かからない費用', T_HEAD, WHITE)],
+     [[('・DL・メルマガの制作費　当社が引き受ける', T_BODY, INK)],
       [('・CRM　当面は無料プランを使う', T_BODY, INK)],
-      [('・名簿のデータ化　提携先から受け取る形', T_BODY, INK)]],
+      [('・名簿のデータ化　提携先から受け取る形', T_BODY, INK)],
+      [('・人件費　既存の3名体制で回すため増えない', T_BODY, INK)]],
      head_size=T_HEAD, body_size=T_BODY, body_spc=1.7)
-card(s, X2[1], 10.40, W2, 1.20, CB - 11.60, [('回収の目安', T_HEAD, WHITE)],
+card(s, X2[1], 10.55, W2, 1.20, CB - 11.75, [('回収の目安', T_HEAD, WHITE)],
      [[('・損益分岐は提携4社（1社あたり粗利129万円）', T_BODY, INK)],
       [('・名簿1件あたりの獲得単価は4,100円', T_BODY, INK)],
       [('・個人向けCPA 40,000円のおよそ10分の1', T_BODY, INK)],
       [('・ツールの25％OFFが切れると年476万円', T_BODY, INK)]],
      head_size=T_HEAD, body_size=T_BODY, body_spc=1.7)
-rec('経営企画', 'ツールの25％OFFの適用期間、FB広告の月額の確定')
-keymsg(s, '投資452万円は、提携4社で回収できる。')
-notes(s, '投資の内訳と回収の見通し。内訳はFB広告360万円（月30万円）、'
-         'セールスブレイカー72万円（月6万円・25％OFF適用時）、セミナー運営20万円（年4回）の'
-         '合計452万円。人件費・制作費・CRM・名簿のデータ化は追加の現金支出が発生しないため'
-         '計上していない。損益分岐は提携4社（粗利2,060万円 ÷ 16社 ＝ 1社あたり129万円）。'
+rec('経営企画', 'セミナー運営費の実額、ツールの25％OFFの適用期間')
+keymsg(s, '初年度に出ていく現金は、452万円だけ。')
+notes(s, '初年度の投資内訳。FB広告360万円（月30万円）、セールスブレイカー72万円'
+         '（月6万円・25％OFF適用時）、セミナー運営20万円（年4回 × 5万円）の合計452万円。'
+         'セミナー運営の5万円/回は仮置きで、オンライン開催なら実際はもっと安い一方、'
+         'セミナー告知のDM発送費は含めていない。実額が出たら差し替える。'
+         '制作費・CRM・名簿のデータ化・人件費は追加の現金支出が発生しないため計上していない。'
+         '損益分岐は提携4社（粗利2,060万円 ÷ 16社 ＝ 1社あたり129万円）。'
          '名簿1件あたりの獲得単価は452万円 ÷ 1,090件 ＝ 4,100円で、'
          '個人向けCPA 40,000円のおよそ10分の1。'
-         '2年目・3年目は、名簿共有まで進んだ先の累計を 6社 → 17社 → 32社 と置き、'
-         'その年に新たに進んだ先 × 195件 を「その年に預かる名簿」として積み上げている。'
-         '到達率が35％ → 53％ → 67％ と上がる前提は根拠のない置きなので、要確認。'
          'ツールの25％OFFが切れると通常価格96万円となり、投資は年476万円になる。主担当：経営企画。')
 
 # --- 17 計算ロジック ---
 s = slide_blank(); header(s, 'Ⅳ. 数値', '計算ロジック')
-lead(s, [('■　この企画の数字は、すべて', T_LEAD, INK), ('この4本の式', T_LEADEM, RED),
+lead(s, [('■　この企画の数字は、すべて', T_LEAD, INK), ('この3本の式', T_LEADEM, RED),
          ('から出ている', T_LEAD, INK)])
 _y = CT
 for _hd, _rows in [
@@ -870,23 +849,18 @@ for _hd, _rows in [
        (' × 成約率 ', T_TAG, INK), ('30％', T_TAG, RED),
        ('　＝　契約 ', T_TAG, INK), ('28件', T_TAG, RED)],
       [('契約 28件 × 平均単価 250万円 ＝ 売上 ', T_TAG, INK), ('6,900万円', T_TAG, RED),
-       ('　× 粗利率 30％ ＝ ', T_TAG, INK), ('粗利 2,060万円', T_TAG, RED)]]),
-    ('STEP 4｜2年目以降はどう出したか',
-     [[('提携は毎年16社ずつ積み上がり、共有まで進む率は ', T_TAG, INK),
-       ('35％ → 53％ → 67％', T_TAG, RED), (' と上がると置いた', T_TAG, INK)],
-      [('その年に新たに進んだ先 × 195件 ＝ その年に預かる名簿（', T_TAG, INK),
-       ('2,270件 → 2,890件', T_TAG, RED), ('）', T_TAG, INK)]])]:
-    plain(s, M, _y, CW, 1.00, [[(_hd, T_BODY, YEL)]], fill=NAVY, line=NAVY, lw=1.5)
-    plain(s, M, _y + 1.00, CW, 1.65, _rows, fill=WHITE, line=NAVY, lw=1.5,
-          align=PP_ALIGN.CENTER, spc=1.3)
-    _y += 2.83
-rec('経営企画', 'STEP4の到達率（2年目53％・3年目67％）の妥当性')
-keymsg(s, '数字はすべて、この4本の式から出ている。')
+       ('　× 粗利率 30％ ＝ ', T_TAG, INK), ('粗利 2,060万円', T_TAG, RED)]])]:
+    plain(s, M, _y, CW, 1.10, [[(_hd, T_BODY, YEL)]], fill=NAVY, line=NAVY, lw=1.5)
+    plain(s, M, _y + 1.10, CW, 2.15, _rows, fill=WHITE, line=NAVY, lw=1.5,
+          align=PP_ALIGN.CENTER, spc=1.4)
+    _y += 3.95
+rec('経営企画', '仮説値の確定（名刺獲得率50％・名簿の共有率65％・初年度到達率35％）')
+keymsg(s, '数字はすべて、この3本の式から出ている。')
 notes(s, '計算ロジックの明細ページ。打合せで「その数字はどう出したのか」と聞かれたときの'
          '答えを1枚にまとめた。STEP1〜3は初年度の計算で、KPI前提と事例ページの仮説値を'
-         'そのまま使っている。STEP4の2年目以降だけは、共有まで進む率が35％ → 53％ → 67％と'
-         '上がるという置きに依存しており、ここには根拠がない。'
-         '「提携から名簿共有まで何ヶ月かかる感覚か」を確認して差し替える。主担当：経営企画。')
+         'そのまま使っている。このうち根拠が弱いのは、名簿の共有される割合65％と'
+         '初年度に共有まで進む率35％の2つ。この2つで1社あたりの名簿数68件が決まるため、'
+         'ここが動くと全体が動く。主担当：経営企画。')
 
 # --- 18 ロードマップ ---
 s = slide_blank(); header(s, 'Ⅴ. 実行', 'ロードマップ')

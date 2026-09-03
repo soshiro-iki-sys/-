@@ -929,7 +929,7 @@ para(tf, [('― 工事を持たずに、', T_BODY, INK)], PP_ALIGN.LEFT, 1.35, f
 para(tf, [('　売上をつくる3つの型 ―', T_BODY, INK)], PP_ALIGN.LEFT, 1.35)
 photo(s, M + 0.35, 10.30, CVW - 0.70, 2.60, '図 版 ・ 写 真')
 tf = textbox(s, M + 0.35, 13.20, CVW - 0.70, 1.55, MSO_ANCHOR.TOP)
-para(tf, [('株式会社 船井総合研究所', T_SUB, INK)], PP_ALIGN.LEFT, 1.45, first=True)
+para(tf, [('株式会社ワン・ミニット', T_SUB, INK)], PP_ALIGN.LEFT, 1.45, first=True)
 para(tf, [('A4縦 ／ 全12ページ ／ PDF', T_SUB, NAVY)], PP_ALIGN.LEFT, 1.45)
 TX, TW = M + CVW + 0.34, 11.40     # 目次
 plain(s, TX, CT, TW, 1.10, [[('目　次（全12ページ）', T_TAG, WHITE)]],
@@ -955,7 +955,8 @@ card(s, RX, CT, RW, 1.10, 4.30, [('制作要件', T_TAG, WHITE)],
       [('・DL申込LP経由で提供する', T_SUB, INK)],
       [('・1.5ヶ月に1本・年8本', T_SUB, INK)],
       [('・第1号の公開は【　月】', T_SUB, INK)],
-      [('・制作は船井が担当', T_SUB, INK)]], head_size=T_TAG, body_size=T_SUB, body_spc=1.6)
+      [('・差出人は貴社。船井の要素は入れない', T_SUB, INK)]],
+     head_size=T_TAG, body_size=T_SUB, body_spc=1.6)
 card(s, RX, 9.85, RW, 1.10, CB - 10.95, [('次号以降のテーマ案', T_TAG, WHITE)],
      [[('・第2号 補助金の使い方', T_SUB, INK)],
       [('・第3号 蓄電池リプレイス', T_SUB, INK)],
@@ -967,7 +968,10 @@ rec('マーケ', '第1号のテーマ確定と公開時期、掲載する事例'
 keymsg(s, 'DLで確実にリードを獲得していく。')
 notes(s, 'DLレポートのたたき台。左が表紙イメージ、中央が目次案、右が制作要件と次号以降の'
          'テーマ案。第1号は「工務店のための太陽光・蓄電池 提携モデル解説」を想定し、'
-         'A4縦12ページのPDFとしてDL申込LP経由で配布する。主担当：マーケ。')
+         'A4縦12ページのPDFとしてDL申込LP経由で配布する。'
+         '差出人は貴社（株式会社ワン・ミニット）。読み手は工務店なので、'
+         '船井総研のロゴ・社名は入れず、制作を当社が引き受けていることも出さない。'
+         '主担当：マーケ。')
 
 # --- 22 実行｜メルマガ ---
 exec_page('実行｜メルマガ',

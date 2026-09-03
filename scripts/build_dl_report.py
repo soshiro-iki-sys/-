@@ -22,8 +22,8 @@ GRAY  = RGBColor(0xBF, 0xBF, 0xBF)
 SOFT  = RGBColor(0xF2, 0xF2, 0xF2)
 
 FONT = 'Meiryo UI'
-LOGO = 'templates/assets/funai_logo.png'
-COPY = 'Copyright Funai Consulting Inc. All Rights Reserved.'
+ISSUER = '株式会社ワン・ミニット'
+COPY   = '© 株式会社ワン・ミニット　All Rights Reserved.'
 
 W, H = 21.0, 29.7                      # A4縦
 M, G  = 1.60, 0.30
@@ -196,7 +196,9 @@ def page(title, lead_parts=None, strip=True):
         para(tf, [(title, T_TITLE, INK)], PP_ALIGN.LEFT, first=True)
         c = s.shapes.add_connector(MSO_CONNECTOR.STRAIGHT, Cm(0), Cm(2.90), Cm(W), Cm(2.90))
         c.line.color.rgb = NAVY; c.line.width = Pt(1.75)
-        s.shapes.add_picture(LOGO, Cm(RE - 2.40), Cm(1.53), Cm(2.40), Cm(1.23))
+        _lg = shape(s, RE - 2.40, 1.53, 2.40, 1.23, fill=SOFT, line=GRAY, lw=1.0)
+        _lg.line.dash_style = MSO_LINE_DASH_STYLE.DASH
+        para(_lg.text_frame, [('ロ ゴ', T_SUB, GRAY)], PP_ALIGN.CENTER, first=True)
     if lead_parts:
         tf = textbox(s, M, 3.35, CW, 1.00, MSO_ANCHOR.TOP)
         para(tf, lead_parts, PP_ALIGN.LEFT, 1.15, first=True)
@@ -209,7 +211,7 @@ def footer(s, n, strip=True):
     tf = textbox(s, (W - 4.00) / 2, 28.45, 4.00, 0.80)
     para(tf, [(str(n), 9, WHITE, False)], PP_ALIGN.CENTER, first=True)
     tf = textbox(s, RE - 8.00, 28.68, 8.00, 0.40)
-    para(tf, [(COPY, 7, WHITE, False, 'Arial')], PP_ALIGN.RIGHT, first=True)
+    para(tf, [(COPY, 7, WHITE, False)], PP_ALIGN.RIGHT, first=True)
 
 
 # ================= 本編（A4縦・全12ページ） =================
@@ -233,10 +235,12 @@ para(tf, [('新築1棟あたりの粗利を、施工体制を持たずに上げ�
      PP_ALIGN.LEFT, 1.4)
 photo(s, M, 16.20, CW, 8.40, '表 紙 ビ ジ ュ ア ル （ 施 工 写 真 な ど ）')
 shape(s, M, 25.40, CW, 2.30, fill=WHITE)
-s.shapes.add_picture(LOGO, Cm(M + 0.40), Cm(25.85), Cm(2.90), Cm(1.49))
-tf = textbox(s, M + 3.80, 25.70, CW - 4.20, 1.85)
-para(tf, [('株式会社 船井総合研究所', 12, INK)], PP_ALIGN.RIGHT, 1.3, first=True)
-para(tf, [('専門工事支援部　住宅エネルギーチーム', 10, NAVY, False)], PP_ALIGN.RIGHT, 1.3)
+_lg = shape(s, M + 0.40, 25.75, 3.40, 1.60, fill=SOFT, line=GRAY, lw=1.0)
+_lg.line.dash_style = MSO_LINE_DASH_STYLE.DASH
+para(_lg.text_frame, [('ロ　ゴ', T_BODY, GRAY)], PP_ALIGN.CENTER, first=True)
+tf = textbox(s, M + 4.30, 25.70, CW - 4.70, 1.85)
+para(tf, [(ISSUER, 13, INK)], PP_ALIGN.RIGHT, 1.3, first=True)
+para(tf, [('【　　　　　　部　／　担当　　　　　　】', 10, NAVY, False)], PP_ALIGN.RIGHT, 1.3)
 para(tf, [('A4縦 ／ 全12ページ ／ 2026年◯月', 9, NAVY, False)], PP_ALIGN.RIGHT, 1.3)
 
 # --- P2 なぜいま太陽光・蓄電池なのか ---
@@ -337,7 +341,7 @@ def model_page(no, name, sub, roles, merit, demerit, income, fit):
     cxR = [M]
     for w in cwR[:-1]:
         cxR.append(cxR[-1] + w)
-    for x, w, t in zip(cxR, cwR, ['工　程', '貴社（工務店）', '当社（船井のパートナー）']):
+    for x, w, t in zip(cxR, cwR, ['工　程', '貴社（工務店）', '当社（ワン・ミニット）']):
         plain(s, x, 5.45, w, 0.85, [[(t, T_BODY, WHITE)]], fill=NAVY, line=NAVY)
     _y = 6.30
     for _p, _a, _b in roles:
@@ -558,7 +562,7 @@ _y = 17.20
 for _k, _v in [('お 電 話', '【　　-　　　　-　　　　】（平日9:00〜18:00）'),
                ('メ ー ル', '【　　　　　　　　　　＠　　　　　　　　　】'),
                ('W E B', '【　　　　　　　　　　　　　　　　　　　　】'),
-               ('担　　当', '専門工事支援部　住宅エネルギーチーム　【　　　　】')]:
+               ('担　　当', '【　　　　　　部】　【　　　　　　　　】')]:
     plain(s, M, _y, 4.20, 1.05, [[(_k, T_BODY, NAVY)]], fill=PALE, line=NAVY)
     plain(s, M + 4.20, _y, CW - 4.20, 1.05, [[(_v, T_BODY, INK)]], fill=WHITE, line=NAVY,
           align=PP_ALIGN.LEFT)

@@ -6,25 +6,25 @@ const {
 } = require('docx');
 
 const FONT = 'MS PGothic';
-const COLS = [700, 3500, 800, 1100, 3538];            // 合計 9638 DXA
+const COLS = [800, 5238, 1600, 2000];                 // 合計 9638 DXA
 const TOTAL = COLS.reduce((a, b) => a + b, 0);
 
 const morning = [
-  { name: '荘司　和弘',        n: '1名', memo: '' },
-  { name: '遠藤　清一',        n: '1名', memo: '' },
-  { name: '福島　正',          n: '1名', memo: '' },
-  { name: '廣川　克仁',        n: '1名', memo: '8/30申込' },
-  { name: 'タケダ　ツヨシ',    n: '1名', memo: '' },
-  { name: '廣川　克仁',        n: '1名', memo: '9/1申込・No.4と同一の連絡先' },
-  { name: '平野　和則',        n: '1名', memo: '' },
-  { name: '村上　聖一',        n: '1名', memo: 'FAX申込' },
+  { name: '荘司　和弘',        n: '1名' },
+  { name: '遠藤　清一',        n: '1名' },
+  { name: '福島　正',          n: '1名' },
+  { name: '廣川　克仁',        n: '1名' },
+  { name: 'タケダ　ツヨシ',    n: '1名' },
+  { name: '廣川　克仁',        n: '1名' },
+  { name: '平野　和則',        n: '1名' },
+  { name: '村上　聖一',        n: '1名' },
 ];
 
 const afternoon = [
-  { name: '棚村　功',          n: '1名', memo: '' },
-  { name: '高石　俊一',        n: '1名', memo: '' },
-  { name: '永井　清',          n: '1名', memo: '電話申込' },
-  { name: 'タカノ　ノブヤス',  n: '1名', memo: '電話申込' },
+  { name: '棚村　功',          n: '1名' },
+  { name: '高石　俊一',        n: '1名' },
+  { name: '永井　清',          n: '1名' },
+  { name: 'タカノ　ノブヤス',  n: '1名' },
 ];
 
 const run = (text, o = {}) => new TextRun({
@@ -46,7 +46,7 @@ const cell = (text, i, o = {}) => new TableCell({
 });
 
 function sheet(title, time, rows, blanks) {
-  const head = ['No.', 'お名前', '人数', '出席', '備考'];
+  const head = ['No.', 'お名前', '人数', '出席'];
 
   const tableRows = [
     new TableRow({
@@ -62,7 +62,6 @@ function sheet(title, time, rows, blanks) {
         cell(r.name, 1, { align: AlignmentType.LEFT, size: 22 }),
         cell(r.n, 2),
         cell('□', 3, { size: 28 }),
-        cell(r.memo, 4, { align: AlignmentType.LEFT, size: 18 }),
       ],
     }));
   });
@@ -74,7 +73,6 @@ function sheet(title, time, rows, blanks) {
         cell('', 1, { shade: 'FAFAFA' }),
         cell('', 2, { shade: 'FAFAFA' }),
         cell('□', 3, { size: 28, shade: 'FAFAFA' }),
-        cell(i === 0 ? '飛び入り参加' : '', 4, { align: AlignmentType.LEFT, size: 18, color: '808080', shade: 'FAFAFA' }),
       ],
     }));
   }

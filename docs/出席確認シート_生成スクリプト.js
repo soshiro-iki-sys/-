@@ -6,25 +6,25 @@ const {
 } = require('docx');
 
 const FONT = 'MS PGothic';
-const COLS = [700, 2500, 2100, 700, 1100, 2538];      // 合計 9638 DXA
+const COLS = [700, 3500, 800, 1100, 3538];            // 合計 9638 DXA
 const TOTAL = COLS.reduce((a, b) => a + b, 0);
 
 const morning = [
-  { name: '荘司　和弘',        tel: '0258-34-2157',  n: '1名', memo: '' },
-  { name: '遠藤　清一',        tel: '080-5483-2333', n: '1名', memo: '' },
-  { name: '福島　正',          tel: '0258-23-1056',  n: '1名', memo: '' },
-  { name: '廣川　克仁',        tel: '090-5808-4281', n: '1名', memo: '8/30申込' },
-  { name: 'タケダ　ツヨシ',    tel: '090-5521-8250', n: '1名', memo: '' },
-  { name: '廣川　克仁',        tel: '090-5808-4281', n: '1名', memo: '9/1申込・No.4と同一連絡先' },
-  { name: '平野　和則',        tel: '090-4913-3465', n: '1名', memo: '' },
-  { name: '村上　聖一',        tel: '0258-27-4191',  n: '1名', memo: 'FAX申込' },
+  { name: '荘司　和弘',        n: '1名', memo: '' },
+  { name: '遠藤　清一',        n: '1名', memo: '' },
+  { name: '福島　正',          n: '1名', memo: '' },
+  { name: '廣川　克仁',        n: '1名', memo: '8/30申込' },
+  { name: 'タケダ　ツヨシ',    n: '1名', memo: '' },
+  { name: '廣川　克仁',        n: '1名', memo: '9/1申込・No.4と同一の連絡先' },
+  { name: '平野　和則',        n: '1名', memo: '' },
+  { name: '村上　聖一',        n: '1名', memo: 'FAX申込' },
 ];
 
 const afternoon = [
-  { name: '棚村　功',          tel: '090-1995-6595', n: '1名', memo: '' },
-  { name: '高石　俊一',        tel: '080-9362-5248', n: '1名', memo: '' },
-  { name: '永井　清',          tel: '090-5203-6743', n: '1名', memo: '電話申込' },
-  { name: 'タカノ　ノブヤス',  tel: '090-2241-4609', n: '1名', memo: '電話申込' },
+  { name: '棚村　功',          n: '1名', memo: '' },
+  { name: '高石　俊一',        n: '1名', memo: '' },
+  { name: '永井　清',          n: '1名', memo: '電話申込' },
+  { name: 'タカノ　ノブヤス',  n: '1名', memo: '電話申込' },
 ];
 
 const run = (text, o = {}) => new TextRun({
@@ -46,7 +46,7 @@ const cell = (text, i, o = {}) => new TableCell({
 });
 
 function sheet(title, time, rows, blanks) {
-  const head = ['No.', 'お名前', 'お電話番号', '人数', '出席', '備考'];
+  const head = ['No.', 'お名前', '人数', '出席', '備考'];
 
   const tableRows = [
     new TableRow({
@@ -60,10 +60,9 @@ function sheet(title, time, rows, blanks) {
       children: [
         cell(String(idx + 1), 0),
         cell(r.name, 1, { align: AlignmentType.LEFT, size: 22 }),
-        cell(r.tel, 2),
-        cell(r.n, 3),
-        cell('□', 4, { size: 28 }),
-        cell(r.memo, 5, { align: AlignmentType.LEFT, size: 18 }),
+        cell(r.n, 2),
+        cell('□', 3, { size: 28 }),
+        cell(r.memo, 4, { align: AlignmentType.LEFT, size: 18 }),
       ],
     }));
   });
@@ -74,9 +73,8 @@ function sheet(title, time, rows, blanks) {
         cell(String(rows.length + i + 1), 0, { shade: 'FAFAFA' }),
         cell('', 1, { shade: 'FAFAFA' }),
         cell('', 2, { shade: 'FAFAFA' }),
-        cell('', 3, { shade: 'FAFAFA' }),
-        cell('□', 4, { size: 28, shade: 'FAFAFA' }),
-        cell(i === 0 ? '飛び入り参加' : '', 5, { align: AlignmentType.LEFT, size: 18, color: '808080', shade: 'FAFAFA' }),
+        cell('□', 3, { size: 28, shade: 'FAFAFA' }),
+        cell(i === 0 ? '飛び入り参加' : '', 4, { align: AlignmentType.LEFT, size: 18, color: '808080', shade: 'FAFAFA' }),
       ],
     }));
   }

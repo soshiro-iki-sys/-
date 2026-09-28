@@ -37,6 +37,9 @@ AB     = os.path.join(ASSETS, 'ab')
 TPL    = os.path.join(REPO, 'templates', '研修資料_フォーマット見本.pptx')
 OUT    = os.path.join(REPO, 'slides', '2026営業研修_必要性訴求パート_アプローチブックの伝え方.pptx')
 
+CLIENT  = '株式会社山岸'
+DURATION = 60            # 研修の所要時間（分）
+
 GOTHIC='HGPｺﾞｼｯｸE'; MINCHO='HGP明朝E'; UD='BIZ UDPゴシック'; YU='游ゴシック'
 RED='FF0000'; BLACK='000000'; WHITE='FFFFFF'; GREEN='9BBB59'; YELLOW='FFFF00'
 GRAY='595959'; BLUE='0070C0'; LTGREEN='EAF1DD'; LTGRAY='F2F2F2'; LTYEL='FFF2CC'
@@ -201,26 +204,71 @@ for shp in cover.shapes:
     if shp.has_text_frame and shp.name == 'テキスト ボックス 5':
         tf = shp.text_frame; tf.clear()
         lines(tf, [
-            ('2026年度　営業研修', {'size': 30, 'bold': True, 'color': WHITE, 'font': UD, 'space': 8}),
+            ('%s　御中' % CLIENT, {'size': 26, 'bold': True, 'color': WHITE, 'font': UD, 'space': 10}),
             ('必要性訴求パート', {'size': 48, 'bold': True, 'color': WHITE, 'font': UD, 'space': 8}),
             ('アプローチブックの伝え方', {'size': 32, 'bold': True, 'color': WHITE, 'font': UD, 'space': 10}),
             ('〜太陽光＋蓄電池セット販売〜', {'size': 22, 'bold': True, 'color': WHITE, 'font': UD}),
         ])
     if shp.has_text_frame and shp.name == 'テキスト ボックス 6':
         tf = shp.text_frame; tf.clear()
-        lines(tf, [('2026年度　＠船井総研', {'size': 14, 'color': WHITE, 'font': UD})],
+        lines(tf, [('2026年度　所要%d分　株式会社船井総合研究所' % DURATION,
+                    {'size': 14, 'color': WHITE, 'font': UD})],
               align=PP_ALIGN.RIGHT)
+
+# ---------------------------------------------------------------- 上部ヘッダー（スライドマスター）
+for _m in prs.slide_masters:
+    for _shp in _m.shapes:
+        if _shp.has_text_frame and '住宅用太陽光' in _shp.text_frame.text:
+            _ps = _shp.text_frame.paragraphs[0]
+            _rs = _ps.runs
+            if _rs:
+                _rs[0].text = '%s様　住宅用太陽光・蓄電池研修' % CLIENT
+                for _r in _rs[1:]:
+                    _r._r.getparent().remove(_r._r)
+
 page_no[0] = 1
 
 
-# ================================================================ 2. このパートのゴール
+# ================================================================ 2. 本日の進め方
+s = new_slide('本日の進め方')
+box, tf = tb(s, 0.45, 1.38, 9.95, 0.45)
+lines(tf, [('%d分間の進め方' % DURATION, {'size': 26, 'bold': True})])
+rows = [
+    ['時間', '内容', 'ページ', 'スライド'],
+    [('5分', {'bold': True}), 'オリエンテーション（ゴール・地図・伝え方の型）', '−', 'P3〜P6'],
+    [('18分', {'bold': True, 'fill': LTGREEN}), ('① 電気代が高騰している ⇒ 払わなくていい', {'fill': LTGREEN}),
+     ('p.9〜p.17', {'fill': LTGREEN}), ('P7〜P14', {'fill': LTGREEN})],
+    [('6分', {'bold': True, 'fill': LTYEL}), ('② 災害対策', {'fill': LTYEL}),
+     ('p.18・p.19', {'fill': LTYEL}), ('P15〜P18', {'fill': LTYEL})],
+    [('15分', {'bold': True, 'fill': LTBLUE}),
+     ('③ 経済メリット（＋シミュレーション）', {'fill': LTBLUE}),
+     ('p.20・p.21', {'fill': LTBLUE}), ('P19〜P24', {'fill': LTBLUE})],
+    [('11分', {'bold': True}), '通し練習（ペアロープレ）とセルフチェック', 'p.9〜p.21', 'P25〜P28'],
+    [('5分', {'bold': True}), 'まとめ・質疑', '−', 'P29'],
+]
+table(s, 0.45, 1.95, 9.95, [1.00, 4.50, 2.85, 1.60], rows, font_size=13, row_h=0.50, head_h=0.34)
+_, tf = rect(s, 0.45, 5.55, 4.80, 1.35, fill=LTGRAY)
+lines(tf, [
+    ('持ち物', {'size': 15, 'bold': True, 'space': 6}),
+    ('・アプローチブック（1人1冊）', {'size': 14, 'space': 4}),
+    ('・直近の検針票（自宅のもので構いません）', {'size': 14}),
+])
+_, tf = rect(s, 5.60, 5.55, 4.80, 1.35, fill=None, line=RED, lw=1.5)
+lines(tf, [
+    ('この1時間でやらないこと', {'size': 15, 'bold': True, 'color': RED, 'space': 6}),
+    ('・話法やクロージングの練習', {'size': 14, 'space': 4}),
+    ('・金額（見積・総額）の出し方', {'size': 14}),
+])
+notes(s, '・冒頭で「今日は話し方の研修ではなく、アプローチブックのめくり方の研修です」と宣言する')
+
+# ================================================================ 3. このパートのゴール
 s = new_slide('このパートのゴール')
 box, tf = tb(s, 0.45, 1.42, 9.9, 0.60)
 lines(tf, [('アプローチブック p.9〜p.21 を、自分の言葉でめくれるようになる',
             {'size': 21, 'bold': True, 'color': RED})])
 _, tf = rect(s, 0.45, 2.25, 9.95, 2.95, fill=LTGREEN)
 lines(tf, [
-    ('研修が終わったときの「できる状態」', {'size': 18, 'bold': True, 'space': 10}),
+    ('この1時間が終わったときの「できる状態」', {'size': 18, 'bold': True, 'space': 10}),
     ('①　各ページで「何を言うか」が、資料を見なくても口から出る', {'size': 19, 'space': 9}),
     ('②　各ページの「結論の一文」を、そのまま言い切れる', {'size': 19, 'space': 9}),
     ('③　お客様から引き出したい反応を、質問で取りにいける', {'size': 19, 'space': 9}),
@@ -819,7 +867,7 @@ s = new_slide('通しで使う')
 box, tf = tb(s, 0.45, 1.36, 9.95, 0.45)
 lines(tf, [('必要性訴求パートの時間配分（商談での目安）', {'size': 23, 'bold': True})])
 box, tf = tb(s, 0.45, 1.86, 9.95, 0.32)
-lines(tf, [('商談1時間のうち、この部分に使えるのは約40分です',
+lines(tf, [('※ 研修の時間割ではありません。お客様との商談1時間のうち、この部分に使えるのは約40分です',
             {'size': 14, 'color': GRAY})])
 bars = [
     ('導入', '検針票の実額を聞く', '2分', 0.78, LTGRAY),
@@ -880,41 +928,40 @@ run(p, '共通しているのは「資料を読んでいる」状態。資料は
 # ================================================================ 26. 通し練習
 s = new_slide('通しで使う')
 box, tf = tb(s, 0.45, 1.36, 9.95, 0.45)
-lines(tf, [('通し練習：p.9 から p.21 まで、15分で止まらずに', {'size': 23, 'bold': True})])
-_, tf = rect(s, 0.45, 1.92, 9.95, 1.28, fill=LTGRAY)
-lines(tf, [('進め方', {'size': 14, 'bold': True, 'color': GRAY, 'space': 6})])
+lines(tf, [('通し練習：p.9 から、5分で行けるところまで', {'size': 23, 'bold': True})])
+_, tf = rect(s, 0.45, 1.92, 9.95, 1.45, fill=LTGRAY)
+lines(tf, [('進め方（合計11分）', {'size': 14, 'bold': True, 'color': GRAY, 'space': 6})])
 for it in [
-    '3人1組。営業役・ご主人役・奥様役。時計回りに交代します',
+    '2人1組。営業役とお客様役。営業役だけ1本（5分）やります',
     '営業役はアプローチブックを持ち、p.9を開いた状態から始めます',
     'お客様役は「月18,000円」という設定。最初に必ず聞かれるので答えてください',
+    'そのあとフィードバック3分 → 役を交代してもう1本（時間があれば）',
 ]:
     p = para(tf, space_after=4); run(p, '・' + it, size=14)
-_, tf = rect(s, 0.45, 3.32, 4.80, 1.55, fill=LTGREEN, line='70A040')
+_, tf = rect(s, 0.45, 3.48, 4.80, 1.55, fill=LTGREEN, line='70A040')
 lines(tf, [
     ('お客様役が見るところ', {'size': 15, 'bold': True, 'space': 6}),
     ('・自分が何回しゃべったか', {'size': 13, 'space': 4}),
     ('・「読まれている」と感じた場面', {'size': 13, 'space': 4}),
     ('・数字が多すぎて追えなくなった場面', {'size': 13}),
 ])
-_, tf = rect(s, 5.60, 3.32, 4.80, 1.55, fill=LTBLUE, line='4B8FC0')
+_, tf = rect(s, 5.60, 3.48, 4.80, 1.55, fill=LTBLUE, line='4B8FC0')
 lines(tf, [
     ('講師が机間で見るところ', {'size': 15, 'bold': True, 'space': 6}),
     ('・発言比率 6：4 になっているか', {'size': 13, 'space': 4}),
     ('・緑帯を言い切れているか', {'size': 13, 'space': 4}),
     ('・太陽光だけ／蓄電池だけの話になっていないか', {'size': 13}),
 ])
-_, tf = rect(s, 0.45, 5.00, 9.95, 1.00, fill=LTYEL, line='BF8F00')
+_, tf = rect(s, 0.45, 5.16, 9.95, 1.00, fill=LTYEL, line='BF8F00')
 lines(tf, [
     ('フィードバックの型', {'size': 15, 'bold': True, 'space': 5}),
     ('① 良かったページを1つ、ページ番号で言う　② 直すのは1人1つだけ　③ 人ではなくページを指摘する',
      {'size': 14, 'bold': True}),
 ])
-_, tf = rect(s, 0.45, 6.15, 9.95, 0.75, fill=None, line=RED, lw=1.5)
-lines(tf, [
-    ('2周目は「太字の4ページだけ（p.9・p.14・p.17・p.21）」で、5分に短縮して回します。',
-     {'size': 15, 'bold': True, 'space': 3}),
-    ('短くしても結論が残るかを確かめる練習です。', {'size': 14}),
-])
+_, tf = rect(s, 0.45, 6.30, 9.95, 0.62, fill=None, line=RED, lw=1.5,
+             anchor=MSO_ANCHOR.MIDDLE)
+lines(tf, [('5分で13ページは回りません。回りきらなかったページが、そのまま宿題です',
+            {'size': 16, 'bold': True, 'align': PP_ALIGN.CENTER})])
 
 # ================================================================ 27. チェックシート
 s = new_slide('通しで使う')
@@ -924,7 +971,7 @@ box, tf = tb(s, 0.45, 1.86, 9.95, 0.32)
 lines(tf, [('ロープレのあとに記入し、できていない項目を次回までの宿題にしてください',
             {'size': 14, 'color': GRAY})])
 rows = [
-    ['確認すること', '1回目', '2回目'],
+    ['確認すること', '今日', '次回'],
     ['資料を見ずに、p.9の結論一文が言えた', ' ', ' '],
     ['p.14の「1,210円 → 22,990円」が言えた', ' ', ' '],
     ['p.17でお客様の実額の列を指せた', ' ', ' '],

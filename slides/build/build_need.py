@@ -2,8 +2,9 @@
 """必要性訴求パート（アプローチブックの伝え方）研修資料ビルダー
 
 第2回・第3回に分かれていた必要性訴求の内容を1本にまとめ、
-営業テクニックではなく「アプローチブック p.9〜p.21 を、どうめくり、
-何を言うか」を軸に組み直したもの。
+営業テクニックではなく「アプローチブック p.9〜p.19 を、どうめくり、
+何を言うか」を軸に組み直したもの。③経済メリット（p.20・p.21＋シミュレーション）は
+本資料では扱わない。
 
 使い方は slides/build/build_session2.py と同じ。以下の画像が必要。
 
@@ -12,8 +13,6 @@
   <ASSETS>/ab17.jpg   同 p.17  生涯に支払う電気代
   <ASSETS>/ab18.jpg   同 p.18  予測が困難な地震情報
   <ASSETS>/ab19.jpg   同 p.19  自然災害と停電被害
-  <ASSETS>/ab21.jpg   同 p.21  太陽光発電・蓄電池の使い方
-  <ASSETS>/sim_trust.jpg  シミュレーションの信憑性（75.4％の円グラフ）
 
     TRAINING_ASSETS=/path/to/assets python slides/build/build_need.py
 
@@ -232,7 +231,7 @@ page_no[0] = 1
 # ================================================================ 2. このパートのゴール
 s = new_slide('このパートのゴール')
 box, tf = tb(s, 0.45, 1.42, 9.9, 0.60)
-lines(tf, [('アプローチブック p.9〜p.21 を、自分の言葉でめくれるようになる',
+lines(tf, [('アプローチブック p.9〜p.19 を、自分の言葉でめくれるようになる',
             {'size': 21, 'bold': True, 'color': RED})])
 _, tf = rect(s, 0.45, 2.25, 9.95, 2.95, fill=LTGREEN)
 lines(tf, [
@@ -240,15 +239,15 @@ lines(tf, [
     ('①　各ページで「何を言うか」が、資料を見なくても口から出る', {'size': 19, 'space': 9}),
     ('②　各ページの「結論の一文」を、そのまま言い切れる', {'size': 19, 'space': 9}),
     ('③　お客様から引き出したい反応を、質問で取りにいける', {'size': 19, 'space': 9}),
-    ('④　p.9からp.21まで、15分で止まらずに通せる', {'size': 19}),
+    ('④　p.9からp.19まで、13分で止まらずに通せる', {'size': 19}),
 ])
 _, tf = rect(s, 0.45, 5.45, 9.95, 1.05, fill=None, line=RED, lw=1.5,
              anchor=MSO_ANCHOR.MIDDLE)
 lines(tf, [
     ('このパートで扱うもの', {'size': 14, 'bold': True, 'color': GRAY,
                     'align': PP_ALIGN.CENTER, 'space': 3}),
-    ('アプローチブック p.9〜p.21　＋　シミュレーション', {'size': 21, 'bold': True,
-                                    'align': PP_ALIGN.CENTER}),
+    ('アプローチブック p.9〜p.19（11ページ）', {'size': 21, 'bold': True,
+                                 'align': PP_ALIGN.CENTER}),
 ])
 notes(s, '・営業テクニックを覚える会ではなく、アプローチブックをめくれるようになる会だと宣言する\n'
          '・「資料に書いてあることを読む」のではなく「資料を使って言わせる」のが目的')
@@ -258,31 +257,33 @@ s = new_slide('必要性訴求とは')
 box, tf = tb(s, 0.45, 1.38, 9.95, 0.45)
 lines(tf, [('必要性を訴求する3つの切り口', {'size': 26, 'bold': True})])
 cuts = [
-    (1.95, '①', '電気代が高騰している ⇒ 払わなくていい', 'p.9〜p.17（7ページ）', LTGREEN, '約20分'),
-    (3.32, '②', '災害対策', 'p.18・p.19（2ページ）', LTYEL, '3分以内'),
-    (4.69, '③', '経済メリット', 'p.20・p.21 ＋ シミュレーション', LTBLUE, '約15分'),
+    (1.95, '①', '電気代が高騰している ⇒ 払わなくていい', 'p.9〜p.17（7ページ）',
+     LTGREEN, '約20分', BLACK, GRAY),
+    (3.32, '②', '災害対策', 'p.18・p.19（2ページ）', LTYEL, '3分以内', BLACK, GRAY),
+    (4.69, '③', '経済メリット', 'p.20・p.21 ＋ シミュレーション',
+     'EDEDED', '次回', GRAY, 'A6A6A6'),
 ]
-for y, n, t, pages, fill, mins in cuts:
+for y, n, t, pages, fill, mins, fg, tag in cuts:
     _, tf = rect(s, 0.45, y, 0.62, 1.20, fill=fill, anchor=MSO_ANCHOR.MIDDLE)
-    lines(tf, [(n, {'size': 26, 'bold': True, 'align': PP_ALIGN.CENTER})])
+    lines(tf, [(n, {'size': 26, 'bold': True, 'color': fg, 'align': PP_ALIGN.CENTER})])
     _, tf = rect(s, 1.20, y, 7.15, 1.20, fill=fill, anchor=MSO_ANCHOR.MIDDLE)
     lines(tf, [
-        (t, {'size': 20, 'bold': True, 'space': 5}),
+        (t, {'size': 20, 'bold': True, 'color': fg, 'space': 5}),
         ('使うページ：%s' % pages, {'size': 14, 'color': GRAY}),
     ])
-    _, tf = rect(s, 8.50, y + 0.30, 1.90, 0.60, fill=GRAY, anchor=MSO_ANCHOR.MIDDLE)
+    _, tf = rect(s, 8.50, y + 0.30, 1.90, 0.60, fill=tag, anchor=MSO_ANCHOR.MIDDLE)
     lines(tf, [(mins, {'size': 15, 'bold': True, 'color': WHITE, 'align': PP_ALIGN.CENTER})])
 _, tf = rect(s, 0.45, 6.10, 9.95, 0.80, fill=LTGRAY)
 lines(tf, [
-    ('このパートの基本設計は「下げてから上げる」', {'size': 18, 'bold': True, 'color': RED, 'space': 4}),
-    ('①②でネガティブな現状を自分事にしてもらい、③で解決策を出します。順番は入れ替えません。',
+    ('本日は①と②だけを扱います', {'size': 18, 'bold': True, 'color': RED, 'space': 4}),
+    ('①②でネガティブな現状を自分事にしてもらうところまで。③の解決策は次回扱います。',
      {'size': 15}),
 ])
 
 # ================================================================ 4. ページの地図
 s = new_slide('アプローチブックの地図')
 box, tf = tb(s, 0.45, 1.32, 9.95, 0.38)
-lines(tf, [('p.9〜p.21で、どのページで何を言うか', {'size': 22, 'bold': True})])
+lines(tf, [('p.9〜p.19で、どのページで何を言うか', {'size': 22, 'bold': True})])
 rows = [
     ['切り口', 'ページ', '見せるもの', '引き出す反応'],
     [('①電気代', {'fill': LTGREEN}), ('p.9', {'fill': LTGREEN, 'bold': True}),
@@ -309,13 +310,8 @@ rows = [
      ('停電被害の実績', {'fill': LTYEL, 'bold': True}), ('備えておいた方が安心ですね', {'fill': LTYEL})],
     [('', {'fill': LTYEL}), ('（なし）', {'fill': LTYEL, 'color': RED}),
      ('自社・メーカーの事例で語る', {'fill': LTYEL}), ('停電時も電気が使えた方が安心です', {'fill': LTYEL})],
-    [('③経済メリット', {'fill': LTBLUE}), ('p.20・p.21', {'fill': LTBLUE, 'bold': True}),
-     ('自給自足への転換と、その使い方', {'fill': LTBLUE, 'bold': True}),
-     ('自給自足した方が良いですね', {'fill': LTBLUE})],
-    [('', {'fill': LTBLUE}), ('（資料の外）', {'fill': LTBLUE}), ('シミュレーション', {'fill': LTBLUE}),
-     ('思ったより減るんですね', {'fill': LTBLUE})],
 ]
-table(s, 0.30, 1.85, 10.25, [1.40, 1.15, 3.55, 4.15], rows, font_size=11, row_h=0.38, head_h=0.32)
+table(s, 0.30, 1.85, 10.25, [1.40, 1.15, 3.55, 4.15], rows, font_size=12, row_h=0.46, head_h=0.34)
 _, tf = rect(s, 0.30, 6.42, 10.25, 0.48, fill=None, line=RED, lw=1.5, anchor=MSO_ANCHOR.MIDDLE)
 lines(tf, [('太字が「必ず時間をかけるページ」。それ以外は流して構いません',
             {'size': 15, 'bold': True, 'align': PP_ALIGN.CENTER})])
@@ -346,7 +342,7 @@ for tag, title, sec, desc in steps:
     run(p, desc, size=14)
     y += 1.17
 _, tf = rect(s, 0.45, 6.62, 9.95, 0.42, fill=LTYEL, line='BF8F00', anchor=MSO_ANCHOR.MIDDLE)
-lines(tf, [('1ページ約70秒。13ページ通して約15分。これが「めくるだけ」の標準ペースです',
+lines(tf, [('1ページ約70秒。11ページ通して約13分。これが「めくるだけ」の標準ペースです',
             {'size': 15, 'bold': True, 'align': PP_ALIGN.CENTER})])
 notes(s, '・「資料を読み上げる」と「資料を使って言わせる」の違いを、講師が実演して見せる')
 
@@ -659,189 +655,18 @@ lines(tf, [
     ('p.18が1分、p.19が1分、事例が1分。これを超えると、そのあとの話が入らなくなります。', {'size': 14}),
 ])
 
-# ================================================================ 18. ③章扉
-s = new_slide('③ 経済メリット')
-chapter_slide(s, '③', '経済メリット',
-              'p.20・p.21 ＋ シミュレーション', '約15分', LTBLUE,
-              '「自分の家ならいくら減るか」を具体的に持ち帰ってもらう',
-              ['①②で作ったネガを、ここで初めて解決策に変えます',
-               'p.20・p.21は「仕組みの説明」。ここが曖昧だとシミュレーションが伝わりません',
-               'シミュレーションは金額の大きさで勝とうとしない。前提条件を先に言う',
-               '見積り（総額）はこのパートでは出しません。それは金額訴求の役割です'])
-
-# ================================================================ 19. p.20・p.21
-s = new_slide('③ 経済メリット')
-box, tf = tb(s, 0.45, 1.36, 9.95, 0.45)
-lines(tf, [('p.20・p.21　仕組みを説明して、シミュレーションに渡す', {'size': 23, 'bold': True})])
-pic(s, os.path.join(ASSETS, 'ab21.jpg'), 0.45, 1.92, 4.85)
-box, tf = tb(s, 0.45, 5.34, 4.85, 0.28)
-lines(tf, [('アプローチブック p.21　太陽光発電・蓄電池の使い方', {'size': 11, 'color': GRAY})])
-_, tf = rect(s, 5.65, 1.92, 4.75, 1.45, fill=LTGRAY)
-lines(tf, [
-    ('p.20で言うこと', {'size': 13, 'bold': True, 'color': GRAY, 'space': 6}),
-    ('「電気代の上昇と災害。この2つへの答えが、自分で作って自分で使うことです」', {'size': 13, 'space': 5}),
-    ('結論：電気代を削減するために、自給自足が求められます', {'size': 12, 'bold': True}),
-])
-_, tf = rect(s, 5.65, 3.52, 4.75, 2.08, fill=LTGRAY)
-lines(tf, [
-    ('p.21で言うこと', {'size': 13, 'bold': True, 'color': GRAY, 'space': 6}),
-    ('図を左から順に指でなぞる：朝は買う → 昼は作って使う・貯める → 夜は貯めた電気を使う',
-     {'size': 13, 'space': 5}),
-    ('「売電15円より、買う電気30円の方が高い。だから売らずに使うんです」', {'size': 13, 'space': 5}),
-    ('ここが曖昧だと、次のシミュレーションが伝わりません', {'size': 13, 'bold': True, 'color': RED}),
-])
-_, tf = rect(s, 0.45, 5.80, 9.95, 0.58, fill=LTGREEN, anchor=MSO_ANCHOR.MIDDLE)
-p = para(tf, first=True, align=PP_ALIGN.CENTER)
-run(p, '緑帯の結論（そのまま言い切る）　', size=12, bold=True, color=GRAY)
-run(p, '具体的なシミュレーションを見ていきましょう！', size=15, bold=True, hl=YELLOW)
-_, tf = rect(s, 0.45, 6.48, 9.95, 0.50, fill=LTYEL, line='BF8F00', anchor=MSO_ANCHOR.MIDDLE)
-lines(tf, [('この一文で資料を閉じ、シミュレーションを開きます。ここが切り替えの合図です',
-            {'size': 15, 'bold': True, 'align': PP_ALIGN.CENTER})])
-
-# ================================================================ 20. シミュレーションの読み方
-s = new_slide('③ 経済メリット')
-box, tf = tb(s, 0.45, 1.36, 9.95, 0.45)
-lines(tf, [('シミュレーションは「どこを読むか」だけ教える', {'size': 23, 'bold': True})])
-box, tf = tb(s, 0.45, 1.86, 9.95, 0.32)
-lines(tf, [('数字が多い資料です。お客様に見せるのは2か所だけにしてください',
-            {'size': 14, 'color': GRAY})])
-for x, ttl, a, b, c, d in (
-    (0.45, 'FIT期間', '24,002 円/月', '14,429 円/月', '9,573', '約 319 円'),
-    (5.60, 'FIT期間終了後', '24,002 円/月', '12,686 円/月', '11,316', '約 377 円'),
-):
-    _, tf = rect(s, x, 2.26, 4.80, 0.40, fill='DAEEF3', anchor=MSO_ANCHOR.MIDDLE)
-    lines(tf, [(ttl, {'size': 15, 'bold': True, 'align': PP_ALIGN.CENTER})])
-    rows = [['毎月の分割支払額', a], ['− 実質光熱費削減額', b]]
-    table(s, x, 2.72, 4.80, [2.95, 1.85], rows, font_size=13, row_h=0.42, head_h=0.42, header=False)
-    _, tf = rect(s, x, 3.62, 4.80, 0.90, fill=LTGREEN, anchor=MSO_ANCHOR.MIDDLE)
-    p = para(tf, first=True, align=PP_ALIGN.CENTER)
-    run(p, '＝ 毎月の実質負担額　', size=13, bold=True)
-    run(p, c, size=24, bold=True, color=RED)
-    run(p, ' 円/月', size=13, bold=True)
-    p = para(tf, align=PP_ALIGN.CENTER)
-    run(p, '（1日あたり %s）' % d, size=12)
-_, tf = rect(s, 0.45, 4.72, 4.80, 1.55, fill='FCE4E4', line=RED)
-lines(tf, [
-    ('✕ 見せてはいけないところ', {'size': 15, 'bold': True, 'color': RED, 'space': 6}),
-    ('いちばん上の「分割支払額 24,002円」を先に見せると、', {'size': 13, 'space': 4}),
-    ('そこで思考が止まります。', {'size': 13, 'bold': True}),
-])
-_, tf = rect(s, 5.60, 4.72, 4.80, 1.55, fill=LTGREEN, line='70A040')
-lines(tf, [
-    ('○ 見せるところ', {'size': 15, 'bold': True, 'space': 6}),
-    ('「毎月の実質負担額」と「1日あたり」の2か所だけ。', {'size': 13, 'space': 4}),
-    ('「1日319円。缶コーヒー2本分です」', {'size': 13, 'bold': True}),
-])
-_, tf = rect(s, 0.45, 6.40, 9.95, 0.58, fill=LTGREEN, anchor=MSO_ANCHOR.MIDDLE)
-p = para(tf, first=True, align=PP_ALIGN.CENTER)
-run(p, '1日あたりの金額まで落として、初めて判断できる数字になる', size=16, bold=True, hl=YELLOW)
-
-# ================================================================ 21. 伝え方①②
-s = new_slide('③ 経済メリット')
-box, tf = tb(s, 0.45, 1.36, 9.95, 0.45)
-lines(tf, [('伝え方は2通り。お客様を見て選びます', {'size': 23, 'bold': True})])
-_, tf = rect(s, 0.45, 1.90, 4.80, 0.48, fill=LTGREEN, anchor=MSO_ANCHOR.MIDDLE)
-lines(tf, [('伝え方①　ローン返済額を含めたトータル金額', {'size': 14, 'bold': True})])
-rows = [
-    ['（例）', 'ローン中', '完済後'],
-    ['もともとの電気代', '15,000', '15,000'],
-    ['＋ ローンの分割額', '22,000', '0'],
-    ['− 電気代削減額', '−14,000', '−14,000'],
-    [('支出合計', {'bold': True}), ('23,000', {'bold': True, 'fill': LTYEL}),
-     ('1,000', {'bold': True, 'fill': LTYEL, 'color': RED})],
-]
-table(s, 0.45, 2.44, 4.80, [1.90, 1.50, 1.40], rows, font_size=12, row_h=0.42, head_h=0.32)
-_, tf = rect(s, 0.45, 4.62, 4.80, 1.40, fill=LTGRAY)
-lines(tf, [
-    ('向いているお客様', {'size': 14, 'bold': True, 'space': 5}),
-    ('・長期で考えられる方', {'size': 13, 'space': 3}),
-    ('・完済後の姿に価値を感じる方', {'size': 13, 'space': 5}),
-    ('返済中は支出が増えます。隠さないこと。', {'size': 13, 'bold': True, 'color': RED}),
-])
-_, tf = rect(s, 5.60, 1.90, 4.80, 0.48, fill=LTGREEN, anchor=MSO_ANCHOR.MIDDLE)
-lines(tf, [('伝え方②　電気代の減収分のみ', {'size': 14, 'bold': True})])
-rows = [
-    ['（例）', '金額', '削減額'],
-    ['もともとの電気代', '15,000', '1年 ¥168,000'],
-    ['− 電気代削減額', '14,000', '10年 ¥1,680,000'],
-    [('支出合計', {'bold': True}), ('1,000', {'bold': True, 'fill': LTYEL}),
-     ('30年 ¥5,040,000', {'bold': True, 'fill': LTYEL, 'color': RED})],
-]
-table(s, 5.60, 2.44, 4.80, [1.90, 1.20, 1.70], rows, font_size=12, row_h=0.42, head_h=0.32)
-_, tf = rect(s, 5.60, 4.62, 4.80, 1.40, fill=LTGRAY)
-lines(tf, [
-    ('向いているお客様', {'size': 14, 'bold': True, 'space': 5}),
-    ('・現金一括で検討される方', {'size': 13, 'space': 3}),
-    ('・月々の支出が増えることに抵抗がある方', {'size': 13, 'space': 5}),
-    ('①で反応が鈍かったら②に切り替える。', {'size': 13, 'bold': True, 'color': RED}),
-])
-_, tf = rect(s, 0.45, 6.15, 9.95, 0.78, fill=LTYEL, line='BF8F00')
-lines(tf, [
-    ('どちらも同じ事実を、別の枠組みで見せているだけです。', {'size': 16, 'bold': True, 'space': 4}),
-    ('お客様の反応を見て、途中で切り替えて構いません。', {'size': 15}),
-])
-
-# ================================================================ 22. 疑われている
-s = new_slide('③ 経済メリット')
-box, tf = tb(s, 0.45, 1.36, 9.95, 0.45)
-lines(tf, [('前提：シミュレーションは疑われています', {'size': 23, 'bold': True, 'color': RED})])
-pic(s, os.path.join(ASSETS, 'sim_trust.jpg'), 0.45, 1.92, 5.35)
-box, tf = tb(s, 0.45, 5.30, 5.35, 0.28)
-lines(tf, [('出典：エネがえる運営事務局調べ（国際航業株式会社）', {'size': 10, 'color': GRAY})])
-_, tf = rect(s, 6.10, 1.92, 4.30, 1.45, fill='FCE4E4', line=RED, anchor=MSO_ANCHOR.MIDDLE)
-lines(tf, [
-    ('経済効果シミュレーションの信憑性を', {'size': 14, 'bold': True, 'align': PP_ALIGN.CENTER, 'space': 2}),
-    ('疑ったことがある人', {'size': 14, 'bold': True, 'align': PP_ALIGN.CENTER, 'space': 5}),
-    ('75.4 ％', {'size': 32, 'bold': True, 'color': RED, 'align': PP_ALIGN.CENTER}),
-])
-_, tf = rect(s, 6.10, 3.55, 4.30, 2.30, fill=LTGRAY)
-lines(tf, [
-    ('だから、こう伝えます', {'size': 15, 'bold': True, 'space': 8}),
-    ('・金額の大きさで勝とうとしない', {'size': 13, 'space': 6}),
-    ('・前提条件を先に口で言う', {'size': 13, 'space': 2}),
-    ('　（電気使用量・単価・設置容量）', {'size': 13, 'color': GRAY, 'space': 6}),
-    ('・お客様の検針票の実額から出発する', {'size': 13, 'space': 6}),
-    ('「盛っていない」ことが伝わる方が', {'size': 13, 'bold': True, 'color': RED, 'space': 2}),
-    ('金額より効きます', {'size': 13, 'bold': True, 'color': RED}),
-])
-_, tf = rect(s, 0.45, 6.05, 9.95, 0.85, fill=LTGREEN, anchor=MSO_ANCHOR.MIDDLE)
-lines(tf, [
-    ('言い方の例', {'size': 12, 'bold': True, 'color': GRAY, 'align': PP_ALIGN.CENTER, 'space': 3}),
-    ('「この数字は、〇〇様の検針票の18,000円から計算しています。盛った数字ではありません」',
-     {'size': 16, 'bold': True, 'align': PP_ALIGN.CENTER}),
-])
-
-# ================================================================ 23. ③のまとめ
-s = new_slide('③ 経済メリット')
-box, tf = tb(s, 0.45, 1.45, 9.95, 0.55)
-lines(tf, [('このパートでは「全体の金額」を出しません', {'size': 26, 'bold': True, 'color': RED})])
-rows = [
-    ['', 'このパート（必要性訴求）', '次のパート（金額訴求）'],
-    ['目的', '「電気代がいくら減るか」を納得してもらう', '「毎月いくら払うか」を払える形にする'],
-    ['出す数字', '削減額（月14,000円／30年504万円）', '月々の支払額・概算見積・総額'],
-    ['使う道具', 'アプローチブック＋シミュレーション', 'シミュレーション＋概算見積＋カタログ'],
-]
-table(s, 0.45, 2.20, 9.95, [1.30, 4.30, 4.35], rows, font_size=13.5, row_h=0.78, head_h=0.36)
-_, tf = rect(s, 0.45, 5.15, 9.95, 1.30, fill=LTYEL, line='BF8F00')
-lines(tf, [
-    ('なぜ分けるのか', {'size': 16, 'bold': True, 'space': 6}),
-    ('「いくら得か」が腹落ちしていない状態で「いくら払うか」を出すと、支払額だけが記憶に残ります。',
-     {'size': 15, 'space': 4}),
-    ('このパートは「得の大きさ」を作りきるところまでです。', {'size': 15, 'bold': True, 'color': RED}),
-])
-
-# ================================================================ 24. 通しの時間配分
+# ================================================================ 18. 通しの時間配分
 s = new_slide('通しで使う')
 box, tf = tb(s, 0.45, 1.36, 9.95, 0.45)
 lines(tf, [('必要性訴求パートの時間配分（商談での目安）', {'size': 23, 'bold': True})])
 box, tf = tb(s, 0.45, 1.86, 9.95, 0.32)
-lines(tf, [('※ 研修の時間割ではありません。お客様との商談1時間のうち、この部分に使えるのは約40分です',
+lines(tf, [('※ 研修の時間割ではありません。お客様との商談のうち、①②に使えるのは約25分です',
             {'size': 14, 'color': GRAY})])
 bars = [
     ('導入', '検針票の実額を聞く', '2分', 0.78, LTGRAY),
     ('① 電気代', 'p.9 〜 p.17（7ページ）', '20分', 4.20, LTGREEN),
     ('② 災害対策', 'p.18・p.19 ＋ 事例1本', '3分', 0.98, LTYEL),
-    ('③ 経済メリット', 'p.20・p.21 ＋ シミュレーション', '15分', 3.20, LTBLUE),
+    ('③ 経済メリット', 'p.20・p.21 ＋ シミュレーション', '次回', 3.20, 'EDEDED'),
 ]
 y = 2.32
 for name, detail, mins, blen, fill in bars:
@@ -854,20 +679,20 @@ for name, detail, mins, blen, fill in bars:
     box, tf2 = tb(s, 7.00, y, 3.40, 0.72, anchor=MSO_ANCHOR.MIDDLE)
     lines(tf2, [(detail, {'size': 12})])
     y += 0.86
-_, tf = rect(s, 0.45, 5.90, 4.80, 1.00, fill=LTGRAY)
+_, tf = rect(s, 0.45, 5.86, 4.80, 1.06, fill=LTGRAY)
 lines(tf, [
     ('時間が押したときに削る順番', {'size': 14, 'bold': True, 'space': 5}),
     ('p.15・16 → p.10・p.12 → p.11・p.13', {'size': 15, 'bold': True, 'color': RED, 'space': 3}),
-    ('p.9・p.14・p.17・p.21 は削らない', {'size': 13}),
+    ('p.9・p.14・p.17 は削らない', {'size': 13}),
 ])
-_, tf = rect(s, 5.60, 5.90, 4.80, 1.00, fill='FCE4E4', line=RED)
+_, tf = rect(s, 5.60, 5.86, 4.80, 1.06, fill='FCE4E4', line=RED)
 lines(tf, [
     ('いちばん多い失敗', {'size': 14, 'bold': True, 'color': RED, 'space': 5}),
     ('①で30分以上かけてしまい、', {'size': 14, 'space': 3}),
-    ('③のシミュレーションが駆け足になる', {'size': 14, 'bold': True}),
+    ('②の災害対策が飛んでしまう', {'size': 14, 'bold': True}),
 ])
 
-# ================================================================ 25. NG集
+# ================================================================ 19. NG集
 s = new_slide('通しで使う')
 box, tf = tb(s, 0.45, 1.36, 9.95, 0.45)
 lines(tf, [('めくり方のNG集', {'size': 24, 'bold': True})])
@@ -893,17 +718,17 @@ p = para(tf, first=True, align=PP_ALIGN.CENTER)
 run(p, '共通しているのは「資料を読んでいる」状態。資料は読むものではなく、指すものです',
     size=16, bold=True, hl=YELLOW)
 
-# ================================================================ 26. 通し練習
+# ================================================================ 20. 通し練習
 s = new_slide('通しで使う')
 box, tf = tb(s, 0.45, 1.36, 9.95, 0.45)
-lines(tf, [('通し練習：p.9 から、5分で行けるところまで', {'size': 23, 'bold': True})])
+lines(tf, [('通し練習：p.9 から p.19 まで、6分で通す', {'size': 23, 'bold': True})])
 _, tf = rect(s, 0.45, 1.92, 9.95, 1.45, fill=LTGRAY)
-lines(tf, [('進め方（合計11分）', {'size': 14, 'bold': True, 'color': GRAY, 'space': 6})])
+lines(tf, [('進め方（合計18分）', {'size': 14, 'bold': True, 'color': GRAY, 'space': 6})])
 for it in [
-    '2人1組。営業役とお客様役。営業役だけ1本（5分）やります',
+    '2人1組。営業役とお客様役。1本6分 → フィードバック3分 → 交代してもう1本',
     '営業役はアプローチブックを持ち、p.9を開いた状態から始めます',
     'お客様役は「月18,000円」という設定。最初に必ず聞かれるので答えてください',
-    'そのあとフィードバック3分 → 役を交代してもう1本（時間があれば）',
+    'ゴールは p.19 まで到達すること。途中で止まったページを覚えておいてください',
 ]:
     p = para(tf, space_after=4); run(p, '・' + it, size=14)
 _, tf = rect(s, 0.45, 3.48, 4.80, 1.55, fill=LTGREEN, line='70A040')
@@ -928,10 +753,10 @@ lines(tf, [
 ])
 _, tf = rect(s, 0.45, 6.30, 9.95, 0.62, fill=None, line=RED, lw=1.5,
              anchor=MSO_ANCHOR.MIDDLE)
-lines(tf, [('5分で13ページは回りません。回りきらなかったページが、そのまま宿題です',
+lines(tf, [('止まったページが、そのまま宿題です。1本目で全部回れる人はほとんどいません',
             {'size': 16, 'bold': True, 'align': PP_ALIGN.CENTER})])
 
-# ================================================================ 27. チェックシート
+# ================================================================ 21. チェックシート
 s = new_slide('通しで使う')
 box, tf = tb(s, 0.45, 1.36, 9.95, 0.45)
 lines(tf, [('セルフチェックシート', {'size': 24, 'bold': True})])
@@ -944,16 +769,15 @@ rows = [
     ['p.14の「1,210円 → 22,990円」が言えた', ' ', ' '],
     ['p.17でお客様の実額の列を指せた', ' ', ' '],
     ['②災害を3分以内で抜けられた', ' ', ' '],
-    ['p.21で「売電15円・買電30円」を言えた', ' ', ' '],
-    ['シミュレーションで前提条件を先に言えた', ' ', ' '],
-    ['13ページを15分で通せた', ' ', ' '],
+    ['p.18・p.19を事実と第三者だけで話せた', ' ', ' '],
+    ['11ページを13分で通せた', ' ', ' '],
     ['お客様の発言が4割あった', ' ', ' '],
 ]
 table(s, 0.45, 2.30, 6.35, [4.35, 1.00, 1.00], rows, font_size=13, row_h=0.50, head_h=0.34)
 _, tf = rect(s, 7.05, 2.30, 3.35, 2.15, fill=LTGREEN, line='70A040')
 lines(tf, [
     ('合格ライン', {'size': 15, 'bold': True, 'space': 6}),
-    ('8項目中 6つ', {'size': 26, 'bold': True, 'color': RED, 'space': 6}),
+    ('7項目中 5つ', {'size': 26, 'bold': True, 'color': RED, 'space': 6}),
     ('うち、上から3つは必須です', {'size': 13, 'bold': True, 'space': 2}),
     ('（p.9・p.14・p.17）', {'size': 12, 'color': GRAY}),
 ])
@@ -966,7 +790,7 @@ lines(tf, [
     ('翌日には50％忘れます。', {'size': 13, 'bold': True, 'color': RED}),
 ])
 
-# ================================================================ 28. まとめ
+# ================================================================ 22. まとめ
 s = new_slide('まとめ')
 box, tf = tb(s, 0.45, 1.42, 9.95, 0.55)
 lines(tf, [('このパートで持ち帰ってほしい3つ', {'size': 26, 'bold': True})])
@@ -974,11 +798,11 @@ items = [
     ('1', '資料は読むものではなく、指すもの',
      'リード文は読まない。数字は1ページ1つだけ指す。残りはお客様に聞かせない。'),
     ('2', '緑帯の結論は、必ず声に出して言い切る',
-     '13ページ分の緑帯が、そのまま必要性訴求のトークスクリプトです。'),
+     '11ページ分の緑帯が、そのまま必要性訴求のトークスクリプトです。'),
     ('3', '全国平均ではなく、お客様の検針票の実額で話す',
      '最初に月額を聞く。以降の数字はすべてそこから計算し直す。'),
 ]
-y = 2.15
+y = 1.98
 for n, t, d in items:
     _, tf = rect(s, 0.45, y, 0.72, 1.35, fill=RED, anchor=MSO_ANCHOR.MIDDLE)
     lines(tf, [(n, {'size': 30, 'bold': True, 'color': WHITE, 'align': PP_ALIGN.CENTER})])
@@ -987,10 +811,10 @@ for n, t, d in items:
         (t, {'size': 20, 'bold': True, 'space': 6}),
         (d, {'size': 14}),
     ])
-    y += 1.50
-_, tf = rect(s, 0.45, 6.30, 9.95, 0.62, fill=None, line=RED, lw=1.75,
+    y += 1.45
+_, tf = rect(s, 0.45, 6.36, 9.95, 0.56, fill=None, line=RED, lw=1.75,
              anchor=MSO_ANCHOR.MIDDLE)
-lines(tf, [('次のパートは「時期訴求・金額訴求」。ここで作った"得の大きさ"が土台になります',
+lines(tf, [('次回は③経済メリット。今日ここで作った"危機感"が、その土台になります',
             {'size': 16, 'bold': True, 'align': PP_ALIGN.CENTER})])
 notes(s, '・3つとも「アプローチブックの扱い方」の話であって、話術の話ではないことを強調する')
 

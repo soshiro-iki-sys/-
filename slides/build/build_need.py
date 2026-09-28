@@ -9,8 +9,7 @@
 使い方は slides/build/build_session2.py と同じ。以下の画像が必要。
 
   <ASSETS>/ab09.jpg 〜 ab19.jpg   2026年版アプローチブック p.9〜p.19 の誌面画像
-                                （誌面下端の緑帯は本資料側で作り直すため、
-                                  画像は下端13％を切り落としたものを使う）
+                                （下端のキーメッセージ帯まで含めた1ページ丸ごと）
 
     TRAINING_ASSETS=/path/to/assets python slides/build/build_need.py
 
@@ -383,8 +382,9 @@ def page_slide(s, chapter, title, img, caption, goal, says, conc, caution=None,
     box, tf = tb(s, 0.45, 1.36, 9.95, 0.45)
     lines(tf, [(title, {'size': 23, 'bold': True})])
     if img:
-        pic(s, os.path.join(ASSETS, img), 0.45, 1.92, 5.05)
-        box, tf = tb(s, 0.45, 5.06, 5.05, 0.28)
+        # 誌面は下端のキーメッセージ帯まで含めて丸ごと貼る
+        pic(s, os.path.join(ASSETS, img), 0.45, 1.90, 4.95)
+        box, tf = tb(s, 0.45, 5.40, 4.95, 0.28)
         lines(tf, [(caption, {'size': 11, 'color': GRAY})])
     elif panel or panel_table:
         ph = 3.34

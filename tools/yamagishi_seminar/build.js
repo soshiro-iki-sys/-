@@ -282,15 +282,37 @@ divider("02", "絶対に知っておきたい\n屋根・外壁の基礎知識");
   txt(s, [br("年数よりも「家の状態」で判断することが大切です。", { bold: true }), n("ご自分で住まいの状態を把握し、塗り替えのタイミングを計画しましょう", { bold: true })], 0.55, 5.2, 9.8, 1.3, { fontSize: 20 });
 }
 {
-  const s = content(T2, "外壁10工程・屋根8工程の全体像。この手順を省く会社は要注意。");
-  sub(s, "(2)塗装工事の流れ");
-  const wall = ["①足場組立", "②ネット養生", "③高圧洗浄", "④下地処理", "⑤養生", "⑥下塗り", "⑦中塗り", "⑧上塗り", "⑨完工チェック", "⑩足場解体・清掃"];
-  const roof = ["①高圧洗浄", "②鉄部下地調整", "③鉄部さび止め塗装", "④屋根下塗り", "⑤屋根中塗り", "⑥屋根上塗り", "⑦確認作業", "⑧清掃"];
-  s.addText("外壁工事", { x: 0.6, y: 1.8, w: 4.6, h: 0.42, fill: { color: "1F3864" }, color: C.background1, fontSize: 16, bold: true, align: "center", margin: 0, isTextBox: true });
-  s.addText("屋根工事", { x: 5.6, y: 1.8, w: 4.6, h: 0.42, fill: { color: "1F3864" }, color: C.background1, fontSize: 16, bold: true, align: "center", margin: 0, isTextBox: true });
-  wall.forEach((t, i) => s.addText(t, { x: 0.6 + (i % 2) * 2.33, y: 2.35 + Math.floor(i / 2) * 0.68, w: 2.25, h: 0.55, fill: { color: C.accent1 }, color: C.background1, fontSize: 14, bold: true, align: "center", valign: "middle", margin: 0, isTextBox: true }));
-  roof.forEach((t, i) => s.addText(t, { x: 5.6 + (i % 2) * 2.33, y: 2.35 + Math.floor(i / 2) * 0.68, w: 2.25, h: 0.55, fill: { color: C.accent1 }, color: C.background1, fontSize: 14, bold: true, align: "center", valign: "middle", margin: 0, isTextBox: true }));
-  s.addText("この手順を省く会社は要注意！", { x: 0.5, y: 6.1, w: 9.833, h: 0.5, fontSize: 22, bold: true, color: C.accent6, align: "center", margin: 0, isTextBox: true });
+  const s = content(T2, "外壁10工程・屋根8工程の全体像。上から順番に進むことと、準備→下地づくり→塗装→仕上げの段階を見せる。この手順を省く会社は要注意。");
+  sub(s, "(2)塗装工事の流れ", { y: 1.2, w: 4.5 });
+  s.addText("上から順番に進みます。この手順を省く会社は要注意！", { x: 4.2, y: 1.22, w: 6.2, h: 0.42, fontSize: 15, bold: true, color: C.accent6, align: "right", margin: 0, isTextBox: true });
+  // 段階ごとの色（濃いほど工事が進む）
+  const PH = { "準備": "BFBFBF", "下地づくり": "F4B183", "塗装": "F79646", "仕上げ": "C55A11" };
+  const wall = [["足場組立", "準備"], ["ネット養生", "準備"], ["高圧洗浄", "下地づくり"], ["下地処理", "下地づくり"], ["養生", "下地づくり"], ["下塗り", "塗装"], ["中塗り", "塗装"], ["上塗り", "塗装"], ["完工チェック", "仕上げ"], ["足場解体・清掃", "仕上げ"]];
+  const roof = [["高圧洗浄", "下地づくり"], ["鉄部下地調整", "下地づくり"], ["鉄部さび止め塗装", "下地づくり"], ["屋根下塗り", "塗装"], ["屋根中塗り", "塗装"], ["屋根上塗り", "塗装"], ["確認作業", "仕上げ"], ["清掃", "仕上げ"]];
+  const ROW = 0.4, TOP = 2.28;
+  const flow = (x0, head, steps) => {
+    s.addText(head, { x: x0, y: 1.75, w: 4.7, h: 0.45, fill: { color: "1F3864" }, color: C.background1, fontSize: 17, bold: true, align: "center", valign: "middle", margin: 0, isTextBox: true });
+    // 段階ラベル（左の縦帯）
+    let k = 0;
+    while (k < steps.length) {
+      let e = k; while (e + 1 < steps.length && steps[e + 1][1] === steps[k][1]) e++;
+      const ph = steps[k][1];
+      s.addText(ph, { x: x0, y: TOP + k * ROW + 0.03, w: 1.05, h: (e - k + 1) * ROW - 0.06, fill: { color: PH[ph] }, color: ph === "準備" || ph === "下地づくり" ? "000000" : "FFFFFF", fontSize: 12, bold: true, align: "center", valign: "middle", margin: 0, isTextBox: true, objectName: "段階" });
+      k = e + 1;
+    }
+    // 番号をつなぐ縦の矢印線
+    const cx = x0 + 1.42;
+    s.addShape(pres.ShapeType.line, { x: cx, y: TOP + ROW / 2, w: 0, h: (steps.length - 1) * ROW, line: { color: C.accent1, width: 3.5 }, objectName: "流れの線" });
+    steps.forEach(([t, ph], i) => {
+      const y = TOP + i * ROW;
+      s.addText(String(i + 1), { shape: pres.ShapeType.ellipse, x: cx - 0.18, y: y + 0.035, w: 0.36, h: 0.36, fill: { color: C.accent1 }, line: { color: C.background1, width: 1.5 }, color: C.background1, fontSize: 13, bold: true, align: "center", valign: "middle", margin: 0, isTextBox: true });
+      s.addText(t, { x: cx + 0.3, y: y + 0.03, w: x0 + 4.7 - (cx + 0.3), h: ROW - 0.06, fill: { color: "FFF4EA" }, color: C.text1, fontSize: 15, bold: true, valign: "middle", margin: [0, 0, 0, 8], isTextBox: true });
+    });
+    const endY = TOP + steps.length * ROW + 0.06;
+    s.addText("完成！", { x: cx - 0.45, y: endY, w: 0.9, h: 0.34, fill: { color: "C00000" }, color: C.background1, fontSize: 13, bold: true, align: "center", valign: "middle", margin: 0, isTextBox: true });
+  };
+  flow(0.45, "外壁工事（全10工程）", wall);
+  flow(5.7, "屋根工事（全8工程）", roof);
 }
 function koutei(title, body, notes, photos) {
   const s = content(T2, notes);

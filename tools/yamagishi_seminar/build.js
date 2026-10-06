@@ -408,7 +408,7 @@ const T3S = T3; // 見出し帯は章タイトルのまま
   s.addText("→ まずは家の状態を正しく知ることが、失敗しない第一歩", { x: 0.45, y: 6.0, w: 9.95, h: 0.5, fontSize: 18, bold: true, color: C.text1, margin: 0, isTextBox: true });
 }
 {
-  const s = content(T3S, "POINT1の対策。健康診断（現場調査）で見るところ。機械を使わない点検：目で見る・手で触る・写真で記録して説明。約1時間30分。", 22);
+  const s = content(T3S, "POINT1の対策。健康診断（現場調査）で見るところ。機械を使わない点検：目で見る・手で触る・写真で記録して説明。", 22);
   pointHead(s, 1, "対策", "健康診断で、ここまで見てくれるかを確認しましょう");
   const cards = [["目で見る", "ひび割れ・はがれ・色あせ\nカビ・コケ・目地・錆・屋根"], ["手で触る", "チョーキング（白い粉）\n浮き・反り"], ["写真で記録・説明", "写真を見せながら\n状態と原因を説明"]];
   cards.forEach(([h, d], i) => {
@@ -417,7 +417,7 @@ const T3S = T3; // 見出し帯は章タイトルのまま
     s.addText(d, { x, y: 2.9, w: 3.15, h: 0.85, fill: { color: "EAF1FB" }, color: C.text1, fontSize: 14, bold: true, align: "center", valign: "middle", margin: 0.05, isTextBox: true });
     ph(s, x, 3.85, 3.15, 1.95, `【写真】${h}点検`);
   });
-  s.addText("※機械を使わない点検です。約1時間30分かけて、家のまわりを一周して確認します", { x: 0.45, y: 5.95, w: 9.95, h: 0.45, fontSize: 15, bold: true, color: C.text1, margin: 0, isTextBox: true });
+  s.addText("※機械を使わない点検です", { x: 0.45, y: 5.95, w: 9.95, h: 0.45, fontSize: 15, bold: true, color: C.text1, margin: 0, isTextBox: true });
 }
 
 // ---- POINT 2 -------------------------------------------------------
@@ -624,9 +624,9 @@ divider("05", "まとめ・質疑応答");
   });
 }
 {
-  const s = content("さいごに", "まずは外壁・屋根の健康診断を。無料／機械を使わない点検（目視・触診・写真で記録）／写真付きの診断結果でご説明／約1時間30分／申込み方法。");
+  const s = content("さいごに", "まずは外壁・屋根の健康診断を。無料／機械を使わない点検（目視・触診・写真で記録）／写真付きの診断結果でご説明／申込み方法。");
   s.addText([br("まず、一度は外壁・屋根の"), n("“健康診断”をしてみて下さい。")], { x: 0.4, y: 1.5, w: 10.033, h: 1.9, fontSize: 32, bold: true, color: "595959", align: "center", valign: "middle", margin: 0, isTextBox: true });
-  s.addText([br("無料の健康診断", { bold: true, fontSize: 20, color: C.accent6 }), br("・機械を使わない点検（目視・触診・写真で記録）"), br("・写真付きの診断結果でご説明"), br("・所要時間 約1時間30分"), n("・お申込み：申込用紙／電話／QRコード　ショールームでもご相談いただけます")], { x: 0.6, y: 3.7, w: 7.2, h: 2.9, fontSize: 16, color: C.text1, line: { color: C.accent1, width: 1.5 }, margin: 0.15, valign: "middle", isTextBox: true });
+  s.addText([br("無料の健康診断", { bold: true, fontSize: 20, color: C.accent6 }), br("・機械を使わない点検（目視・触診・写真で記録）"), br("・写真付きの診断結果でご説明"), n("・お申込み：申込用紙／電話／QRコード　ショールームでもご相談いただけます")], { x: 0.6, y: 3.7, w: 7.2, h: 2.9, fontSize: 16, color: C.text1, line: { color: C.accent1, width: 1.5 }, margin: 0.15, valign: "middle", isTextBox: true });
   ph(s, 8.1, 3.7, 2.2, 2.9, "【QRコード】\n申込み・電話番号");
 }
 {

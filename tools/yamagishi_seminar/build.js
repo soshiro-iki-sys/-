@@ -369,74 +369,102 @@ function koutei(title, body, notes, photos) {
 // =====================================================================
 section("③ 失敗しない工事3つのポイント");
 divider("03", "意外な落とし穴？！\n失敗しない工事3つのポイント");
+
+// ポイントの帯：左に「POINT n」、右にポイントの見出し。その下に「落とし穴／対策」とこのページの一言
+const POINTS = [
+  ["工事の前に「健康診断」で家の状態を正しく知る", "見た目だけで見積もり、診断を間違える"],
+  ["劣化の度合いに合わせて、工事内容と時期を決める", "傷みすぎて塗装できず、結局高くつく"],
+  ["塗料は「メーカー」で選ぶ", "中身のわからない塗料で、思ったほどもたない"],
+];
+function pointHead(s, no, kind, msg) {
+  s.addText(`POINT ${no}`, { x: 0.45, y: 1.22, w: 1.35, h: 0.5, fill: { color: C.accent2 }, color: C.background1, fontSize: 18, bold: true, align: "center", valign: "middle", margin: 0, isTextBox: true, objectName: "POINT番号" });
+  s.addText(POINTS[no - 1][0], { x: 1.8, y: 1.22, w: 8.6, h: 0.5, fill: { color: "FDF0E6" }, color: C.text1, fontSize: 19, bold: true, valign: "middle", margin: [0, 0, 0, 10], isTextBox: true, objectName: "POINT見出し" });
+  const isTrap = kind === "落とし穴";
+  s.addText(kind, { shape: pres.ShapeType.roundRect, rectRadius: 0.08, x: 0.45, y: 1.85, w: 1.35, h: 0.42, fill: { color: isTrap ? "595959" : C.accent5 }, color: C.background1, fontSize: 15, bold: true, align: "center", valign: "middle", margin: 0, isTextBox: true, objectName: "落とし穴/対策" });
+  s.addText(msg, { x: 1.95, y: 1.85, w: 8.45, h: 0.42, fontSize: 18, bold: true, color: isTrap ? C.accent6 : C.accent5, valign: "middle", margin: 0, isTextBox: true });
+}
+const T3S = T3; // 見出し帯は章タイトルのまま
 {
-  const s = content(T3, "お問合せから引き渡し・アフターまでの流れ。いつまでに工事を終えたいかを決めて、逆算して計画する。各ステップに日付の記入欄。", 22);
-  sub(s, "ポイント1　流れを知って、逆算して計画する");
-  const steps = ["お問い合わせ", "健康診断\n（現場調査）", "ご要望の確認", "診断結果・\nお見積りのご説明", "ご契約", "色の打合せ", "近隣への\nご挨拶", "着工", "完工チェック", "お引き渡し・\n保証書", "定期点検・\nアフターサービス"];
-  steps.forEach((t, i) => {
-    const row = i < 6 ? 0 : 1, col = row ? i - 6 : i;
-    const x = 0.25 + col * 1.73, y = 1.85 + row * 2.05;
-    s.addShape(pres.ShapeType.rect, { x, y, w: 1.62, h: 1.85, fill: { color: C.background1 }, line: { color: C.accent3, width: 1.5 } });
-    s.addText(String(i + 1), { x, y, w: 0.38, h: 0.5, fill: { color: C.accent3 }, color: C.background1, fontSize: 18, bold: true, align: "center", valign: "middle", margin: 0, isTextBox: true });
-    s.addText(t, { x: x + 0.4, y, w: 1.2, h: 0.62, fontSize: 10.5, bold: true, color: C.text1, valign: "middle", margin: 0.02, isTextBox: true });
-    s.addText("月　　日", { x, y: y + 0.65, w: 1.62, h: 0.3, fontSize: 11, color: C.text1, align: "center", margin: 0, isTextBox: true });
-    ph(s, x + 0.08, y + 0.98, 1.46, 0.8, "【説明・イラスト】");
+  const s = content(T3S, "最初に3つのポイントの全体像を見せる。それぞれ「落とし穴（よくある失敗）」と「対策」の順で話す。", 22);
+  wave(s, "失敗しない工事3つのポイント", 1.2);
+  POINTS.forEach(([pt, trap], i) => {
+    const y = 1.85 + i * 1.6;
+    s.addText(`POINT\n${i + 1}`, { x: 0.55, y, w: 1.25, h: 1.35, fill: { color: C.accent2 }, color: C.background1, fontSize: 20, bold: true, align: "center", valign: "middle", margin: 0, isTextBox: true });
+    s.addText(pt, { x: 1.8, y, w: 8.5, h: 0.8, fill: { color: "FDF0E6" }, color: C.text1, fontSize: 22, bold: true, valign: "middle", margin: [0, 0, 0, 14], isTextBox: true });
+    s.addText([{ text: "落とし穴　", options: { bold: true, color: "595959" } }, { text: trap, options: { color: C.accent6 } }], { x: 1.8, y: y + 0.8, w: 8.5, h: 0.55, fontSize: 16, valign: "middle", margin: [0, 0, 0, 14], line: { color: "FDF0E6", width: 1 }, isTextBox: true });
   });
-  txt(s, "いつまでに工事を終えたいかを決めて、そこから逆算してスケジュールを組みましょう！", 0.55, 6.1, 9.8, 0.6, { fontSize: 17, bold: true });
 }
+
+// ---- POINT 1 -------------------------------------------------------
 {
-  const s = content(T3, "工事中も安心のお約束：近隣挨拶の代行／施工管理の責任者（丸投げしない）／禁煙／お茶菓子不要／毎日の作業報告／工程写真の報告書／工期厳守。", 22);
-  sub(s, "ポイント1　工事中も安心のお約束");
-  const items = [["①近隣挨拶は当社が代行", "ご契約者様に代わって、工事の専門家がご挨拶します"], ["②施工管理の責任者がつく", "丸投げはしません"], ["③施工中禁煙", "現場内での喫煙は行いません"], ["④お茶菓子不要", "職人へのお気づかいは不要です"], ["⑤毎日の作業報告", "作業の前後に内容をご報告します"], ["⑥工程を写真で記録", "工事後に報告書にまとめてご提出します"], ["⑦整理整頓・清掃", "毎日の後片付けを徹底します"], ["⑧工期厳守", "予定期間内の完了に努めます"]];
-  items.forEach(([h, d], i) => {
-    const x = 0.5 + (i % 2) * 5.0, y = 1.8 + Math.floor(i / 2) * 1.2;
-    s.addText(h, { x, y, w: 4.7, h: 0.42, fill: { color: "C00000" }, color: C.background1, fontSize: 15, bold: true, margin: 0.08, isTextBox: true });
-    s.addText(d, { x, y: y + 0.42, w: 4.7, h: 0.62, fill: { color: "F2F2F2" }, color: C.text1, fontSize: 13, margin: 0.08, valign: "middle", isTextBox: true });
+  const s = content(T3S, "POINT1の落とし穴。悪徳業者は一部。普通の業者でも、施工前の診断ミスや知識不足・思い込みで失敗は起きる。だから最初の診断が大事。", 22);
+  pointHead(s, 1, "落とし穴", "失敗の原因は「悪徳業者」だけではありません");
+  const lv = [["悪徳業者・手抜き工事", "404040", 3.0], ["施工前の診断ミス", C.accent1, 5.0], ["施工業者の知識不足・思い込み", "7030A0", 7.0]];
+  lv.forEach(([t, col, w], i) => {
+    s.addText(t, { x: 0.5 + (7.0 - w) / 2, y: 2.55 + i * 1.12, w, h: 1.0, fill: { color: col }, color: C.background1, fontSize: 17, bold: true, align: "center", valign: "middle", margin: 0, isTextBox: true });
   });
+  s.addShape(pres.ShapeType.rect, { x: 0.4, y: 3.62, w: 7.2, h: 2.18, fill: { type: "none" }, line: { color: C.accent6, width: 2, dashType: "dash" } });
+  s.addText([br("悪徳業者はごく一部。", { bold: true }), br(""), br("普通の業者でも、", {}), br("工事の前の診断を間違えれば", { color: C.accent6, bold: true }), n("失敗します。", { color: C.accent6, bold: true })], { x: 7.85, y: 2.55, w: 2.55, h: 3.3, fontSize: 16, color: C.text1, valign: "middle", margin: 0, isTextBox: true });
+  s.addText("→ まずは家の状態を正しく知ることが、失敗しない第一歩", { x: 0.45, y: 6.0, w: 9.95, h: 0.5, fontSize: 18, bold: true, color: C.text1, margin: 0, isTextBox: true });
 }
 {
-  const s = content(T3, "健康診断（現場調査）で見るところ。機械を使わない点検：目で見る・手で触る・写真で記録して説明。約1時間30分。", 22);
-  sub(s, "ポイント1　健康診断（現場調査）で見るところ");
-  txt(s, "次のことをしているかチェックしましょう　※機械を使わない点検", 0.55, 1.75, 9.8, 0.45, { fontSize: 18, bold: true });
-  s.addText([
-    br("□目で見る：ひび割れ・はがれ・色あせ・カビコケ・目地・錆・屋根"),
-    br("□手で触る：チョーキング・浮き・反り"),
-    br("□写真で記録し、写真を見せながら説明してくれるか"),
-    n("□約1時間30分かけて、家のまわりを一周して確認してくれるか"),
-  ], { x: 0.55, y: 2.3, w: 9.7, h: 1.9, fontSize: 16, bold: true, color: C.accent6, line: { color: "1F3864", width: 2 }, margin: 0.12, valign: "middle", paraSpaceAfter: 6, isTextBox: true });
-  ph(s, 0.55, 4.4, 3.0, 2.3, "【写真】目で見る点検");
-  ph(s, 3.9, 4.4, 3.0, 2.3, "【写真】手で触る点検（チョーキング）");
-  ph(s, 7.25, 4.4, 3.0, 2.3, "【写真】写真付きの診断結果");
+  const s = content(T3S, "POINT1の対策。健康診断（現場調査）で見るところ。機械を使わない点検：目で見る・手で触る・写真で記録して説明。約1時間30分。", 22);
+  pointHead(s, 1, "対策", "健康診断で、ここまで見てくれるかを確認しましょう");
+  const cards = [["目で見る", "ひび割れ・はがれ・色あせ\nカビ・コケ・目地・錆・屋根"], ["手で触る", "チョーキング（白い粉）\n浮き・反り"], ["写真で記録・説明", "写真を見せながら\n状態と原因を説明"]];
+  cards.forEach(([h, d], i) => {
+    const x = 0.45 + i * 3.35;
+    s.addText(h, { x, y: 2.45, w: 3.15, h: 0.45, fill: { color: C.accent5 }, color: C.background1, fontSize: 17, bold: true, align: "center", valign: "middle", margin: 0, isTextBox: true });
+    s.addText(d, { x, y: 2.9, w: 3.15, h: 0.85, fill: { color: "EAF1FB" }, color: C.text1, fontSize: 14, bold: true, align: "center", valign: "middle", margin: 0.05, isTextBox: true });
+    ph(s, x, 3.85, 3.15, 1.95, `【写真】${h}点検`);
+  });
+  s.addText("※機械を使わない点検です。約1時間30分かけて、家のまわりを一周して確認します", { x: 0.45, y: 5.95, w: 9.95, h: 0.45, fontSize: 15, bold: true, color: C.text1, margin: 0, isTextBox: true });
 }
+
+// ---- POINT 2 -------------------------------------------------------
 {
-  const s = content(T3, "傷みすぎると塗装できない。外壁材がはがれる・腐る・変形していると塗っても密着しない→張替え・カバー工事が必要になる。", 22);
-  sub(s, "ポイント2　劣化度合いによって工事を決める");
-  txt(s, [br("劣化が進みすぎると、塗装しても塗料がすぐにはがれてしまい、", { color: C.accent6 }), br("塗装自体ができなくなってしまいます。", { color: C.accent6 }), br(""), br("・外壁材自体がはがれ落ちている"), br("・カビや藻で外壁が傷み、塗料が密着しない"), br("・外壁が水を吸って変形している"), br(""), n("→張替え・カバー工事が必要になります", { bold: true })], 0.55, 1.8, 5.4, 4.6, { fontSize: 16 });
-  ph(s, 6.2, 1.85, 4.1, 2.25, "【写真】塗装できないほど傷んだ外壁①");
-  ph(s, 6.2, 4.3, 4.1, 2.25, "【写真】塗装できないほど傷んだ外壁②");
-}
-{
-  const s = content(T3, "放っておくと結局高くつく。外壁100㎡・足場代込みで、塗装パック54.8万円 vs サイディングパック148万円〜（約2.7倍）。「あと何年住みたいか」で工事を選ぶ。価格は最新のものに。", 22);
-  sub(s, "ポイント2　放っておくと結局高くつく");
-  const card = (x, head, name, price, dur, color) => {
-    s.addText(head, { x, y: 1.85, w: 4.6, h: 0.5, fill: { color }, color: C.background1, fontSize: 16, bold: true, align: "center", valign: "middle", margin: 0, isTextBox: true });
-    s.addText([br(name, { fontSize: 15, bold: true }), br(price, { fontSize: 32, bold: true, color }), n(dur, { fontSize: 13 })], { x, y: 2.35, w: 4.6, h: 2.1, align: "center", valign: "middle", line: { color, width: 1.5 }, color: C.text1, margin: 0.1, isTextBox: true });
+  const s = content(T3S, "POINT2の落とし穴。傷みすぎると塗装しても密着せず、張替え・カバー工事が必要になる。塗装できる状態とできない状態を写真で見比べる。", 22);
+  pointHead(s, 2, "落とし穴", "傷みすぎると、塗装ではもう直せません");
+  const col = (x, head, color, body, photo) => {
+    s.addText(head, { x, y: 2.45, w: 4.75, h: 0.5, fill: { color }, color: C.background1, fontSize: 18, bold: true, align: "center", valign: "middle", margin: 0, isTextBox: true });
+    ph(s, x, 3.0, 4.75, 1.85, photo);
+    txt(s, body, x, 4.95, 4.75, 1.4, { fontSize: 14 });
   };
-  card(0.55, "塗装パック", "プレミアムシリコン（ラジカル）", "54.8万円", "（税込）外壁100㎡・足場代込・10年保証\n耐久年数〇〜〇年", "1F9BA8");
-  card(5.7, "外壁サイディングパック", "金属サイディング", "148万円〜", "（税込）外壁100㎡・足場代込・10年保証\n耐久年数〇〜〇年", "2E9E44");
-  s.addText("サイディング工事は塗装工事の約2.7倍！", { x: 0.5, y: 4.7, w: 9.833, h: 0.6, fontSize: 26, bold: true, color: C.accent6, align: "center", margin: 0, isTextBox: true });
-  txt(s, [br("劣化を放置すると結局高くつきます。", { bold: true }), n("「あと何年住みたいか」で、塗装か張替えかを選びましょう。", { bold: true })], 0.55, 5.45, 9.8, 1.0, { fontSize: 18, align: "center" });
+  col(0.45, "まだ塗装で直せる状態", C.accent5, [br("・色あせ・チョーキング"), br("・細かいひび割れ"), n("・目地の痩せ・割れ")], "【写真】塗装で直せる劣化");
+  col(5.65, "塗装ではもう直せない状態", "C00000", [br("・外壁材そのものがはがれ落ちている"), br("・カビや藻で外壁が傷み、塗料が密着しない"), n("・水を吸って外壁が変形している")], "【写真】塗装できないほど傷んだ外壁");
+  s.addText("→ 張替え・カバー工事が必要に", { x: 5.65, y: 6.3, w: 4.75, h: 0.4, fontSize: 16, bold: true, color: C.accent6, margin: 0, isTextBox: true });
 }
 {
-  const s = content(T3, "同じ「シリコン」「ラジカル」でもメーカーによって品質や実績が違う。見積書にメーカー名と商品名が書いてあるかを確認。", 22);
-  sub(s, "ポイント3　家に合った塗料を選ぶ");
-  s.addText("塗料は「メーカー」で選ぶ時代", { x: 0.5, y: 2.1, w: 9.833, h: 0.9, fontSize: 34, bold: true, color: C.text1, align: "center", margin: 0, isTextBox: true });
-  txt(s, [br("同じ「シリコン」「ラジカル」でも、"), br("メーカーによって品質や実績が違います。"), br(""), n("見積書にメーカー名と商品名が書いてあるかを確認しましょう！", { color: C.accent6, bold: true })], 0.8, 3.3, 9.2, 2.2, { fontSize: 20, align: "center" });
-  ph(s, 3.4, 5.4, 4.0, 1.2, "【イラスト・写真】\n塗料缶");
+  const s = content(T3S, "POINT2の対策。早めの塗装がいちばん安い。外壁100㎡・足場代込みで、塗装パック54.8万円 vs サイディングパック148万円〜（約2.7倍）。あと何年住みたいかで工事を選ぶ。価格は最新のものに。", 22);
+  pointHead(s, 2, "対策", "早めに塗装するのが、いちばん安くすみます");
+  const card = (x, head, name, price, dur, color) => {
+    s.addText(head, { x, y: 2.45, w: 4.75, h: 0.45, fill: { color }, color: C.background1, fontSize: 16, bold: true, align: "center", valign: "middle", margin: 0, isTextBox: true });
+    s.addText([br(name, { fontSize: 14, bold: true }), br(price, { fontSize: 30, bold: true, color }), n(dur, { fontSize: 12 })], { x, y: 2.9, w: 4.75, h: 1.7, align: "center", valign: "middle", line: { color, width: 1.5 }, color: C.text1, margin: 0.08, isTextBox: true });
+  };
+  card(0.45, "早めに塗装した場合", "塗装パック（プレミアムシリコン）", "54.8万円", "（税込）外壁100㎡・足場代込・10年保証\n耐久年数〇〜〇年", C.accent5);
+  card(5.65, "傷みすぎて張替えた場合", "外壁サイディングパック", "148万円〜", "（税込）外壁100㎡・足場代込・10年保証\n耐久年数〇〜〇年", "C00000");
+  s.addText("放っておくと約2.7倍！", { x: 0.45, y: 4.75, w: 9.95, h: 0.55, fontSize: 26, bold: true, color: C.accent6, align: "center", margin: 0, isTextBox: true });
+  s.addText([{ text: "工事の決め方　", options: { bold: true, color: C.accent5 } }, { text: "「あと何年この家に住みたいか」で、塗装か張替えか・どの塗料かを選びましょう" }], { x: 0.45, y: 5.45, w: 9.95, h: 0.9, fontSize: 16, bold: true, color: C.text1, fill: { color: "EAF1FB" }, valign: "middle", margin: 0.15, isTextBox: true });
+}
+
+// ---- POINT 3 -------------------------------------------------------
+{
+  const s = content(T3S, "POINT3の落とし穴。同じ「シリコン」でもメーカーや商品で中身は違う。見積書にメーカー名・商品名が書いてあるかを確認する。", 22);
+  pointHead(s, 3, "落とし穴", "同じ「シリコン塗装」でも、中身は違います");
+  const est = (x, head, color, line1, note) => {
+    s.addText(head, { x, y: 2.45, w: 4.75, h: 0.45, fill: { color }, color: C.background1, fontSize: 16, bold: true, align: "center", valign: "middle", margin: 0, isTextBox: true });
+    s.addTable([
+      [{ text: "項目", options: { bold: true, fill: { color: "F2F2F2" } } }, { text: "数量", options: { bold: true, fill: { color: "F2F2F2" } } }],
+      [line1[0], line1[1]],
+    ], { x, y: 3.0, w: 4.75, colW: [3.45, 1.3], fontSize: 13, color: "000000", border: { type: "solid", pt: 0.75, color: "BFBFBF" }, valign: "middle", rowH: 0.55 });
+    txt(s, note, x, 4.25, 4.75, 1.3, { fontSize: 14 });
+  };
+  est(0.45, "見積書の書き方　悪い例", "595959", ["外壁シリコン塗装", "一式"], [br("・どのメーカーの、どの塗料かわからない"), n("・中身のわからない塗料かもしれない")]);
+  est(5.65, "見積書の書き方　良い例", C.accent5, ["外壁塗装　エスケー化研\nプレミアムシリコン（3回塗り）", "〇〇㎡"], [br("・メーカー名と商品名がわかる"), n("・性能や耐用年数を自分で調べられる")]);
+  s.addText("→ 見積書に「メーカー名」と「商品名」が書いてあるか確認しましょう", { x: 0.45, y: 5.8, w: 9.95, h: 0.55, fontSize: 18, bold: true, color: C.accent6, align: "center", margin: 0, isTextBox: true });
 }
 {
-  const s = content(T3, "主な塗料メーカーの比較表。他社を悪く言わず、事実だけを並べる。各社の公式情報で最終確認。", 22);
-  sub(s, "ポイント3　主な塗料メーカーの比較");
+  const s = content(T3S, "POINT3の対策。主な塗料メーカーの比較表。他社を悪く言わず、事実だけを並べる。各社の公式情報で最終確認。", 22);
+  pointHead(s, 3, "対策", "主な塗料メーカーを知っておきましょう");
   const hdr = (t) => ({ text: t, options: { bold: true, color: "FFFFFF", fill: { color: "F79646" }, align: "center", valign: "middle" } });
   const ek = (t, o = {}) => ({ text: t, options: Object.assign({ fill: { color: "FCE4D0" }, bold: true }, o) });
   const rows = [
@@ -448,45 +476,48 @@ divider("03", "意外な落とし穴？！\n失敗しない工事3つのポイ�
     ["アステックペイント", "日本では2000年から販売", "オーストラリアのメーカー", "超低汚染リファイン", "加盟店しか扱えない"],
     ["オリジナル塗料", "—", "塗装店の自社ブランド", "—", "性能の根拠がわかりにくい／比べにくい"],
   ];
-  s.addTable(rows, { x: 0.35, y: 1.8, w: 10.13, colW: [1.7, 1.35, 2.4, 2.6, 2.08], fontSize: 12, color: "000000", border: { type: "solid", pt: 0.75, color: "BFBFBF" }, valign: "middle", rowH: 0.62 });
-  txt(s, "※各社の公式情報をもとに作成（掲載前に最新情報を確認）", 0.35, 6.35, 9, 0.35, { fontSize: 10, color: GRAY_TXT });
+  s.addTable(rows, { x: 0.35, y: 2.42, w: 10.13, colW: [1.7, 1.35, 2.4, 2.6, 2.08], fontSize: 11.5, color: "000000", border: { type: "solid", pt: 0.75, color: "BFBFBF" }, valign: "middle", rowH: 0.55 });
+  txt(s, "※各社の公式情報をもとに作成（掲載前に最新情報を確認）", 0.35, 6.4, 9, 0.35, { fontSize: 10, color: GRAY_TXT });
 }
 {
-  const s = content(T3, "なぜエスケー化研の塗料を選ぶのか：①ものがいい ②トラブルが少ない ③日本一（建築仕上塗材 国内シェア53％）。", 22);
-  sub(s, "ポイント3　なぜエスケー化研の塗料を選ぶのか");
+  const s = content(T3S, "POINT3の対策。当社がエスケー化研の塗料を選ぶ理由：①ものがいい ②トラブルが少ない ③日本一（建築仕上塗材 国内シェア53％）。", 22);
+  pointHead(s, 3, "対策", "当社がエスケー化研の塗料を選ぶ3つの理由");
   const pillars = [
     ["①ものがいい", ["家の外壁・屋根に使う建築用の塗料が専門", "プレミアムシリコン（ラジカル制御・期待耐用年数15年）", "クールテクトSi（遮熱・汚れにくい）", "性能が試験データで確認できる"]],
     ["②トラブルが少ない", ["全国の多くの現場で長年使われてきた実績", "製品情報がすべて公開されていて、お客様自身でも調べられる", "どの塗装店でも同じ品質の材料が手に入る"]],
     ["③日本一", ["建築仕上塗材の国内シェア", "53％", "でNo.1", "六本木ヒルズや甲子園球場でも使われている"]],
   ];
   pillars.forEach(([h, lines], i) => {
-    const x = 0.4 + i * 3.4;
-    s.addText(h, { x, y: 1.85, w: 3.2, h: 0.6, fill: { color: C.accent1 }, color: C.background1, fontSize: 20, bold: true, align: "center", valign: "middle", margin: 0, isTextBox: true });
+    const x = 0.45 + i * 3.35;
+    s.addText(h, { x, y: 2.45, w: 3.15, h: 0.55, fill: { color: C.accent1 }, color: C.background1, fontSize: 19, bold: true, align: "center", valign: "middle", margin: 0, isTextBox: true });
     const runs = i === 2
-      ? [br(lines[0], { fontSize: 14 }), br(lines[1], { fontSize: 48, bold: true, color: C.accent6 }), br(lines[2], { fontSize: 16, bold: true }), br(""), n(lines[3], { fontSize: 12 })]
+      ? [br(lines[0], { fontSize: 14 }), br(lines[1], { fontSize: 44, bold: true, color: C.accent6 }), br(lines[2], { fontSize: 16, bold: true }), br(""), n(lines[3], { fontSize: 12 })]
       : lines.map((t, k) => ({ text: "・" + t, options: { breakLine: k < lines.length - 1 } }));
-    s.addText(runs, { x, y: 2.45, w: 3.2, h: 3.4, fontSize: 14, color: C.text1, fill: { color: "FFF7F0" }, line: { color: C.accent1, width: 1 }, align: i === 2 ? "center" : "left", valign: i === 2 ? "middle" : "top", margin: 0.12, paraSpaceAfter: 6, isTextBox: true });
+    s.addText(runs, { x, y: 3.0, w: 3.15, h: 2.95, fontSize: 13.5, color: C.text1, fill: { color: "FFF7F0" }, line: { color: C.accent1, width: 1 }, align: i === 2 ? "center" : "left", valign: i === 2 ? "middle" : "top", margin: 0.12, paraSpaceAfter: 6, isTextBox: true });
   });
-  ph(s, 0.4, 6.0, 10.0, 0.7, "【ロゴ・写真】エスケー化研のロゴ／代表商品の缶／施工物件の写真");
+  ph(s, 0.45, 6.05, 9.85, 0.6, "【ロゴ・写真】エスケー化研のロゴ／代表商品の缶／施工物件の写真");
 }
 {
-  const s = content(T3, "当社のおすすめプランと施工実績（Before/After）。", 22);
-  sub(s, "ポイント3　当社のおすすめプランと施工実績");
-  ph(s, 0.45, 1.85, 4.6, 2.2, "【プラン】\n塗装パック（プレミアムシリコン）");
-  ph(s, 0.45, 4.25, 4.6, 2.2, "【プラン】\n遮熱プラン（クールテクトSi）");
-  s.addText("施工前 Before", { x: 5.5, y: 1.85, w: 2.0, h: 0.35, fill: { color: "006B61" }, color: C.background1, fontSize: 12, margin: 0.05, isTextBox: true });
-  ph(s, 5.5, 2.2, 2.3, 1.9, "【写真】施工前");
-  s.addText("施工後 After", { x: 8.0, y: 1.85, w: 2.0, h: 0.35, fill: { color: "006B61" }, color: C.background1, fontSize: 12, margin: 0.05, isTextBox: true });
-  ph(s, 8.0, 2.2, 2.3, 1.9, "【写真】施工後");
-  ph(s, 5.5, 4.25, 4.8, 2.2, "【お住まいと工事の概要】\n所在地／部位／工事期間／使用塗料／コメント");
+  const s = content(T3S, "POINT3の対策。エスケー化研の塗料を使った当社のプランと施工実績（Before/After）。", 22);
+  pointHead(s, 3, "対策", "エスケー化研の塗料を使った当社のプランと実績");
+  ph(s, 0.45, 2.45, 4.6, 1.95, "【プラン】\n塗装パック（プレミアムシリコン）");
+  ph(s, 0.45, 4.55, 4.6, 1.95, "【プラン】\n遮熱プラン（クールテクトSi）");
+  s.addText("施工前 Before", { x: 5.5, y: 2.45, w: 2.0, h: 0.35, fill: { color: "006B61" }, color: C.background1, fontSize: 12, margin: 0.05, isTextBox: true });
+  ph(s, 5.5, 2.8, 2.3, 1.6, "【写真】施工前");
+  s.addText("施工後 After", { x: 8.0, y: 2.45, w: 2.0, h: 0.35, fill: { color: "006B61" }, color: C.background1, fontSize: 12, margin: 0.05, isTextBox: true });
+  ph(s, 8.0, 2.8, 2.3, 1.6, "【写真】施工後");
+  ph(s, 5.5, 4.55, 4.8, 1.95, "【お住まいと工事の概要】\n所在地／部位／工事期間／使用塗料／コメント");
 }
 {
-  const s = content(T3, "3つのポイントのまとめ。そのためには、正しく診断できる会社を選ぶことが大切（→④へ）。", 22);
-  wave(s, "3つのポイントのまとめ");
-  ["ポイント1\n流れを知って、逆算して計画する", "ポイント2\n劣化度合いによって工事を決める", "ポイント3\n家に合った塗料を選ぶ"].forEach((t, i) => {
-    s.addText(t, { x: 0.6 + i * 3.35, y: 2.1, w: 3.05, h: 1.9, fill: { color: C.background2 }, color: C.text1, fontSize: 18, bold: true, align: "center", valign: "middle", margin: 0.1, isTextBox: true });
+  const s = content(T3S, "3つのポイントのまとめ。各ポイントで「お客様がやること」を1つずつ持ち帰ってもらう。そのためには正しく診断できる会社選びが大切（→④へ）。", 22);
+  wave(s, "3つのポイントのまとめ", 1.2);
+  const acts = ["健康診断で、目視・触診・写真の説明まで受ける", "「あと何年住むか」を決めて、傷みすぎる前に塗装する", "見積書でメーカー名と商品名を確認する"];
+  POINTS.forEach(([pt], i) => {
+    const y = 1.85 + i * 1.3;
+    s.addText(`POINT ${i + 1}`, { x: 0.55, y, w: 1.35, h: 1.1, fill: { color: C.accent2 }, color: C.background1, fontSize: 17, bold: true, align: "center", valign: "middle", margin: 0, isTextBox: true });
+    s.addText([br(pt, { fontSize: 18, bold: true }), { text: "やること：", options: { fontSize: 14, bold: true, color: C.accent5 } }, { text: acts[i], options: { fontSize: 14 } }], { x: 1.9, y, w: 8.4, h: 1.1, fill: { color: "FDF0E6" }, color: C.text1, valign: "middle", margin: [0, 0, 0, 14], isTextBox: true });
   });
-  s.addText([br("そのためには、"), n("正しく診断できる会社を選ぶことが大切です！", { color: C.accent6 })], { x: 0.5, y: 4.5, w: 9.833, h: 1.4, fontSize: 26, bold: true, color: C.text1, align: "center", valign: "middle", margin: 0, isTextBox: true });
+  s.addText([{ text: "そのためには、" }, { text: "正しく診断できる会社選びが大切です！", options: { color: C.accent6 } }], { x: 0.45, y: 5.85, w: 9.95, h: 0.6, fontSize: 22, bold: true, color: C.text1, align: "center", valign: "middle", margin: 0, isTextBox: true });
 }
 
 // =====================================================================
@@ -585,7 +616,7 @@ divider("05", "まとめ・質疑応答");
 {
   const s = content("まとめ", "本日のまとめ：家は必ず劣化する（北陸は特に）／3つのポイント／業者は価格ではなく見積・保証・会社の中身で選ぶ。");
   wave(s, "本日のまとめ");
-  const rows = [["1", "家は必ず劣化します（北陸は特に）"], ["2", "失敗しない工事3つのポイント\n流れを知って逆算／劣化度合いで工事を決める／家に合った塗料を選ぶ"], ["3", "業者は価格ではなく、見積・保証・会社の中身で選びましょう"]];
+  const rows = [["1", "家は必ず劣化します（北陸は特に）"], ["2", "失敗しない工事3つのポイント\n健康診断で状態を知る／劣化度合いで工事と時期を決める／塗料はメーカーで選ぶ"], ["3", "業者は価格ではなく、見積・保証・会社の中身で選びましょう"]];
   rows.forEach(([no, t], i) => {
     const y = 1.95 + i * 1.5;
     s.addText(no, { shape: pres.ShapeType.ellipse, x: 0.7, y: y + 0.15, w: 0.9, h: 0.9, fill: { color: C.accent1 }, color: C.background1, fontSize: 28, bold: true, align: "center", valign: "middle", margin: 0, isTextBox: true });
@@ -597,6 +628,29 @@ divider("05", "まとめ・質疑応答");
   s.addText([br("まず、一度は外壁・屋根の"), n("“健康診断”をしてみて下さい。")], { x: 0.4, y: 1.5, w: 10.033, h: 1.9, fontSize: 32, bold: true, color: "595959", align: "center", valign: "middle", margin: 0, isTextBox: true });
   s.addText([br("無料の健康診断", { bold: true, fontSize: 20, color: C.accent6 }), br("・機械を使わない点検（目視・触診・写真で記録）"), br("・写真付きの診断結果でご説明"), br("・所要時間 約1時間30分"), n("・お申込み：申込用紙／電話／QRコード　ショールームでもご相談いただけます")], { x: 0.6, y: 3.7, w: 7.2, h: 2.9, fontSize: 16, color: C.text1, line: { color: C.accent1, width: 1.5 }, margin: 0.15, valign: "middle", isTextBox: true });
   ph(s, 8.1, 3.7, 2.2, 2.9, "【QRコード】\n申込み・電話番号");
+}
+{
+  const s = content("ご依頼からお引き渡しまでの流れ", "健康診断のお申込みからお引き渡し・アフターまでの流れ。いつまでに工事を終えたいかを決めて、逆算して計画する。各ステップに日付の記入欄。");
+  const steps = ["お問い合わせ", "健康診断\n（現場調査）", "ご要望の確認", "診断結果・\nお見積りのご説明", "ご契約", "色の打合せ", "近隣への\nご挨拶", "着工", "完工チェック", "お引き渡し・\n保証書", "定期点検・\nアフターサービス"];
+  steps.forEach((t, i) => {
+    const row = i < 6 ? 0 : 1, col = row ? i - 6 : i;
+    const x = 0.25 + col * 1.73, y = 1.45 + row * 2.2;
+    s.addShape(pres.ShapeType.rect, { x, y, w: 1.62, h: 1.85, fill: { color: C.background1 }, line: { color: C.accent3, width: 1.5 } });
+    s.addText(String(i + 1), { x, y, w: 0.38, h: 0.5, fill: { color: C.accent3 }, color: C.background1, fontSize: 18, bold: true, align: "center", valign: "middle", margin: 0, isTextBox: true });
+    s.addText(t, { x: x + 0.4, y, w: 1.2, h: 0.62, fontSize: 10.5, bold: true, color: C.text1, valign: "middle", margin: 0.02, isTextBox: true });
+    s.addText("月　　日", { x, y: y + 0.65, w: 1.62, h: 0.3, fontSize: 11, color: C.text1, align: "center", margin: 0, isTextBox: true });
+    ph(s, x + 0.08, y + 0.98, 1.46, 0.8, "【説明・イラスト】");
+  });
+  txt(s, "いつまでに工事を終えたいかを決めて、そこから逆算してスケジュールを組みましょう！", 0.55, 6.0, 9.8, 0.6, { fontSize: 17, bold: true });
+}
+{
+  const s = content("工事中も安心のお約束", "工事中も安心のお約束：近隣挨拶の代行／施工管理の責任者（丸投げしない）／禁煙／お茶菓子不要／毎日の作業報告／工程写真の報告書／工期厳守。");
+  const items = [["①近隣挨拶は当社が代行", "ご契約者様に代わって、工事の専門家がご挨拶します"], ["②施工管理の責任者がつく", "丸投げはしません"], ["③施工中禁煙", "現場内での喫煙は行いません"], ["④お茶菓子不要", "職人へのお気づかいは不要です"], ["⑤毎日の作業報告", "作業の前後に内容をご報告します"], ["⑥工程を写真で記録", "工事後に報告書にまとめてご提出します"], ["⑦整理整頓・清掃", "毎日の後片付けを徹底します"], ["⑧工期厳守", "予定期間内の完了に努めます"]];
+  items.forEach(([h, d], i) => {
+    const x = 0.5 + (i % 2) * 5.0, y = 1.5 + Math.floor(i / 2) * 1.3;
+    s.addText(h, { x, y, w: 4.7, h: 0.42, fill: { color: "C00000" }, color: C.background1, fontSize: 15, bold: true, margin: 0.08, isTextBox: true });
+    s.addText(d, { x, y: y + 0.42, w: 4.7, h: 0.62, fill: { color: "F2F2F2" }, color: C.text1, fontSize: 13, margin: 0.08, valign: "middle", isTextBox: true });
+  });
 }
 {
   const s = content("さいごに", "お礼。質疑応答へ。");

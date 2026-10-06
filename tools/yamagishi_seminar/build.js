@@ -567,17 +567,33 @@ divider("04", "業者選びのポイント");
   ph(s, 5.6, 5.0, 4.7, 1.6, "【地図】\nショールームの場所・営業時間");
 }
 {
-  const s = content(T4, "安心の保証制度（連帯工事保証）。保証書は書面で。誰が保証するのかを確認。元請けと施工した会社が連帯して責任を負う。責任が重いため多くの会社はリスクを嫌って出していない。定期点検も確認。");
-  wave(s, "安心の保証制度（連帯工事保証）");
-  txt(s, [br("・保証書は口約束ではなく、書面で発行されているか"), br("・「誰が保証するのか」を確認しましょう", { color: C.accent6, bold: true }), n("・定期点検（何年目に来てくれるか）も確認しましょう")], 0.55, 1.85, 9.8, 1.2, { fontSize: 17 });
-  s.addText("お客様", { x: 4.15, y: 3.15, w: 2.5, h: 0.65, fill: { color: C.background2 }, color: C.text1, fontSize: 18, bold: true, align: "center", valign: "middle", margin: 0, isTextBox: true });
-  s.addText("元請け", { x: 1.6, y: 4.6, w: 2.6, h: 0.75, fill: { color: C.accent1 }, color: C.background1, fontSize: 18, bold: true, align: "center", valign: "middle", margin: 0, isTextBox: true });
-  s.addText("実際に施工した会社", { x: 6.6, y: 4.6, w: 2.6, h: 0.75, fill: { color: C.accent1 }, color: C.background1, fontSize: 16, bold: true, align: "center", valign: "middle", margin: 0, isTextBox: true });
-  s.addText("連帯して責任を負う", { x: 4.05, y: 4.3, w: 2.7, h: 0.45, fontSize: 14, bold: true, color: C.accent6, align: "center", margin: 0, isTextBox: true });
-  s.addShape(pres.ShapeType.line, { x: 4.2, y: 4.97, w: 2.4, h: 0, line: { color: C.accent6, width: 2, beginArrowType: "triangle", endArrowType: "triangle" } });
-  s.addShape(pres.ShapeType.line, { x: 2.9, y: 3.8, w: 1.25, h: 0.8, flipV: true, line: { color: "7F7F7F", width: 1.5, beginArrowType: "triangle" } });
-  s.addShape(pres.ShapeType.line, { x: 6.65, y: 3.8, w: 1.25, h: 0.8, line: { color: "7F7F7F", width: 1.5, beginArrowType: "triangle" } });
-  txt(s, [br("→どちらかが対応できなくても、お客様は守られます", { bold: true }), n("責任が重いため、多くの会社はリスクを嫌って出していません")], 0.55, 5.6, 9.8, 1.0, { fontSize: 16, align: "center" });
+  const s = content(T4, "安心の保証制度。保証書は書面で。そのうえで「誰が保証するのか」を確認する。当社は施工した当社と塗料メーカーのエスケー化研が連名で責任を負う連帯保証。施工と材料の両方を守る。※保証の年数・範囲・対象は山岸様に確認して記入。");
+  wave(s, "安心の保証制度　山岸の連帯保証");
+  txt(s, [br("・保証書は口約束ではなく、書面で発行されているか"), br("・「誰が保証するのか」を確認しましょう", { color: C.accent6, bold: true }), n("・定期点検（何年目に来てくれるか）も確認しましょう")], 0.55, 1.8, 9.8, 1.1, { fontSize: 16 });
+  // 図：当社 × エスケー化研 → お客様
+  s.addText("株式会社山岸\n（施工）", { x: 0.9, y: 3.15, w: 2.9, h: 0.95, fill: { color: C.accent1 }, color: C.background1, fontSize: 18, bold: true, align: "center", valign: "middle", margin: 0, isTextBox: true });
+  s.addText("×", { x: 3.85, y: 3.2, w: 0.6, h: 0.85, fontSize: 32, bold: true, color: C.accent6, align: "center", valign: "middle", margin: 0, isTextBox: true });
+  s.addText("エスケー化研\n（塗料メーカー）", { x: 4.5, y: 3.15, w: 2.9, h: 0.95, fill: { color: "1F3864" }, color: C.background1, fontSize: 18, bold: true, align: "center", valign: "middle", margin: 0, isTextBox: true });
+  s.addText("連名で保証", { x: 0.9, y: 4.2, w: 6.5, h: 0.42, fill: { color: "FDF0E6" }, color: C.accent6, fontSize: 17, bold: true, align: "center", valign: "middle", margin: 0, isTextBox: true });
+  s.addShape(pres.ShapeType.line, { x: 7.5, y: 3.62, w: 0.65, h: 0, line: { color: "7F7F7F", width: 2.5, endArrowType: "triangle" } });
+  s.addText("お客様", { x: 8.25, y: 3.15, w: 1.95, h: 0.95, fill: { color: C.background2 }, color: C.text1, fontSize: 20, bold: true, align: "center", valign: "middle", margin: 0, isTextBox: true });
+  s.addText([br("施工も材料も、2社で責任を持ちます", { bold: true, fontSize: 18 }), br("「施工の不具合」と「塗料の品質」のどちらが原因でも、お客様は守られます", { fontSize: 14 }), n("保証期間：〇年／対象：〇〇〇（要確認）", { fontSize: 13, color: GRAY_TXT })], { x: 0.55, y: 4.85, w: 9.8, h: 1.55, color: C.text1, align: "center", valign: "middle", line: { color: C.accent1, width: 1.5 }, margin: 0.1, isTextBox: true });
+}
+{
+  const s = content(T4, "連帯保証はエスケー化研を使うからこそできる。エスケー化研はメーカー単独の保証は出さず、条件を満たした工事に限り施工店と連名で保証書を出す。中身のわからない塗料や指定どおりでない施工では、メーカーは保証に加われない。3章POINT3（塗料はメーカーで選ぶ）とつなげて話す。");
+  wave(s, "連帯保証は、エスケー化研を使うからこそ");
+  s.addText("メーカーが「この工事なら保証できる」と認めた施工だけに付けられる保証です", { x: 0.45, y: 1.8, w: 9.95, h: 0.5, fontSize: 17, bold: true, color: C.accent6, align: "center", margin: 0, isTextBox: true });
+  const why = [
+    ["①材料が本物だと証明できる", "エスケー化研の出荷証明書で、どの塗料をどれだけ使ったかを証明できる"],
+    ["②メーカーの決まりどおりに施工", "塗る量・回数・乾燥時間などメーカー指定の工程を守るから、メーカーが保証に加われる"],
+    ["③日本一のメーカーが後ろにいる", "建築仕上塗材の国内シェア53％のメーカーが、連名で責任を持つ"],
+  ];
+  why.forEach(([h, d], i) => {
+    const y = 2.5 + i * 1.0;
+    s.addText(h, { x: 0.45, y, w: 4.1, h: 0.85, fill: { color: C.accent1 }, color: C.background1, fontSize: 15, bold: true, valign: "middle", margin: [0, 0, 0, 10], isTextBox: true });
+    s.addText(d, { x: 4.55, y, w: 5.85, h: 0.85, fill: { color: "FFF7F0" }, color: C.text1, fontSize: 14, valign: "middle", margin: [0, 0, 0, 12], isTextBox: true });
+  });
+  s.addText([{ text: "中身のわからないオリジナル塗料や、決まりどおりでない施工では、", options: {} }, { text: "メーカーは保証に加われません。", options: { color: C.accent6, bold: true } }], { x: 0.45, y: 5.6, w: 9.95, h: 0.75, fontSize: 15, color: C.text1, fill: { color: "F2F2F2" }, align: "center", valign: "middle", margin: 0.1, isTextBox: true });
 }
 {
   const s = content(T4, "経営基盤はHPで確認しましょう。10年保証でも、10年後に会社がなければ意味がない。");
@@ -601,7 +617,7 @@ divider("04", "業者選びのポイント");
 {
   const s = content(T4, "良い会社のチェックリスト（自社施工は外した版）。");
   wave(s, "良い会社ってどんな会社？");
-  const items = ["健康診断を丁寧にしてくれる（写真で説明）", "見積が詳しい（㎡・製品名・塗る回数）", "塗装面積が正確", "ショールームがある", "会社の歴史がある・地域密着", "連帯工事保証・定期点検がある", "HPで経営基盤がわかる", "施工管理の責任者がいる（丸投げしない）", "近隣挨拶・職人のマナーがしっかりしている", "契約書・工程表・保証書がそろっている"];
+  const items = ["健康診断を丁寧にしてくれる（写真で説明）", "見積が詳しい（㎡・製品名・塗る回数）", "塗装面積が正確", "ショールームがある", "会社の歴史がある・地域密着", "メーカーとの連帯保証・定期点検がある", "HPで経営基盤がわかる", "施工管理の責任者がいる（丸投げしない）", "近隣挨拶・職人のマナーがしっかりしている", "契約書・工程表・保証書がそろっている"];
   items.forEach((t, i) => s.addText("□ " + t, { x: 0.5 + (i % 2) * 5.0, y: 1.95 + Math.floor(i / 2) * 0.88, w: 4.8, h: 0.7, fontSize: 15, bold: true, color: C.text1, fill: { color: "F2F2F2" }, valign: "middle", margin: 0.12, isTextBox: true }));
 }
 {

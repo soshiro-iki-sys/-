@@ -7,11 +7,17 @@ const A = (f) => path.join(__dirname, "assets", f);
 const OUT = process.argv[2] || path.join(__dirname, "guidebook.pptx");
 const mm = (v) => v / 25.4;
 
-const NAVY = "012E6A", NAVY2 = "1E4A8C", NAVY_SOFT = "E8EEF7";
-const ORANGE = "F8900F", ORANGE_SOFT = "FFF3E3";
-const NG = "D0312D", NG_SOFT = "FDECEC", OK = "1F7A4D", OK_SOFT = "E7F4EC";
-const INK = "1A1A1A", MUTED = "5B6573", LINE = "D5DBE3", PH_BG = "F4F6F9";
-const FONT = "メイリオ";
+// アプローチブック（2025年1月版）の配色：緑の見出し帯・山吹色の帯・赤の強調・メイリオ
+const GREEN = "00B050", GREEN_D = "00873E", YELLOW = "FED86C";
+const NAVY = GREEN_D, NAVY2 = GREEN, NAVY_SOFT = "F2F2F2";   // 見出し文字・表の見出し・カード地
+const ORANGE = GREEN, ORANGE_SOFT = "FFF6D6";                // 番号・ラベル・豆知識の地（薄い山吹）
+const NG = "C00000", NG_SOFT = "FDECEC", OK = GREEN_D, OK_SOFT = "EAF6EE";
+const INK = "2D2D2D", MUTED = "595959", LINE = "D9D9D9", PH_BG = "F4F4F4";
+const FONT = "メイリオ", FONT_UI = "Meiryo UI";
+const SLOGAN = "地域の屋根・外壁を安心・安全に塗装して、長持ちをさせる為に全力を尽くします";
+// 本文は緑の帯の下（y=62mm）から。旧レイアウト（y=58mm 起点）の座標を4mm下げる
+let SHIFT = true;
+const Y = (y) => (SHIFT && y >= 55 && y < 280 ? y + 4 : y);
 
 const pres = new pptxgen();
 pres.defineLayout({ name: "A4_PORTRAIT", width: mm(210), height: mm(297) });
@@ -24,10 +30,10 @@ const L = 14, W = 182; // 左余白と本文の幅（mm）
 
 // ---------- 基本部品 ----------
 function T(s, text, x, y, w, h, o = {}) {
-  s.addText(text, Object.assign({ x: mm(x), y: mm(y), w: mm(w), h: mm(h), fontFace: FONT, fontSize: 10, color: INK, margin: 0, valign: "top", isTextBox: true }, o));
+  s.addText(text, Object.assign({ x: mm(x), y: mm(Y(y)), w: mm(w), h: mm(h), fontFace: FONT, fontSize: 10, color: INK, margin: 0, valign: "top", isTextBox: true }, o));
 }
 function R(s, x, y, w, h, fill, o = {}) {
-  s.addShape(o.round ? pres.ShapeType.roundRect : pres.ShapeType.rect, Object.assign({ x: mm(x), y: mm(y), w: mm(w), h: mm(h), fill: { color: fill }, line: o.line || { type: "none" } }, o.round ? { rectRadius: mm(o.round) } : {}));
+  s.addShape(o.round ? pres.ShapeType.roundRect : pres.ShapeType.rect, Object.assign({ x: mm(x), y: mm(Y(y)), w: mm(w), h: mm(h), fill: { color: fill }, line: o.line || { type: "none" } }, o.round ? { rectRadius: mm(o.round) } : {}));
 }
 function ph(s, label, x, y, w, h) {
   T(s, label, x, y, w, h, { fontSize: 8.5, color: "7A8594", align: "center", valign: "middle", fill: { color: PH_BG }, line: { color: "A9B3C1", width: 0.75, dashType: "dash" }, objectName: "写真枠" });
@@ -39,24 +45,24 @@ const nl = (t, o = {}) => ({ text: t, options: Object.assign({ breakLine: true }
 function page(no) {
   const s = pres.addSlide();
   s.background = { color: "FFFFFF" };
+  SHIFT = !!no;
   if (no) {
-    R(s, L, 281, W, 0.35, LINE);
-    s.addImage({ path: A("logo_h.png"), x: mm(L), y: mm(283.5), w: mm(35.3), h: mm(6), objectName: "ロゴ" });
-    T(s, "失敗しない外装工事ガイドブック", 70, 284.3, 70, 5, { fontSize: 8, color: MUTED, align: "center" });
-    T(s, String(no), L + W - 20, 283.6, 20, 6, { fontSize: 11, bold: true, color: NAVY, align: "right" });
+    T(s, SLOGAN, 10, 284, 170, 7, { fontFace: "HGP教科書体", fontSize: 11, color: INK, valign: "middle" });
+    T(s, String(no), 182, 284, 14, 7, { fontSize: 11, bold: true, color: GREEN_D, align: "right", valign: "middle" });
   }
   return s;
 }
 function head(s, scene, title, sub) {
-  R(s, 0, 0, 210, 50, NAVY);
-  R(s, 0, 50, 210, 2.2, ORANGE);
-  T(s, scene, L, 9, Math.max(22, scene.length * 4.6 + 8), 7.5, { fontSize: 11, bold: true, color: "FFFFFF", fill: { color: ORANGE }, align: "center", valign: "middle", rectRadius: mm(1.2), shape: pres.ShapeType.roundRect });
-  T(s, title, L, 18.5, W, 22, { fontSize: 22, bold: true, color: "FFFFFF", valign: "middle", lineSpacingMultiple: 1.05 });
-  if (sub) T(s, sub, L, 41.5, W, 6, { fontSize: 10.5, bold: true, color: "DCE6F5" });
+  // 上：山吹色の帯（左に白い縦すじ）／下：緑の見出し帯
+  R(s, 0, 0, 210, 25, YELLOW);
+  R(s, 5, 0, 3, 25, "FFFFFF");
+  R(s, 0, 30, 210, 27, GREEN);
+  T(s, scene, L, 5, Math.max(22, scene.length * 4.6 + 8), 7.5, { fontFace: FONT_UI, fontSize: 11, bold: true, color: "FFFFFF", fill: { color: GREEN }, align: "center", valign: "middle" });
+  if (sub) T(s, sub, L, 14.5, W, 7, { fontSize: 10.5, bold: true, color: INK, valign: "middle" });
+  T(s, title, L, 31.5, W, 24, { fontSize: 21, bold: true, color: "FFFFFF", valign: "middle", lineSpacingMultiple: 1.0 });
 }
 function sec(s, text, y, x = L, w = W) {
-  s.addShape(pres.ShapeType.ellipse, { x: mm(x), y: mm(y + 1.6), w: mm(3.4), h: mm(3.4), fill: { color: ORANGE }, line: { type: "none" } });
-  T(s, text, x + 5.5, y, w - 5.5, 6.5, { fontSize: 13, bold: true, color: NAVY, valign: "middle" });
+  T(s, text, x, y, Math.min(w, text.length * 4.75 + 8), 7, { fontFace: FONT_UI, fontSize: 12.5, bold: true, color: "FFFFFF", fill: { color: GREEN }, valign: "middle", margin: [0, mm(3), 0, mm(3)] });
 }
 // 「見るところ」カード
 function look(s, items, y, h, cols = items.length, x = L, w = W) {
@@ -74,7 +80,7 @@ function ngok(s, y, h, ng, ok, titles = ["要注意", "良い業者"], kinds = [
     const isNg = kinds[i] === "ng";
     const x = L + i * (cw + 4), col = isNg ? NG : OK;
     R(s, x, y, cw, h, isNg ? NG_SOFT : OK_SOFT, { round: 1.5, line: { color: col, width: 1.25 } });
-    s.addText(isNg ? "×" : "○", { shape: pres.ShapeType.ellipse, x: mm(x + 4), y: mm(y + 3.2), w: mm(7), h: mm(7), fill: { color: col }, color: "FFFFFF", fontFace: FONT, fontSize: 12, bold: true, align: "center", valign: "middle", margin: 0, isTextBox: true });
+    s.addText(isNg ? "×" : "○", { shape: pres.ShapeType.ellipse, x: mm(x + 4), y: mm(Y(y + 3.2)), w: mm(7), h: mm(7), fill: { color: col }, color: "FFFFFF", fontFace: FONT, fontSize: 12, bold: true, align: "center", valign: "middle", margin: 0, isTextBox: true });
     T(s, titles[i], x + 13, y + 3.2, cw - 16, 7, { fontSize: 11.5, bold: true, color: col, valign: "middle" });
     T(s, items.map((t, k) => ({ text: "・" + t, options: { breakLine: k < items.length - 1 } })), x + 4, y + 12, cw - 8, h - 14, { fontSize: 9.6, paraSpaceAfter: 2, lineSpacingMultiple: 1.1 });
   });
@@ -121,9 +127,10 @@ function tip(s, label, x, y, w, h, body) {
     T(s, sc, L, y, 22, 8.5, { fontSize: 10, bold: true, color: "FFFFFF", fill: { color: i % 2 ? NAVY2 : NAVY }, align: "center", valign: "middle", shape: pres.ShapeType.roundRect, rectRadius: mm(1.2) });
     T(s, [b(t, { fontSize: 11.5 }), n("　" + d, { fontSize: 9.5, color: MUTED })], L + 26, y, W - 46, 8.5, { valign: "middle" });
     T(s, "P." + p, L + W - 18, y, 18, 8.5, { fontSize: 10.5, bold: true, color: ORANGE, align: "right", valign: "middle" });
-    s.addShape(pres.ShapeType.line, { x: mm(L + 26), y: mm(y + 9.6), w: mm(W - 26), h: 0, line: { color: LINE, width: 0.75, dashType: "dash" } });
+    s.addShape(pres.ShapeType.line, { x: mm(L + 26), y: mm(Y(y + 9.6)), w: mm(W - 26), h: 0, line: { color: LINE, width: 0.75, dashType: "dash" } });
   });
   tip(s, "各ページの見方", L, 197, W, 24);
+  s.addImage({ path: A("mascot.png"), x: mm(160), y: mm(Y(230)), w: mm(34), h: mm(34.5), objectName: "キャラクター" });
   [["見るところ", "この場面で確認すること", NAVY], ["× 要注意", "こんな業者は気をつけて", NG], ["○ 良い業者", "信頼できる業者の対応", OK], ["豆知識", "知っておくと役立つ情報", ORANGE]].forEach(([h, d, c], i) => {
     T(s, [nl(h, { bold: true, color: c }), n(d)], L + 4 + i * 44.5, 207, 42, 12, { fontSize: 9.3 });
   });
@@ -205,7 +212,7 @@ function tip(s, label, x, y, w, h, body) {
     [hl("エスケー化研"), hl("1955年"), hl("建築用の仕上塗材が専門。国内シェア53％でNo.1")],
     ["菊水化学工業", "1959年", "建築用の仕上塗材のメーカー"],
     ["オリジナル塗料", "—", "塗装店の自社ブランド。性能の根拠がわかりにくく、比べにくい"],
-  ], { x: mm(L + 4), y: mm(187), w: mm(W - 8), colW: [mm(36), mm(22), mm(W - 8 - 58)], fontFace: FONT, fontSize: 8.8, color: INK, fill: { color: "FFFFFF" }, border: { type: "solid", pt: 0.5, color: LINE }, rowH: mm(7.3), valign: "middle", margin: [0, mm(1.5), 0, mm(1.5)] });
+  ], { x: mm(L + 4), y: mm(Y(187)), w: mm(W - 8), colW: [mm(36), mm(22), mm(W - 8 - 58)], fontFace: FONT, fontSize: 8.8, color: INK, fill: { color: "FFFFFF" }, border: { type: "solid", pt: 0.5, color: LINE }, rowH: mm(7.3), valign: "middle", margin: [0, mm(1.5), 0, mm(1.5)] });
 }
 
 // =============================== P7 場面3つづき ===============================
@@ -245,7 +252,7 @@ function tip(s, label, x, y, w, h, body) {
     [hl("外壁 中塗り・上塗り／エスケー化研 プレミアムシリコン"), hl("〇〇"), hl("㎡")],
     ["付帯部（軒天・破風・雨樋 など部位ごと）", "〇〇", "m・㎡"],
     ["屋根 さび止め・下塗り・上塗り／商品名", "〇〇", "㎡"],
-  ], { x: mm(L), y: mm(67), w: mm(122), colW: [mm(92), mm(15), mm(15)], fontFace: FONT, fontSize: 8.8, color: INK, border: { type: "solid", pt: 0.5, color: LINE }, rowH: mm(7.6), valign: "middle", margin: [0, mm(1.5), 0, mm(1.5)] });
+  ], { x: mm(L), y: mm(Y(67)), w: mm(122), colW: [mm(92), mm(15), mm(15)], fontFace: FONT, fontSize: 8.8, color: INK, border: { type: "solid", pt: 0.5, color: LINE }, rowH: mm(7.6), valign: "middle", margin: [0, mm(1.5), 0, mm(1.5)] });
   [["① 部位ごとに分かれている", "外壁・屋根・付帯部が別々に書いてある"], ["② ㎡・mなど単位がある", "「一式」ばかりになっていない"], ["③ メーカー名と商品名", "どの塗料を何回塗るかがわかる"]].forEach(([h, d], i) => {
     const y = 67 + i * 20.5;
     R(s, L + 126, y, 56, 18, NAVY_SOFT, { round: 1.5 });
@@ -297,7 +304,7 @@ function tip(s, label, x, y, w, h, body) {
     steps.forEach(([t], i) => {
       const y = TOP + i * ROW;
       R(s, x + 19, y, 70, ROW - 1.2, ORANGE_SOFT, { round: 1 });
-      s.addText(String(i + 1), { shape: pres.ShapeType.ellipse, x: mm(x + 20.5), y: mm(y + 0.9), w: mm(5.4), h: mm(5.4), fill: { color: ORANGE }, color: "FFFFFF", fontFace: FONT, fontSize: 8.5, bold: true, align: "center", valign: "middle", margin: 0, isTextBox: true });
+      s.addText(String(i + 1), { shape: pres.ShapeType.ellipse, x: mm(x + 20.5), y: mm(Y(y + 0.9)), w: mm(5.4), h: mm(5.4), fill: { color: ORANGE }, color: "FFFFFF", fontFace: FONT, fontSize: 8.5, bold: true, align: "center", valign: "middle", margin: 0, isTextBox: true });
       T(s, t, x + 28, y, 60, ROW - 1.2, { fontSize: 9.6, bold: true, valign: "middle" });
     });
   };
@@ -316,12 +323,12 @@ function tip(s, label, x, y, w, h, body) {
   head(s, "場面 7", "工事のあと\n長く付き合える会社か", "塗装は「終わってから」が本当のお付き合いの始まりです");
   look(s, [["完工チェック", "塗り残しや汚れを社内で確認"], ["立ち会い検査", "お客様と一緒に仕上がりを確認"], ["保証書", "その場で保証書をお渡し"], ["定期点検", "何年目に来てくれるか確認"]], 58, 21);
   sec(s, "業者選び 総まとめチェックシート", 85);
-  T(s, "見積もりを取った会社ごとに ○・△・× を書き込んで比べてみましょう。", L, 92, W, 5, { fontSize: 8.5, color: MUTED });
+  T(s, "見積もりを取った会社ごとに ○・△・× を書き込んで比べてみましょう。", L, 93.5, W, 5, { fontSize: 8.5, color: MUTED });
   const hd = (t, c = NAVY) => ({ text: t, options: { bold: true, color: "FFFFFF", fill: { color: c }, align: "center" } });
   const cat = (t) => [{ text: t, options: { colspan: 4, bold: true, color: NAVY, fill: { color: NAVY_SOFT } } }];
   const row = (t) => [t, "", "", ""];
   s.addTable([
-    [{ text: "チェック項目", options: { bold: true, color: "FFFFFF", fill: { color: NAVY } } }, hd("ヤマキシ\nペイント", ORANGE), hd("A社"), hd("B社")],
+    [{ text: "チェック項目", options: { bold: true, color: "FFFFFF", fill: { color: NAVY } } }, { text: "ヤマキシ\nペイント", options: { bold: true, color: INK, fill: { color: YELLOW }, align: "center" } }, hd("A社"), hd("B社")],
     cat("会社（場面1）"),
     row("所在地がはっきりしていて、ショールームや事務所がある"),
     row("地域で長く営業し、HPで会社の中身がわかる"),
@@ -339,28 +346,30 @@ function tip(s, label, x, y, w, h, body) {
     row("施工管理の責任者がいる（丸投げしない）"),
     row("近隣挨拶・工程写真の報告・職人のマナーがしっかりしている"),
     [{ text: "○の数", options: { bold: true, fill: { color: PH_BG } } }, { text: "", options: { fill: { color: PH_BG } } }, { text: "", options: { fill: { color: PH_BG } } }, { text: "", options: { fill: { color: PH_BG } } }],
-  ], { x: mm(L), y: mm(99), w: mm(W), colW: [mm(W - 63), mm(21), mm(21), mm(21)], fontFace: FONT, fontSize: 9, color: INK, border: { type: "solid", pt: 0.5, color: LINE }, rowH: mm(9.2), valign: "middle", margin: [0, mm(2), 0, mm(2)] });
+  ], { x: mm(L), y: mm(Y(99)), w: mm(W), colW: [mm(W - 63), mm(21), mm(21), mm(21)], fontFace: FONT, fontSize: 9, color: INK, border: { type: "solid", pt: 0.5, color: LINE }, rowH: mm(9.2), valign: "middle", margin: [0, mm(2), 0, mm(2)] });
 }
 
-// =============================== P12 裏表紙 ===============================
+// =============================== P12 裏表紙（アプローチブックの表紙と同じ枠：緑の帯・山吹色の帯）
 {
   const s = page(0);
-  s.background = { color: NAVY };
-  T(s, "勉強会ご参加の皆様へ", L, 16, 46, 7.5, { fontSize: 11, bold: true, color: "FFFFFF", fill: { color: ORANGE }, align: "center", valign: "middle", shape: pres.ShapeType.roundRect, rectRadius: mm(1.2) });
-  T(s, [nl("まずは一度、外壁・屋根の"), n("“健康診断”", { color: ORANGE }), n("を受けてみてください")], L, 27, W, 26, { fontSize: 24, bold: true, color: "FFFFFF", valign: "middle", lineSpacingMultiple: 1.1 });
-  R(s, L, 60, W, 74, "FFFFFF", { round: 2.5 });
-  T(s, "無料 外壁・屋根の健康診断", L + 7, 66, 120, 8, { fontSize: 15, bold: true, color: NAVY });
-  T(s, [nl("● 機械を使わず、目で見て・手で触って確認します"), nl("● 写真付きの診断結果で、わかりやすくご説明します"), n("● 診断を受けたからといって、契約の必要はありません")], L + 7, 76, 120, 22, { fontSize: 10.5, paraSpaceAfter: 3 });
-  s.addShape(pres.ShapeType.line, { x: mm(L + 7), y: mm(101), w: mm(120), h: 0, line: { color: LINE, width: 0.75 } });
-  T(s, [nl("お電話でのお申込み", { fontSize: 8.5, color: MUTED }), nl("0000-00-0000", { fontSize: 22, bold: true, color: NAVY }), n("受付時間 〇:〇〇〜〇:〇〇（〇曜定休）", { fontSize: 8.5, color: MUTED })], L + 7, 103, 120, 27);
-  ph(s, "【QRコード】\nWEB申込み", L + 134, 74, 42, 42);
-  T(s, "ヤマキシペイントについて", L, 144, 89, 8, { fontSize: 13, bold: true, color: "FFFFFF" });
-  R(s, L, 152.5, 89, 0.8, ORANGE);
-  T(s, [nl("・創業120年以上、地域の住まいを見守ってきました"), nl("・ショールームで色見本や塗料を見ながらご相談いただけます"), nl("・エスケー化研の塗料と連帯保証で安心を"), n("・対応エリア：〇〇市・〇〇市・〇〇町")], L, 156, 89, 40, { fontSize: 10, color: "E3EAF5", paraSpaceAfter: 4 });
-  T(s, "【地図・写真】\nショールームの外観／地図\n住所・営業時間", L + 95, 144, 87, 50, { fontSize: 8.5, color: "C9D6EA", align: "center", valign: "middle", fill: { color: "0B3B7A" }, line: { color: "5D7FB3", width: 0.75, dashType: "dash" } });
-  R(s, 0, 267, 210, 30, "FFFFFF");
-  s.addImage({ path: A("logo_h.png"), x: mm(42), y: mm(276), w: mm(70.6), h: mm(12) });
-  T(s, "株式会社山岸\n〒000-0000 〇〇県〇〇市〇〇町0-0", 120, 276, 70, 12, { fontSize: 9, valign: "middle" });
+  R(s, 0, 0, 210, 25, GREEN);
+  R(s, 0, 25, 5, 247, GREEN);
+  R(s, 6.5, 30, 3, 242, YELLOW);
+  R(s, 0, 272, 210, 25, YELLOW);
+  T(s, "勉強会ご参加の皆様へ", 18, 32, 50, 8, { fontFace: FONT_UI, fontSize: 11, bold: true, color: "FFFFFF", fill: { color: GREEN }, align: "center", valign: "middle" });
+  T(s, [nl("まずは一度、外壁・屋根の"), n("“健康診断”", { color: "FF0000" }), n("を受けてみてください")], 18, 43, 180, 24, { fontSize: 22, bold: true, color: INK, valign: "middle", lineSpacingMultiple: 1.1 });
+  R(s, 18, 72, 178, 72, "FFFFFF", { line: { color: GREEN, width: 2 } });
+  T(s, "無料 外壁・屋根の健康診断", 18, 72, 178, 10, { fontFace: FONT_UI, fontSize: 14, bold: true, color: "FFFFFF", fill: { color: GREEN }, valign: "middle", margin: [0, mm(5), 0, mm(5)] });
+  T(s, [nl("● 機械を使わず、目で見て・手で触って確認します"), nl("● 写真付きの診断結果で、わかりやすくご説明します"), n("● 診断を受けたからといって、契約の必要はありません")], 24, 86, 120, 22, { fontSize: 10.5, paraSpaceAfter: 3 });
+  s.addShape(pres.ShapeType.line, { x: mm(24), y: mm(111), w: mm(120), h: 0, line: { color: LINE, width: 0.75 } });
+  T(s, [nl("お電話でのお申込み", { fontSize: 8.5, color: MUTED }), nl("0000-00-0000", { fontSize: 22, bold: true, color: GREEN_D }), n("受付時間 〇:〇〇〜〇:〇〇（〇曜定休）", { fontSize: 8.5, color: MUTED })], 24, 113, 120, 27);
+  ph(s, "【QRコード】\nWEB申込み", 150, 88, 40, 40);
+  T(s, "ヤマキシペイントについて", 18, 152, 98, 8, { fontFace: FONT_UI, fontSize: 12.5, bold: true, color: "FFFFFF", fill: { color: GREEN }, valign: "middle", margin: [0, mm(3), 0, mm(3)] });
+  T(s, [nl("・創業120年以上、地域の住まいを見守ってきました"), nl("・ショールームで色見本や塗料を見ながらご相談いただけます"), nl("・エスケー化研の塗料と連帯保証で安心を"), n("・対応エリア：〇〇市・〇〇市・〇〇町")], 18, 163, 98, 34, { fontSize: 10, paraSpaceAfter: 4 });
+  ph(s, "【地図・写真】\nショールームの外観／地図\n住所・営業時間", 122, 152, 74, 48);
+  s.addImage({ path: A("logo.png"), x: mm(78), y: mm(206), w: mm(54), h: mm(34.4), objectName: "ロゴ" });
+  T(s, "株式会社山岸　〒000-0000 〇〇県〇〇市〇〇町0-0", 18, 244, 178, 8, { fontSize: 10, align: "center", valign: "middle" });
+  s.addImage({ path: A("mascot.png"), x: mm(14), y: mm(246), w: mm(38), h: mm(38.5), objectName: "キャラクター" });
 }
 
 pres.writeFile({ fileName: OUT }).then(() => console.log("wrote", OUT));

@@ -264,10 +264,9 @@ const TBLOPT = { fontFace: FONT, fontSize: 9.5, color: INK, border: { type: "sol
   s.addTable([
     [thO("種類"), thO("内容")],
     [{ text: "メーカー保証", options: { bold: true } }, "塗料メーカーが、塗料そのものの品質について保証するもの"],
-    [{ text: "工事保証", options: { bold: true } }, "工事をした会社が、施工の不具合（塗膜のはがれ・ふくれなど）を一定期間保証するもの。範囲・年数は会社ごとに違います"],
-    [{ text: "　└ 連帯保証", options: { bold: true, color: RED, fill: { color: "FFF6D6" } } }, { text: "工事保証のひとつ。元請け（契約した会社）と下請け（実際に工事をした会社）が、連帯して工事を保証する制度。どちらか一方が対応できなくなっても、もう一方が責任を負います", options: { fill: { color: "FFF6D6" } } }],
+    [{ text: "工事保証", options: { bold: true } }, { text: [{ text: "工事をした会社が、施工の不具合（塗膜のはがれ・ふくれなど）を一定期間保証するもの。中でも、元請け（契約した会社）と下請け（実際に工事をした会社）が連帯して保証する" }, { text: "「連帯保証」", options: { bold: true, color: RED } }, { text: "なら、どちらか一方が対応できなくなっても、もう一方が責任を負います" }] }],
     [{ text: "賠償責任保険", options: { bold: true } }, "工事ミス（工事完了後もしくは工事期間中の自然災害（地震・噴火を除く））により、お客様宅に被害・損害が発生した際に補填する保証"],
-  ], Object.assign({ x: mm(L), y: mm(134), w: mm(W), colW: [mm(44), mm(146)], rowH: mm(13) }, TBLOPT, { fontSize: 9.8 }));
+  ], Object.assign({ x: mm(L), y: mm(134), w: mm(W), colW: [mm(44), mm(146)], rowH: mm(15) }, TBLOPT, { fontSize: 9.8 }));
   T(s, [red("工事保証の中でも、「連帯保証」なら安心です。"), nl(""), n("保証書で「誰が・何を・何年」保証するのか、保証期間中の定期点検があるかも確認しましょう。", { fontSize: 10.5 })], L, 203, W, 14, { fontSize: 12, lineSpacingMultiple: 1.2 });
   pill(s, "法律で決まっていること", L, 220);
   [["足場", "2024年4月から、幅1m以上の場所では原則として「本足場」（支柱が2列の足場）を使うことが義務になりました"], ["石綿", "改修工事の前には、有資格者による石綿（アスベスト）の事前調査が必要です。税込100万円以上の改修工事は、調査結果の報告も必要です"]].forEach(([h, d], i) => {

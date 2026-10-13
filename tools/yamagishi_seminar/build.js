@@ -586,31 +586,18 @@ divider("04", "業者選びのポイント");
   txt(s, "・定期点検（何年目に来てくれるか）も確認しましょう", 0.55, 6.15, 9.8, 0.45, { fontSize: 14 });
 }
 {
-  const s = content(T4, "経営基盤はHPで確認しましょう。10年保証でも、10年後に会社がなければ意味がない。左のチェック項目を、右の当社HPの会社概要と税引き前利益の推移で実際に確かめて見せる。数値は当社HPより（年商は令和7年1月期）。");
+  const s = content(T4, "経営基盤はHPで確認しましょう。10年保証でも、10年後に会社がなければ意味がない。左のチェック項目を、右の当社HPの会社概要と税引き前利益の画像で実際に確かめて見せる。");
   wave(s, "経営基盤はHPで確認しましょう");
   s.addText("10年保証でも、10年後に会社がなければ意味がありません", { x: 0.45, y: 1.72, w: 9.95, h: 0.5, fontSize: 19, bold: true, color: C.accent6, align: "center", margin: 0, isTextBox: true });
   // 左：HPで確認したい項目
   s.addText("HPで確認したいこと", { x: 0.45, y: 2.4, w: 3.3, h: 0.45, fill: { color: "1F3864" }, color: C.background1, fontSize: 14, bold: true, align: "center", valign: "middle", margin: 0, isTextBox: true });
   s.addText([br("□ 創業年数"), br("□ 売上の規模"), br("□ 決算・利益の公開"), br("□ 施工実績の数"), br("□ 資格者"), n("□ 所在地とショールーム")], { x: 0.45, y: 2.85, w: 3.3, h: 3.85, fontSize: 17, bold: true, color: C.text1, line: { color: "1F3864", width: 1.5 }, margin: [0, 0.18, 0, 0.18], valign: "middle", paraSpaceAfter: 9, isTextBox: true });
-  // 右上：会社概要
-  s.addText("例）当社の場合（HPの会社概要より）", { x: 4.0, y: 2.4, w: 6.4, h: 0.45, fill: { color: C.accent1 }, color: C.background1, fontSize: 14, bold: true, align: "center", valign: "middle", margin: 0, isTextBox: true });
-  const lb = (t) => ({ text: t, options: { bold: true, fill: { color: "FCE4D0" }, align: "center" } });
-  const vb = (t, hl) => ({ text: t, options: hl ? { bold: true, color: "C00000" } : {} });
-  s.addTable([
-    [lb("創業"), vb("1900年（明治33年）", true), lb("資本金"), vb("3,000万円")],
-    [lb("年商"), vb("133億7,000万円", true), lb("経常利益"), vb("4億5,000万円", true)],
-    [lb("従業員数"), vb("500名"), lb("設立"), vb("1988年2月")],
-    [lb("建設業許可"), { text: "石川県知事 許可（般-27）第17741号", options: { colspan: 3 } }],
-  ], { x: 4.0, y: 2.9, w: 6.4, colW: [1.1, 2.1, 1.1, 2.1], rowH: 0.34, fontSize: 11, color: "000000", border: { type: "solid", pt: 0.75, color: "BFBFBF" }, valign: "middle", margin: [0, 0.06, 0, 0.06] });
-  txt(s, "※年商は令和7年1月期", 4.0, 4.3, 6.4, 0.25, { fontSize: 9, color: "7F7F7F", align: "right", margin: 0 });
-  // 右下：税引き前利益の推移
-  s.addChart(pres.ChartType.bar, [{ name: "税引き前利益", labels: ["R2/1月", "R3/1月", "R4/1月", "R5/1月", "R6/1月", "R7/1月"], values: [3.76, 8.77, 4.89, 3.82, 1.71, 2.66] }], {
-    x: 4.0, y: 4.55, w: 6.4, h: 2.2, barDir: "col", chartColors: ["F79646"], barGapWidthPct: 60,
-    showTitle: true, title: "税引き前利益の推移（億円）", titleFontSize: 12, titleColor: "333333", titleFontFace: "+mn-lt",
-    showValue: true, dataLabelPosition: "outEnd", dataLabelFormatCode: "0.0", dataLabelFontSize: 10, dataLabelColor: "333333", dataLabelFontFace: "+mn-lt",
-    catAxisLabelColor: "595959", catAxisLabelFontSize: 10, catAxisLabelFontFace: "+mn-lt", valAxisHidden: true,
-    valGridLine: { style: "none" }, catGridLine: { style: "none" }, showLegend: false, valAxisMinVal: 0, valAxisMaxVal: 10,
-  });
+  // 右：当社HPの画像
+  s.addText("例）当社ホームページより", { x: 3.95, y: 2.4, w: 6.45, h: 0.45, fill: { color: C.accent1 }, color: C.background1, fontSize: 14, bold: true, align: "center", valign: "middle", margin: 0, isTextBox: true });
+  s.addImage({ path: A("hp_company.png"), x: 3.95, y: 2.98, w: 3.84, h: 2.3, objectName: "HP会社概要" });
+  s.addText([br("赤枠の数字で、"), br("会社が長く続いているか、"), n("安定しているかがわかります")], { x: 7.95, y: 2.98, w: 2.45, h: 2.3, fontSize: 13, bold: true, color: C.text1, fill: { color: "F2F2F2" }, valign: "middle", margin: 0.12, isTextBox: true });
+  s.addText("当社の\n税引き前利益", { x: 3.95, y: 5.45, w: 2.7, h: 1.1, fontSize: 18, bold: true, color: C.text1, valign: "middle", margin: 0, isTextBox: true });
+  s.addImage({ path: A("hp_profit.png"), x: 6.85, y: 5.3, w: 3.55, h: 1.5, objectName: "HP税引き前利益" });
 }
 {
   const s = content(T4, "法令順守：契約書（建設業法で書面が義務）／訪問販売は8日以内ならクーリング・オフ／工程表／保証書／本足場・アスベストの事前調査。");

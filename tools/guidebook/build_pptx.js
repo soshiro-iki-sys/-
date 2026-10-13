@@ -263,18 +263,18 @@ const TBLOPT = { fontFace: FONT, fontSize: 9.5, color: INK, border: { type: "sol
   pill(s, "保証の種類", L, 120);
   s.addTable([
     [thO("種類"), thO("内容")],
-    [{ text: "施工店の保証", options: { bold: true } }, "工事をした会社が、施工の不具合を保証するもの。保証の範囲・年数は会社ごとに違います"],
-    [{ text: "メーカーとの連名保証", options: { bold: true } }, "条件を満たした工事について、塗料メーカーと施工店が連名で出す保証。塗料メーカー単独の保証は一般的ではありません"],
-    [{ text: "リフォーム瑕疵保険", options: { bold: true } }, "登録事業者が工事ごとに加入し、第三者の検査を受ける保険。事業者が倒産した場合は、発注者が保険法人に直接請求できます"],
-  ], Object.assign({ x: mm(L), y: mm(134), w: mm(W), colW: [mm(44), mm(146)], rowH: mm(13) }, TBLOPT, { fontSize: 9.8 }));
-  T(s, "保証期間中の定期点検があるかどうかも確認しましょう。", L, 189, W, 7, { fontSize: 11, bold: true, color: RED });
-  pill(s, "法律で決まっていること", L, 198);
+    [{ text: "メーカー保証", options: { bold: true } }, "塗料メーカーが、塗料そのものの品質について保証するもの。条件を満たした工事に限り、施工店と連名で保証書を出す場合があります。メーカー単独で施工まで保証することは一般的ではありません"],
+    [{ text: "連帯保証", options: { bold: true } }, "元請け（契約した会社）と下請け（実際に工事をした会社）が、連帯して工事を保証する制度。どちらか一方が対応できなくなっても、もう一方が責任を負います"],
+    [{ text: "賠償責任保険", options: { bold: true } }, "工事ミス（工事完了後もしくは工事期間中の自然災害（地震・噴火を除く））により、お客様宅に被害・損害が発生した際に補填する保証"],
+  ], Object.assign({ x: mm(L), y: mm(134), w: mm(W), colW: [mm(44), mm(146)], rowH: mm(14.5) }, TBLOPT, { fontSize: 9.8 }));
+  T(s, "保証期間中の定期点検があるかどうかも確認しましょう。", L, 199, W, 7, { fontSize: 11, bold: true, color: RED });
+  pill(s, "法律で決まっていること", L, 208);
   [["足場", "2024年4月から、幅1m以上の場所では原則として「本足場」（支柱が2列の足場）を使うことが義務になりました"], ["石綿", "改修工事の前には、有資格者による石綿（アスベスト）の事前調査が必要です。税込100万円以上の改修工事は、調査結果の報告も必要です"]].forEach(([h, d], i) => {
-    const y = 212 + i * 22;
+    const y = 221 + i * 20;
     badge(s, h, L, y + 2, 15);
     T(s, d, L + 19, y, W - 19, 19, { fontSize: 10.5, lineSpacingMultiple: 1.2, valign: "middle" });
   });
-  T(s, "※出典：建設業法第19条、労働安全衛生規則、大気汚染防止法、住宅瑕疵担保責任保険協会の案内", L, 258, W, 6, { fontSize: 8.5, color: MUTED });
+  T(s, "※出典：建設業法第19条、労働安全衛生規則、大気汚染防止法", L, 264, W, 6, { fontSize: 8.5, color: MUTED });
 }
 
 // =============================== P11 トラブル対策 ===============================
@@ -310,7 +310,7 @@ const TBLOPT = { fontFace: FONT, fontSize: 9.5, color: INK, border: { type: "sol
   s.addShape(pres.ShapeType.rtTriangle, { x: mm(-0.8), y: mm(264.4), w: mm(210.8), h: mm(32.6), fill: { color: YELLOW }, line: { type: "none" } });
   s.addImage({ path: A("logo.png"), x: mm(57.5), y: mm(105), w: mm(94.9), h: mm(60.5), objectName: "ロゴ" });
   T(s, "発行：株式会社山岸（ヤマキシペイント）", 30, 172, 160, 8, { fontSize: 12, bold: true, align: "center" });
-  T(s, [nl("【参考】国土交通省／厚生労働省／環境省／消費者庁／"), nl("公益財団法人 住宅リフォーム・紛争処理支援センター／住宅瑕疵担保責任保険協会／"), n("日本建築仕上工業会／各塗料メーカーの公表情報")], 30, 186, 160, 16, { fontSize: 8.5, color: MUTED, align: "center" });
+  T(s, [nl("【参考】国土交通省／厚生労働省／環境省／消費者庁／"), nl("公益財団法人 住宅リフォーム・紛争処理支援センター／"), n("日本建築仕上工業会／各塗料メーカーの公表情報")], 30, 186, 160, 16, { fontSize: 8.5, color: MUTED, align: "center" });
   T(s, "本書の内容は〇〇年〇月時点の情報です。", 30, 204, 160, 6, { fontSize: 8.5, color: MUTED, align: "center" });
   s.addImage({ path: A("mascot.png"), x: mm(8.8), y: mm(232.8), w: mm(63.3), h: mm(64.2), objectName: "キャラクター" });
 }

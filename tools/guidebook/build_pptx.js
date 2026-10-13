@@ -263,7 +263,7 @@ const TBLOPT = { fontFace: FONT, fontSize: 9.5, color: INK, border: { type: "sol
   pill(s, "保証の種類", L, 120);
   s.addTable([
     [thO("種類"), thO("内容")],
-    [{ text: "メーカー保証", options: { bold: true } }, "塗料メーカーが、塗料そのものの品質について保証するもの。条件を満たした工事に限り、施工店と連名で保証書を出す場合があります。メーカー単独で施工まで保証することは一般的ではありません"],
+    [{ text: "メーカー保証", options: { bold: true } }, "塗料メーカーが、塗料そのものの品質について保証するもの"],
     [{ text: "連帯保証", options: { bold: true } }, "元請け（契約した会社）と下請け（実際に工事をした会社）が、連帯して工事を保証する制度。どちらか一方が対応できなくなっても、もう一方が責任を負います"],
     [{ text: "賠償責任保険", options: { bold: true } }, "工事ミス（工事完了後もしくは工事期間中の自然災害（地震・噴火を除く））により、お客様宅に被害・損害が発生した際に補填する保証"],
   ], Object.assign({ x: mm(L), y: mm(134), w: mm(W), colW: [mm(44), mm(146)], rowH: mm(14.5) }, TBLOPT, { fontSize: 9.8 }));

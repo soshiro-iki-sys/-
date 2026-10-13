@@ -586,18 +586,37 @@ divider("04", "業者選びのポイント");
   txt(s, "・定期点検（何年目に来てくれるか）も確認しましょう", 0.55, 6.15, 9.8, 0.45, { fontSize: 14 });
 }
 {
-  const s = content(T4, "経営基盤はHPで確認しましょう。10年保証でも、10年後に会社がなければ意味がない。左のチェック項目を、右の当社HPの会社概要と税引き前利益の画像で実際に確かめて見せる。");
+  const s = content(T4, "経営基盤はHPで確認しましょう。10年保証でも、10年後に会社がなければ意味がない。左の当社HPの画像を例に、右の①〜④を順に指しながら「HPのここを見ればわかる」と説明する。");
   wave(s, "経営基盤はHPで確認しましょう");
-  s.addText("10年保証でも、10年後に会社がなければ意味がありません", { x: 0.45, y: 1.72, w: 9.95, h: 0.5, fontSize: 19, bold: true, color: C.accent6, align: "center", margin: 0, isTextBox: true });
-  // 左：HPで確認したい項目
-  s.addText("HPで確認したいこと", { x: 0.45, y: 2.4, w: 3.3, h: 0.45, fill: { color: "1F3864" }, color: C.background1, fontSize: 14, bold: true, align: "center", valign: "middle", margin: 0, isTextBox: true });
-  s.addText([br("□ 創業年数"), br("□ 売上の規模"), br("□ 決算・利益の公開"), br("□ 施工実績の数"), br("□ 資格者"), n("□ 所在地とショールーム")], { x: 0.45, y: 2.85, w: 3.3, h: 3.85, fontSize: 17, bold: true, color: C.text1, line: { color: "1F3864", width: 1.5 }, margin: [0, 0.18, 0, 0.18], valign: "middle", paraSpaceAfter: 9, isTextBox: true });
-  // 右：当社HPの画像
-  s.addText("例）当社ホームページより", { x: 3.95, y: 2.4, w: 6.45, h: 0.45, fill: { color: C.accent1 }, color: C.background1, fontSize: 14, bold: true, align: "center", valign: "middle", margin: 0, isTextBox: true });
-  s.addImage({ path: A("hp_company.png"), x: 3.95, y: 2.98, w: 3.84, h: 2.3, objectName: "HP会社概要" });
-  s.addText([br("赤枠の数字で、"), br("会社が長く続いているか、"), n("安定しているかがわかります")], { x: 7.95, y: 2.98, w: 2.45, h: 2.3, fontSize: 13, bold: true, color: C.text1, fill: { color: "F2F2F2" }, valign: "middle", margin: 0.12, isTextBox: true });
-  s.addText("当社の\n税引き前利益", { x: 3.95, y: 5.45, w: 2.7, h: 1.1, fontSize: 18, bold: true, color: C.text1, valign: "middle", margin: 0, isTextBox: true });
-  s.addImage({ path: A("hp_profit.png"), x: 6.85, y: 5.3, w: 3.55, h: 1.5, objectName: "HP税引き前利益" });
+  s.addText("10年保証でも、10年後に会社がなければ意味がありません", { x: 0.45, y: 1.68, w: 9.95, h: 0.45, fontSize: 18, bold: true, color: C.accent6, align: "center", margin: 0, isTextBox: true });
+  // 左：HPの画像（例）
+  s.addText("例）当社ホームページの会社概要", { x: 0.45, y: 2.22, w: 5.2, h: 0.32, fontSize: 12, bold: true, color: "595959", margin: 0, isTextBox: true });
+  s.addImage({ path: A("hp_company.png"), x: 0.45, y: 2.55, w: 4.65, h: 2.78, objectName: "HP会社概要" });
+  s.addImage({ path: A("hp_profit.png"), x: 0.45, y: 5.42, w: 3.05, h: 1.35, objectName: "HP税引き前利益" });
+  s.addText("← 税引き前利益の推移\n（HPで公開）", { x: 3.85, y: 5.7, w: 2.0, h: 0.8, fontSize: 11, bold: true, color: "595959", valign: "middle", margin: 0, isTextBox: true });
+  // 画像の上の番号（右のカードと対応）
+  const mark = (no, x, y) => s.addText(no, { shape: pres.ShapeType.ellipse, x, y, w: 0.3, h: 0.3, fill: { color: C.accent6 }, line: { color: C.background1, width: 1.5 }, color: C.background1, fontSize: 12, bold: true, align: "center", valign: "middle", margin: 0, isTextBox: true });
+  const rowY = (px) => 2.55 + px * (2.78 / 304) - 0.15;
+  mark("1", 4.5, rowY(123));
+  mark("2", 4.5, rowY(203) - 0.02);
+  mark("3", 4.82, rowY(229) + 0.04);
+  mark("4", 4.5, rowY(281));
+  mark("3", 3.36, 5.92);
+  // 右：HPでここを見る
+  s.addText("HPでここを確認しましょう", { x: 5.95, y: 2.22, w: 4.45, h: 0.42, fill: { color: "1F3864" }, color: C.background1, fontSize: 14, bold: true, align: "center", valign: "middle", margin: 0, isTextBox: true });
+  const cards = [
+    ["1", "創業年数", "長く地域で続いている会社か"],
+    ["2", "年商（売上の規模）", "会社の規模はどのくらいか"],
+    ["3", "利益（経常利益・税引き前利益）", "利益が出ている＝倒産のリスクが少ない"],
+    ["4", "建設業許可", "国や県から許可を受けた会社か"],
+  ];
+  cards.forEach(([no, h, d], i) => {
+    const y = 2.75 + i * 0.93;
+    s.addShape(pres.ShapeType.rect, { x: 5.95, y, w: 4.45, h: 0.83, fill: { color: "F2F2F2" }, line: { type: "none" } });
+    s.addText(no, { shape: pres.ShapeType.ellipse, x: 6.05, y: y + 0.18, w: 0.46, h: 0.46, fill: { color: C.accent6 }, line: { type: "none" }, color: C.background1, fontSize: 16, bold: true, align: "center", valign: "middle", margin: 0, isTextBox: true });
+    s.addText([{ text: h, options: { bold: true, fontSize: 15, breakLine: true } }, { text: d, options: { fontSize: 12 } }], { x: 6.62, y, w: 3.72, h: 0.83, color: C.text1, valign: "middle", margin: 0, isTextBox: true });
+  });
+  s.addText("※施工実績・資格者・所在地もHPで確認できます", { x: 5.95, y: 6.5, w: 4.45, h: 0.35, fontSize: 10, color: "595959", margin: 0, isTextBox: true });
 }
 {
   const s = content(T4, "法令順守：契約書（建設業法で書面が義務）／訪問販売は8日以内ならクーリング・オフ／工程表／保証書／本足場・アスベストの事前調査。");

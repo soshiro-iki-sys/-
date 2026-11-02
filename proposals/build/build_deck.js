@@ -1,1282 +1,1269 @@
 // 遺品整理事業 参入のご提案（企画書）生成スクリプト
-// 使い方: node build_deck.js <出力パス.pptx>
-// デザイン：船井総研の提案書（76p）・企画書（96p）の型を踏襲（4:3、紺の見出し帯、紺×黄の中扉、赤字の結論）
-const path = require("path");
+// 使い方: PPTX_SKILL=<pptxスキルのパス> node build_deck.js <出力パス.pptx>
+// 構成：承認済みの55枚版の流れ ＋ 元の企画書（76p・96p）から不足情報を補足
+// デザイン：船井総研の企画書の型（4:3・紺の見出し帯・紺×黄の中扉）＋アイコン・図解・ネイティブグラフ
 const pptxgen = require("pptxgenjs");
+const React = require("react");
+const ReactDOMServer = require("react-dom/server");
+const sharp = require("sharp");
+const FA = require("react-icons/fa");
 
 const OUT = process.argv[2] || "遺品整理事業_企画書.pptx";
 
 // ---------- パレット ----------
-const NAVY = "1F2D50";
-const NAVY2 = "2B3F6E";
-const BLUE = "2E5FA8";
-const LBLUE = "E9EFF8";
-const RED = "E60012";
-const YEL = "FFF000";
-const GOLD = "C9A227";
-const ORANGE = "E07B2E";
-const GREEN = "2E7D4F";
-const LGREEN = "EAF4EE";
-const PURPLE = "5B3F8C";
-const BROWN = "7A5230";
-const GRAY = "666666";
-const LGRAY = "F3F4F6";
-const LINE = "C9D1DE";
-const DARK = "222222";
-const WHITE = "FFFFFF";
-
-const FONT = "Meiryo";
-const MINCHO = "Yu Mincho";
+const NAVY = "1F2D50", NAVY2 = "2B3F6E", BLUE = "2E5FA8", LBLUE = "EAF0F8", SKY = "D6E3F3";
+const RED = "D7261E", YEL = "FFF000", MARK = "FFF2A8", GOLD = "C9A227", ORANGE = "E07B2E", LORANGE = "FDF0E4";
+const GREEN = "2E7D4F", LGREEN = "EAF4EE", PURPLE = "5B3F8C", BROWN = "7A5230", LBROWN = "F7F1EA";
+const GRAY = "666666", MGRAY = "8A8F99", LGRAY = "F3F4F6", LINE = "C9D1DE", DARK = "222222", WHITE = "FFFFFF";
+const FONT = "Meiryo", MINCHO = "Yu Mincho";
+const MODEL_NOTE = "※船井総研作成のモデル数値です。成果を保証するものではありません。";
 
 const THEME = {
-  name: "Ihin Seiri Proposal",
-  headFontFace: FONT,
-  bodyFontFace: FONT,
-  colors: {
-    dk1: "000000", lt1: "FFFFFF", dk2: NAVY, lt2: "F3F4F6",
-    accent1: NAVY, accent2: BLUE, accent3: RED, accent4: ORANGE, accent5: GREEN, accent6: PURPLE,
-    hlink: BLUE, folHlink: PURPLE,
-  },
+  name: "Ihin Seiri Proposal", headFontFace: FONT, bodyFontFace: FONT,
+  colors: { dk1: "000000", lt1: "FFFFFF", dk2: NAVY, lt2: "F3F4F6", accent1: NAVY, accent2: BLUE, accent3: RED, accent4: ORANGE, accent5: GREEN, accent6: PURPLE, hlink: BLUE, folHlink: PURPLE },
 };
 
-const pres = new pptxgen();
-pres.defineLayout({ name: "STD_43", width: 10, height: 7.5 });
-pres.layout = "STD_43";
-pres.theme = { headFontFace: FONT, bodyFontFace: FONT };
-pres.title = "遺品整理事業 参入のご提案";
-pres.author = "株式会社船井総合研究所";
-pres.company = "株式会社船井総合研究所";
-
-// ---------- レイアウト ----------
-pres.defineSlideMaster({
-  title: "CONTENT",
-  background: { color: WHITE },
-  objects: [
-    { rect: { x: 0, y: 0, w: 10, h: 0.85, fill: { color: NAVY } } },
-    { rect: { x: 6.2, y: 0, w: 3.8, h: 0.85, fill: { color: NAVY2 } } },
-    { text: { text: "Funai Soken", options: { x: 7.6, y: 0.18, w: 2.2, h: 0.5, fontFace: FONT, fontSize: 18, color: WHITE, align: "right", valign: "middle" } } },
-    { text: { text: "Confidential", options: { x: 0.2, y: 7.15, w: 2, h: 0.25, fontFace: FONT, fontSize: 8, color: "888888" } } },
-    { rect: { x: 9.25, y: 7.12, w: 0.75, h: 0.38, fill: { color: NAVY } } },
-    { placeholder: { options: { name: "title", type: "title", x: 0.3, y: 0.1, w: 7.2, h: 0.65, fontFace: FONT, fontSize: 20, color: WHITE, align: "left", valign: "middle", margin: 0 }, text: "" } },
-  ],
-  slideNumber: { x: 9.3, y: 7.16, w: 0.65, h: 0.3, fontFace: FONT, fontSize: 10, color: WHITE, align: "center" },
-});
-
-pres.defineSlideMaster({
-  title: "DIVIDER",
-  background: { color: NAVY },
-  objects: [
-    { placeholder: { options: { name: "title", type: "title", x: 0.6, y: 2.5, w: 8.8, h: 2.5, fontFace: FONT, fontSize: 40, bold: true, color: YEL, align: "center", valign: "middle" }, text: "" } },
-  ],
-});
-
-pres.defineSlideMaster({
-  title: "DIVIDER_BLACK",
-  background: { color: "000000" },
-  objects: [
-    { placeholder: { options: { name: "title", type: "title", x: 0.6, y: 2.5, w: 8.8, h: 2.5, fontFace: FONT, fontSize: 40, bold: true, color: YEL, align: "center", valign: "middle" }, text: "" } },
-  ],
-});
-
-pres.defineSlideMaster({ title: "BLANK", background: { color: WHITE }, objects: [] });
-
-// ---------- ヘルパー ----------
-let objId = 0;
-const nm = (p) => `${p}_${++objId}`;
-
-function content(section, title, notes) {
-  const s = pres.addSlide({ masterName: "CONTENT", sectionTitle: section });
-  s.addText(title, { placeholder: "title" });
-  if (notes) s.addNotes(notes);
-  return s;
-}
-function divider(section, title, notes, black) {
-  const s = pres.addSlide({ masterName: black ? "DIVIDER_BLACK" : "DIVIDER", sectionTitle: section });
-  s.addText(title, { placeholder: "title" });
-  if (notes) s.addNotes(notes);
-  return s;
-}
-function lead(s, t, opt = {}) {
-  s.addText(t, { x: 0.4, y: opt.y || 1.0, w: opt.w || 9.2, h: opt.h || 0.55, fontFace: FONT, fontSize: opt.size || 17, bold: true, color: NAVY, valign: "middle", margin: 0, isTextBox: true, objectName: nm("lead") });
-}
-function concl(s, t, opt = {}) {
-  s.addText(t, { x: 0.3, y: opt.y || 6.42, w: 9.4, h: 0.6, fontFace: FONT, fontSize: opt.size || 17, bold: true, color: RED, align: "center", valign: "middle", margin: 0, isTextBox: true, objectName: nm("conclusion") });
-}
-function note(s, t) {
-  s.addText(t, { x: 2.3, y: 7.12, w: 6.85, h: 0.3, fontFace: FONT, fontSize: 8, color: GRAY, align: "right", valign: "middle", margin: 0, isTextBox: true, objectName: nm("note") });
-}
-const MODEL_NOTE = "※船井総研作成のモデル数値です。成果を保証するものではありません。";
-function tag(s, t) {
-  s.addShape(pres.shapes.ROUNDED_RECTANGLE, { x: 6.55, y: 0.93, w: 3.25, h: 0.36, rectRadius: 0.08, fill: { color: YEL }, line: { color: GOLD, width: 1 }, objectName: nm("tag") });
-  s.addText("要カスタマイズ｜" + t, { x: 6.55, y: 0.93, w: 3.25, h: 0.36, fontFace: FONT, fontSize: 10, bold: true, color: DARK, align: "center", valign: "middle", margin: 0, isTextBox: true, objectName: nm("tagText") });
-}
-function rect(s, x, y, w, h, fill, opt = {}) {
-  s.addShape(opt.round ? pres.shapes.ROUNDED_RECTANGLE : pres.shapes.RECTANGLE, {
-    x, y, w, h, fill: { color: fill }, line: opt.line ? { color: opt.line, width: opt.lw || 1, dashType: opt.dash || "solid" } : { type: "none" },
-    rectRadius: opt.round ? (opt.r || 0.08) : undefined, objectName: nm("box"),
-    shadow: opt.shadow ? { type: "outer", color: "000000", opacity: 0.15, blur: 4, offset: 2, angle: 90 } : undefined,
-  });
-}
-function txt(s, t, x, y, w, h, opt = {}) {
-  s.addText(t, {
-    x, y, w, h, fontFace: opt.font || FONT, fontSize: opt.size || 12, bold: !!opt.bold, color: opt.color || DARK,
-    align: opt.align || "left", valign: opt.valign || "top", margin: opt.margin === undefined ? 0.06 : opt.margin,
-    lineSpacingMultiple: opt.ls || 1.1, paraSpaceAfter: opt.psa || 0, isTextBox: true, objectName: nm(opt.name || "text"), fit: "none",
-  });
-}
-function circleNum(s, n, x, y, d, fill, color) {
-  s.addShape(pres.shapes.OVAL, { x, y, w: d, h: d, fill: { color: fill }, line: { type: "none" }, objectName: nm("num") });
-  s.addText(String(n), { x, y, w: d, h: d, fontFace: FONT, fontSize: Math.round(d * 30), bold: true, color: color || WHITE, align: "center", valign: "middle", margin: 0, isTextBox: true, objectName: nm("numText") });
-}
-function arrowR(s, x, y, w, h, color) {
-  s.addShape(pres.shapes.RIGHT_ARROW, { x, y, w, h, fill: { color: color || NAVY }, line: { type: "none" }, objectName: nm("arrow") });
-}
-function arrowD(s, x, y, w, h, color) {
-  s.addShape(pres.shapes.DOWN_ARROW, { x, y, w, h, fill: { color: color || NAVY }, line: { type: "none" }, objectName: nm("arrow") });
-}
-// 見出し帯付きカード
-function card(s, x, y, w, h, head, body, opt = {}) {
-  const c = opt.color || NAVY;
-  const hh = opt.hh || 0.5;
-  rect(s, x, y, w, h, opt.bg || WHITE, { line: LINE, round: false, shadow: true });
-  rect(s, x, y, w, hh, c);
-  const num = opt.num;
-  if (num !== undefined) {
-    circleNum(s, num, x + 0.1, y + (hh - 0.36) / 2, 0.36, WHITE, c);
-    txt(s, head, x + 0.5, y, w - 0.55, hh, { size: opt.hsize || 13, bold: true, color: WHITE, valign: "middle" });
-  } else {
-    txt(s, head, x + 0.08, y, w - 0.16, hh, { size: opt.hsize || 13, bold: true, color: WHITE, valign: "middle", align: opt.halign || "left" });
-  }
-  if (body) txt(s, body, x + 0.1, y + hh + 0.08, w - 0.2, h - hh - 0.14, { size: opt.size || 12, color: DARK, ls: 1.15 });
-}
-// 表
-function table(s, rows, x, y, w, colW, opt = {}) {
-  const fs = opt.size || 11;
-  const data = rows.map((r, i) => r.map((cell, j) => {
-    const isObj = typeof cell === "object" && cell !== null;
-    const text = isObj ? cell.text : String(cell);
-    const base = {
-      fontFace: FONT, fontSize: fs, valign: "middle", margin: [3, 5, 3, 5],
-      border: { type: "solid", pt: 0.75, color: LINE },
-      align: j === 0 ? "left" : (opt.align || "center"),
-    };
-    if (i === 0) Object.assign(base, { bold: true, color: WHITE, fill: { color: opt.head || NAVY }, align: "center" });
-    else Object.assign(base, { color: DARK, fill: { color: (i % 2 === 0) ? LGRAY : WHITE } });
-    if (opt.firstColFill && j === 0 && i > 0) Object.assign(base, { bold: true, fill: { color: LBLUE }, color: NAVY });
-    if (isObj) Object.assign(base, cell.options || {});
-    return { text, options: base };
-  }));
-  s.addTable(data, { x, y, w, colW, rowH: opt.rowH, autoPage: false, objectName: nm("table") });
-}
-// 記入欄（会社ごとに差し替え）
-function ph(s, x, y, w, h, label, hint) {
-  rect(s, x, y, w, h, "FAFAFA", { line: "9AA5B8", dash: "dash", lw: 1.25 });
-  txt(s, [
-    { text: label, options: { bold: true, color: NAVY, fontSize: 12, breakLine: true } },
-    { text: hint || "", options: { color: GRAY, fontSize: 10.5 } },
-  ], x + 0.08, y + 0.06, w - 0.16, h - 0.12, { ls: 1.15 });
-}
-function steps(s, items, y, h, opt = {}) {
-  const n = items.length, gap = 0.28, x0 = opt.x || 0.4, W = opt.w || 9.2;
-  const w = (W - gap * (n - 1)) / n;
-  items.forEach((it, i) => {
-    const x = x0 + i * (w + gap);
-    card(s, x, y, w, h, it[0], it[1], { color: opt.colors ? opt.colors[i] : NAVY, num: opt.num === false ? undefined : i + 1, hh: opt.hh || 0.55, size: opt.size || 11, hsize: opt.hsize || 12 });
-    if (i < n - 1) arrowR(s, x + w + 0.03, y + h / 2 - 0.13, gap - 0.06, 0.26, opt.arrow || ORANGE);
-  });
-}
-
-
-// ---------- 元の企画書の型に合わせた部品 ----------
-// 中見出し（例：「事業モデル」「紙販促」）
-function subhead(s, t, opt = {}) {
-  txt(s, t, 0.4, opt.y || 0.98, opt.w || 6.0, 0.55, { size: opt.size || 20, bold: true, color: DARK, valign: "middle", margin: 0 });
-}
-// スライド内のバナー見出し（例：「── 3つの追い風が遺品整理市場を拡大 ──」）
-function banner(s, t, y, opt = {}) {
-  const size = opt.size || 22;
-  const tw = Math.min(8.6, t.length * size / 72 * 1.02 + 0.2);
-  const c = opt.color || NAVY;
-  txt(s, t, 5 - tw / 2, y, tw, 0.55, { size, bold: true, color: c, align: "center", valign: "middle", margin: 0 });
-  if (opt.lines !== false && tw < 7.8) {
-    rect(s, 0.5, y + 0.27, 5 - tw / 2 - 0.65, 0.025, c);
-    rect(s, 5 + tw / 2 + 0.15, y + 0.27, 5 - tw / 2 - 0.65, 0.025, c);
-  }
-  if (opt.sub) txt(s, opt.sub, 0.4, y + 0.55, 9.2, 0.38, { size: 12.5, bold: true, color: DARK, align: "center", valign: "middle", margin: 0 });
-}
-// 番号付き見出し帯（例：「01｜遺品整理営業の全体フロー」）
-function numHead(s, num, title, desc) {
-  rect(s, 0.4, 1.0, 9.2, 0.78, NAVY);
-  txt(s, num, 0.5, 1.0, 0.85, 0.78, { size: 28, bold: true, color: WHITE, valign: "middle", margin: 0 });
-  rect(s, 1.32, 1.15, 0.03, 0.48, WHITE);
-  txt(s, title, 1.45, 1.0, 4.9, 0.78, { size: 20, bold: true, color: WHITE, valign: "middle", margin: 0 });
-  if (desc) txt(s, desc, 6.35, 1.0, 3.2, 0.78, { size: 9.5, bold: true, color: WHITE, valign: "middle", margin: 0 });
-}
-// 赤字の締めの一文
-function redMsg(s, t, opt = {}) {
-  txt(s, t, 0.3, opt.y || 6.45, 9.4, opt.h || 0.6, { size: opt.size || 19, bold: true, color: RED, align: opt.align || "center", valign: "middle", margin: 0 });
-}
-// 紺のまとめ帯（「」内を黄色にする）
-function band(s, t, y, h, opt = {}) {
-  rect(s, 0.4, y, 9.2, h, NAVY);
-  const runs = [];
-  t.split(/(「[^」]*」)/).forEach((p) => { if (p) runs.push({ text: p, options: { color: p.startsWith("「") ? YEL : WHITE } }); });
-  if (opt.label) {
-    rect(s, 0.55, y + (h - 0.45) / 2, 1.1, 0.45, WHITE);
-    txt(s, opt.label, 0.55, y + (h - 0.45) / 2, 1.1, 0.45, { size: 13, bold: true, color: NAVY, align: "center", valign: "middle", margin: 0 });
-    txt(s, runs, 1.8, y, 7.7, h, { size: opt.size || 13, bold: true, valign: "middle" });
-  } else {
-    txt(s, runs, 0.55, y, 8.9, h, { size: opt.size || 15, bold: true, valign: "middle", align: opt.align || "center" });
+// ---------- アイコン（react-icons → PNG） ----------
+const ICON_CACHE = {};
+async function prepIcons(list) {
+  for (const [name, color] of list) {
+    const key = name + "_" + color;
+    if (ICON_CACHE[key]) continue;
+    const Comp = FA[name];
+    if (!Comp) throw new Error("icon not found: " + name);
+    const svg = ReactDOMServer.renderToStaticMarkup(React.createElement(Comp, { color: "#" + color, size: 256 }));
+    const buf = await sharp(Buffer.from(svg)).png().toBuffer();
+    ICON_CACHE[key] = "image/png;base64," + buf.toString("base64");
   }
 }
-// 見出し付きパネル（紺の見出し＋白地）
-function panel(s, x, y, w, h, head, color) {
-  rect(s, x, y, w, h, WHITE, { line: color || NAVY, lw: 1.25 });
-  rect(s, x, y, w, 0.42, color || NAVY);
-  txt(s, head, x, y, w, 0.42, { size: 13, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
-}
-// 小さなラベル（例：「ワンストップで受注！」）
-function pill(s, x, y, w, t, color) {
-  rect(s, x, y, w, 0.34, color || NAVY);
-  txt(s, t, x, y, w, 0.34, { size: 10, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
-}
-function photo(s, x, y, w, h, label) {
-  rect(s, x, y, w, h, "E6E9EF", { line: "B8C0CC" });
-  txt(s, label, x, y, w, h, { size: 10, color: "7A8494", align: "center", valign: "middle" });
-}
-const GEN_NOTE = "※画像は差し替えてご使用ください。";
 
-// =====================================================================
-// 表紙
-// =====================================================================
-const S0 = "会社紹介";
-pres.addSection({ title: S0 });
-{
-  const s = pres.addSlide({ masterName: "BLANK", sectionTitle: S0 });
-  s.addShape(pres.shapes.OVAL, { x: -2.5, y: 5.7, w: 16, h: 5, fill: { color: NAVY }, line: { type: "none" }, objectName: "cover_wave1" });
-  s.addShape(pres.shapes.OVAL, { x: 1.5, y: 6.25, w: 14, h: 4, fill: { color: BLUE }, line: { type: "none" }, objectName: "cover_wave2" });
-  s.addShape(pres.shapes.OVAL, { x: 6.2, y: -2.6, w: 7, h: 3.4, fill: { color: NAVY }, line: { type: "none" }, objectName: "cover_wave3" });
-  s.addShape(pres.shapes.OVAL, { x: 7.4, y: -2.9, w: 6, h: 3.2, fill: { color: BLUE }, line: { type: "none" }, objectName: "cover_wave4" });
-  s.addShape(pres.shapes.OVAL, { x: -0.5, y: -0.4, w: 1.6, h: 1.6, fill: { color: BLUE }, line: { type: "none" }, objectName: "cover_circle" });
-  for (let i = 0; i < 12; i++) {
-    const d = 0.13 - i * 0.008;
-    s.addShape(pres.shapes.OVAL, { x: 0.75 + i * 0.2, y: 1.95 - d / 2, w: d, h: d, fill: { color: NAVY, transparency: i * 6 }, line: { type: "none" }, objectName: nm("dot") });
+async function main() {
+  const ICONS = {
+    box: "FaBoxOpen", dolly: "FaDolly", truck: "FaTruck", recycle: "FaRecycle", heart: "FaHandHoldingHeart", clock: "FaClock", search: "FaSearch",
+    users: "FaUsers", home: "FaHome", law: "FaBalanceScale", chart: "FaChartLine", warn: "FaExclamationTriangle", shake: "FaHandshake",
+    building: "FaBuilding", hammer: "FaHammer", tools: "FaTools", pray: "FaPrayingHands", broom: "FaBroom", gem: "FaGem", yen: "FaYenSign", phone: "FaPhoneAlt",
+    check: "FaClipboardCheck", list: "FaClipboardList", shield: "FaShieldAlt", contract: "FaFileContract", map: "FaMapMarkedAlt", store: "FaStore",
+    paper: "FaNewspaper", user: "FaUserTie", bulb: "FaLightbulb", ok: "FaCheckCircle", laptop: "FaLaptop", horn: "FaBullhorn", friends: "FaUserFriends",
+    talk: "FaComments", cal: "FaCalendarAlt", pdf: "FaFilePdf", xls: "FaFileExcel", ppt: "FaFilePowerpoint", doc: "FaFileWord", video: "FaFileVideo",
+    img: "FaFileImage", line: "FaLine", mail: "FaEnvelope", coins: "FaCoins", key: "FaKey", hospital: "FaClinicMedical", city: "FaCity",
+    link: "FaLink", award: "FaAward", target: "FaBullseye", wrench: "FaWrench", question: "FaQuestionCircle", rocket: "FaRocket", people: "FaPeopleCarry", photo: "FaImages",
+  };
+  const COLORS = [WHITE, NAVY, BLUE, RED, GREEN, ORANGE, PURPLE, BROWN, GOLD, MGRAY, YEL];
+  const pairs = [];
+  Object.values(ICONS).forEach((n) => COLORS.forEach((c) => pairs.push([n, c])));
+  await prepIcons(pairs);
+  const IC = (key, color) => ICON_CACHE[ICONS[key] + "_" + color];
+
+  const pres = new pptxgen();
+  pres.defineLayout({ name: "STD_43", width: 10, height: 7.5 });
+  pres.layout = "STD_43";
+  pres.theme = { headFontFace: FONT, bodyFontFace: FONT };
+  pres.title = "遺品整理事業 参入のご提案";
+  pres.author = "株式会社船井総合研究所";
+  pres.company = "株式会社船井総合研究所";
+
+  pres.defineSlideMaster({
+    title: "CONTENT", background: { color: WHITE },
+    objects: [
+      { rect: { x: 0, y: 0, w: 10, h: 0.85, fill: { color: NAVY } } },
+      { rect: { x: 6.2, y: 0, w: 3.8, h: 0.85, fill: { color: NAVY2 } } },
+      { text: { text: "Funai Soken", options: { x: 7.6, y: 0.18, w: 2.2, h: 0.5, fontFace: FONT, fontSize: 18, color: WHITE, align: "right", valign: "middle" } } },
+      { text: { text: "Confidential", options: { x: 0.2, y: 7.15, w: 2, h: 0.25, fontFace: FONT, fontSize: 8, color: "888888" } } },
+      { rect: { x: 9.25, y: 7.12, w: 0.75, h: 0.38, fill: { color: NAVY } } },
+      { placeholder: { options: { name: "title", type: "title", x: 0.3, y: 0.1, w: 7.2, h: 0.65, fontFace: FONT, fontSize: 20, color: WHITE, align: "left", valign: "middle", margin: 0 }, text: "" } },
+    ],
+    slideNumber: { x: 9.3, y: 7.16, w: 0.65, h: 0.3, fontFace: FONT, fontSize: 10, color: WHITE, align: "center" },
+  });
+  pres.defineSlideMaster({
+    title: "DIVIDER", background: { color: NAVY },
+    objects: [{ placeholder: { options: { name: "title", type: "title", x: 0.6, y: 2.5, w: 8.8, h: 2.5, fontFace: FONT, fontSize: 40, bold: true, color: YEL, align: "center", valign: "middle" }, text: "" } }],
+  });
+  pres.defineSlideMaster({ title: "BLANK", background: { color: WHITE }, objects: [] });
+
+  // ---------- 基本部品 ----------
+  let objId = 0;
+  const nm = (p) => `${p}_${++objId}`;
+  function content(section, title, notes) {
+    const s = pres.addSlide({ masterName: "CONTENT", sectionTitle: section });
+    s.addText(title, { placeholder: "title" });
+    if (notes) s.addNotes(notes);
+    return s;
   }
-  txt(s, "株式会社○○ 様\n遺品整理事業\n業績アップコンサルティング\nご提案書", 0.7, 2.25, 8.8, 2.4, { size: 32, font: MINCHO, color: DARK, ls: 1.1, name: "cover_title" });
-  txt(s, "株式会社 船井総合研究所\n専門工事支援部\n○○ ○○", 0.7, 4.75, 6, 0.95, { size: 12, color: DARK, ls: 1.2, name: "cover_meta" });
-  s.addNotes("【要カスタマイズ】会社名・担当者名を差し替える。\n事前経営相談では「遺品整理とは」〜「各業態におけるシナジー」までを使い、事後経営相談では「セミナーでのご質問について」以降を使う。");
-}
-{
-  const s = content(S0, "会社紹介");
-  txt(s, [
-    { text: "株式会社船井総合研究所", options: { fontSize: 15, bold: true, breakLine: true } },
-    { text: " ", options: { fontSize: 6, breakLine: true } },
-    { text: "創設者", options: { bold: true, breakLine: true } }, { text: "船井　幸雄", options: { bold: true, breakLine: true } },
-    { text: " ", options: { fontSize: 6, breakLine: true } },
-    { text: "代表取締役社長", options: { bold: true, breakLine: true } }, { text: "真貝　大介", options: { bold: true, breakLine: true } },
-    { text: " ", options: { fontSize: 6, breakLine: true } },
-    { text: "連結従業員数", options: { bold: true, breakLine: true } }, { text: "約1,500名", options: { bold: true, breakLine: true } },
-    { text: " ", options: { fontSize: 6, breakLine: true } },
-    { text: "資本金", options: { bold: true, breakLine: true } }, { text: "3,000百万円", options: { bold: true, breakLine: true } },
-    { text: " ", options: { fontSize: 6, breakLine: true } },
-    { text: "創立", options: { bold: true, breakLine: true } }, { text: "1970年3月6日", options: { bold: true, breakLine: true } },
-    { text: " ", options: { fontSize: 6, breakLine: true } },
-    { text: "会社プロフィール", options: { bold: true, breakLine: true } },
-    { text: "経営コンサルティング業界では世界ではじめて株式公開を果たした日本最大級の経営コンサルティングファーム。お客様の業績を向上させることを最重要テーマとし、現場の即時業績アップ支援に強みを持つ。約1,000名のコンサルタントが、全国10,000社以上の支援先のサポートに当たっている。", options: { bold: true } },
-  ], 0.4, 1.0, 5.6, 5.9, { size: 11.5, ls: 1.1 });
-  photo(s, 6.3, 1.05, 3.3, 2.4, "大阪本社 写真");
-  txt(s, "大阪本社 〒530-0001\n大阪府大阪市北区梅田三丁目2番123号\nイノゲート大阪 21階・22階", 6.3, 3.5, 3.3, 0.7, { size: 9.5, color: DARK });
-  photo(s, 6.3, 4.3, 3.3, 2.0, "東京本社 写真");
-  txt(s, "東京本社 〒104-0028\n東京都中央区八重洲二丁目2番1号\n八重洲セントラルタワー 35階", 6.3, 6.35, 3.3, 0.7, { size: 9.5, color: DARK });
-}
-{
-  const s = content(S0, "遺品整理事業 専門コンサルタント", "【要カスタマイズ】メンバーの写真・役職・資格を差し替える。");
-  const M = [["専門工事支援部\nチームリーダー\n古民家鑑定士", "阪口 和輝"], ["専門工事支援部\nコンサルタント\n遺品整理士", "堂野 宗一郎"], ["専門工事支援部\nコンサルタント", "廣瀬 聡太朗"], ["専門工事支援部\nコンサルタント", "伊木 颯志朗"]];
-  M.forEach((m, i) => {
-    const x = 0.5 + (i % 2) * 4.7, y = 1.3 + Math.floor(i / 2) * 2.9;
-    photo(s, x, y, 2.0, 2.3, "顔写真");
-    txt(s, m[0] + "\n\n" + m[1], x + 2.15, y + 0.05, 2.4, 2.2, { size: 13, bold: true, color: DARK, ls: 1.2 });
-  });
-}
-{
-  const s = content(S0, "コンサルタント紹介", "【要カスタマイズ】担当コンサルタントのプロフィールに差し替える。");
-  rect(s, 0.4, 1.05, 7.0, 0.85, "F6C700");
-  rect(s, 4.4, 1.05, 3.0, 0.85, "FBE38A");
-  txt(s, "コンサルタント紹介", 0.55, 1.05, 6, 0.85, { size: 30, color: WHITE, valign: "middle", margin: 0 });
-  photo(s, 0.4, 2.2, 4.4, 4.3, "担当コンサルタント 写真");
-  txt(s, [
-    { text: "専門工事支援部", options: { fontSize: 14, bold: true, breakLine: true } },
-    { text: " ", options: { fontSize: 6, breakLine: true } },
-    { text: "○○ ○○", options: { fontSize: 18, bold: true, breakLine: true } },
-    { text: " ", options: { fontSize: 6, breakLine: true } },
-    { text: "【出身】　○○県○○市", options: { fontSize: 16, bold: true, breakLine: true } },
-    { text: "【血液型】○型", options: { fontSize: 16, bold: true, breakLine: true } },
-    { text: " ", options: { fontSize: 6, breakLine: true } },
-    { text: "【経歴/プロフィール】", options: { bold: true, breakLine: true } },
-    { text: "大学卒業後、新卒で株式会社船井総合研究所に入社。入社後は遺品整理業界を専門にコンサルティングを行う。現在は、新規事業立上げから既存事業活性化まで、ご支援先の業績アップコンサルティングに従事している。", options: { bold: true, breakLine: true } },
-    { text: " ", options: { fontSize: 6, breakLine: true } },
-    { text: "【ミッション】", options: { bold: true, breakLine: true } },
-    { text: "遺品整理を『片付け』から、安心できる住まいと暮らしの『再編集』へ", options: { bold: true } },
-  ], 5.0, 2.2, 4.6, 4.5, { size: 11, ls: 1.1 });
-}
-// ヒアリング（元の企画書のメモ形式）
-{
-  const s = content(S0, "ご相談内容について", "事前経営相談ではこのページで伺い、手元でメモする。事後経営相談では伺った内容を書き込んだ版に差し替え、最初に確認する。他社名・外注先名は書かない。");
-  tag(s, "ヒアリング内容");
-  const H = ["・セミナー・資料DLのお申し込みのきっかけ", "・貴社の現状", "・課題", "・セミナーで知りたいこと／資料DLでの疑問点", "・遺品整理事業を会社全体でどんな位置づけにしたいか"];
-  H.forEach((h, i) => {
-    const y = 1.45 + i * 1.1;
-    txt(s, h, 0.4, y, 9.2, 0.4, { size: 14, color: DARK, margin: 0 });
-    txt(s, "↪", 0.4, y + 0.42, 0.4, 0.4, { size: 13, color: GRAY, margin: 0 });
-  });
-}
-
-// =====================================================================
-// 遺品整理とは
-// =====================================================================
-const S1 = "遺品整理とは";
-pres.addSection({ title: S1 });
-divider(S1, "遺品整理とは");
-{
-  const s = content(S1, "遺品整理ビジネスのミッション");
-  rect(s, 0.4, 1.0, 9.2, 5.95, "F7F4EE");
-  txt(s, [
-    { text: "遺品整理", options: { color: DARK } }, { text: "は、", options: { color: DARK, fontSize: 20, breakLine: true } },
-    { text: "地域", options: { color: GREEN } }, { text: "の", options: { color: DARK } }, { text: "福祉", options: { color: GREEN } }, { text: "と", options: { color: DARK } }, { text: "空き家問題", options: { color: GREEN } }, { text: "を", options: { color: DARK, breakLine: true } },
-    { text: "解決する事業です", options: { color: DARK } },
-  ], 0.6, 1.1, 5.4, 1.8, { size: 26, bold: true, font: MINCHO, ls: 1.15 });
-  txt(s, "私たちは、故人とご遺族の想いに寄り添い、\n地域の未来を支える遺品整理を行っています。", 0.6, 2.95, 5.4, 0.7, { size: 12, color: DARK, ls: 1.3 });
-  photo(s, 6.1, 1.1, 3.4, 2.5, "イメージ写真（スタッフとご遺族）");
-  rect(s, 0.6, 3.85, 8.8, 0.02, "B9A98F");
-  txt(s, "遺品整理をしたいお客様は、こんなお悩みを抱えています", 1.4, 3.65, 7.2, 0.4, { size: 14, bold: true, color: DARK, align: "center", valign: "middle" });
-  const P = [["亡くなったご遺族の遺品を\n丁寧に扱ってくれる、\n処分してくれる、\n安心できる業者を探している"], ["今の時代、実家に\nわざわざ帰って\n片付ける時間もない"], ["ネットで調べて出てきた、\n安心できるかどうかも\n分からない会社に\n頼むしかない"]];
-  P.forEach((p, i) => {
-    const x = 0.6 + i * 2.95;
-    s.addShape(pres.shapes.OVAL, { x, y: 4.2, w: 0.75, h: 0.75, fill: { color: "EFE6D6" }, line: { type: "none" }, objectName: nm("icon") });
-    txt(s, String(i + 1), x, 4.2, 0.75, 0.75, { size: 18, bold: true, color: GREEN, align: "center", valign: "middle", margin: 0 });
-    txt(s, p[0], x + 0.85, 4.1, 2.0, 1.2, { size: 11, bold: true, color: DARK, ls: 1.15 });
-  });
-  s.addShape(pres.shapes.OVAL, { x: 0.6, y: 5.55, w: 1.2, h: 1.2, fill: { color: GREEN }, line: { type: "none" }, objectName: "mission_circle" });
-  txt(s, "私たちの\nミッション", 0.6, 5.55, 1.2, 1.2, { size: 12, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
-  txt(s, [
-    { text: "そんな業界の問題を解決するべく、", options: { color: DARK, breakLine: true } },
-    { text: "地域密着", options: { color: GREEN } }, { text: "で", options: { color: DARK } }, { text: "安心できる遺品整理業者", options: { color: GREEN } }, { text: "を増やし、", options: { color: DARK, breakLine: true } },
-    { text: "地域の福祉と未来を支えていきます。", options: { color: DARK } },
-  ], 2.0, 5.5, 7.4, 1.3, { size: 15, bold: true, font: MINCHO, ls: 1.2 });
-}
-{
-  const s = content(S1, "遺品整理とは");
-  banner(s, "遺品整理の流れ【3ステップ】", 1.0, { lines: false });
-  const C = [["1", "整理（仕分け）", "遺品を丁寧に仕分けします", ORANGE, "一つ一つ確認しながら、「残す物」「貴重品」「処分する物」に仕分けします。"], ["2", "搬出", "仕分けした段ボールを運び出します", GREEN, "仕分けが終わった段ボールを一つずつ丁寧に運び出します。"], ["3", "トラックへの積込", "トラックに積み込みます", NAVY, "安全にトラックへ積み込み、適切に処理・リサイクルを行います。"]];
-  C.forEach((c, i) => {
-    const x = 0.4 + i * 3.13, w = 2.94;
-    rect(s, x, 1.65, w, 5.2, WHITE, { line: c[3], lw: 2, round: true, r: 0.06 });
-    s.addShape(pres.shapes.OVAL, { x: x + 0.12, y: 1.78, w: 0.5, h: 0.5, fill: { color: c[3] }, line: { type: "none" }, objectName: nm("num") });
-    txt(s, c[0], x + 0.12, 1.78, 0.5, 0.5, { size: 18, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
-    txt(s, c[1], x + 0.7, 1.75, w - 0.75, 0.42, { size: 16, bold: true, color: c[3], valign: "middle", margin: 0 });
-    txt(s, c[2], x + 0.7, 2.15, w - 0.75, 0.3, { size: 10, bold: true, color: DARK, margin: 0 });
-    photo(s, x + 0.12, 2.6, w - 0.24, 2.6, "作業写真");
-    txt(s, c[4], x + 0.15, 5.35, w - 0.3, 1.35, { size: 11, bold: true, color: DARK, ls: 1.2 });
-    if (i < 2) s.addShape(pres.shapes.ISOSCELES_TRIANGLE, { x: x + w + 0.02, y: 3.7, w: 0.17, h: 0.3, rotate: 90, fill: { color: NAVY }, line: { type: "none" }, objectName: nm("tri") });
-  });
-}
-
-// =====================================================================
-// 市場性
-// =====================================================================
-const S2 = "市場性";
-pres.addSection({ title: S2 });
-divider(S2, "市場性");
-{
-  const s = content(S2, "遺品整理市場の成長性");
-  banner(s, "3つの追い風が遺品整理市場を拡大", 0.98, { size: 24 });
-  const W = [["① 市場拡大の波", "多死社会の到来", "・年間死亡者数は今後も増加\n・遺品整理・実家整理の需要が拡大\n・「空き家をどうするか」を考える人が増加", "市場ニーズが拡大", "FFF3DC"], ["② 社会課題の波", "空き家問題の深刻化", "・全国の空き家 約900万戸\n・放置空き家も増加\n・活用・売却・解体の需要が拡大", "空き家対策が社会課題に", LBLUE], ["③ 法改正の波", "相続登記の義務化", "・相続後3年以内に登記が必要\n・放置が難しくなる\n・実家の活用・売却・整理を検討する人が増加", "法改正が行動を後押し", LGREEN]];
-  W.forEach((w, i) => {
-    const x = 0.4 + i * 3.13, ww = 2.94;
-    rect(s, x, 1.65, ww, 3.2, WHITE, { line: LINE });
-    rect(s, x, 1.65, ww, 0.5, NAVY);
-    txt(s, w[0], x, 1.65, ww, 0.5, { size: 15, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
-    txt(s, w[1], x, 2.2, ww, 0.4, { size: 13, bold: true, color: BROWN, align: "center", valign: "middle", margin: 0 });
-    txt(s, w[2], x + 0.15, 2.65, ww - 0.3, 1.4, { size: 11, color: DARK, ls: 1.3 });
-    rect(s, x + 0.15, 4.15, ww - 0.3, 0.55, w[4], { line: LINE, round: true });
-    txt(s, w[3], x + 0.15, 4.15, ww - 0.3, 0.55, { size: 12, bold: true, color: NAVY, align: "center", valign: "middle", margin: 0 });
-  });
-  s.addShape(pres.shapes.ISOSCELES_TRIANGLE, { x: 4.6, y: 4.95, w: 0.8, h: 0.3, rotate: 180, fill: { color: NAVY }, line: { type: "none" }, objectName: "tri_down" });
-  rect(s, 0.4, 5.3, 9.2, 0.55, NAVY);
-  txt(s, [{ text: "3つの波が重なり、", options: { color: WHITE } }, { text: "「放置」", options: { color: "F6C700" } }, { text: "から", options: { color: WHITE } }, { text: "「活用・処分」", options: { color: "F6C700" } }, { text: "へ動く人が急増", options: { color: WHITE } }], 0.4, 5.3, 9.2, 0.55, { size: 17, bold: true, align: "center", valign: "middle", margin: 0 });
-  rect(s, 0.4, 5.85, 9.2, 1.1, WHITE, { line: NAVY });
-  ["遺品整理", "実家整理", "リフォーム", "解体", "売却", "賃貸活用"].forEach((t, i) => {
-    txt(s, t, 0.4 + i * 1.533, 5.85, 1.533, 1.1, { size: 14, bold: true, color: NAVY, align: "center", valign: "middle", margin: 0 });
-    if (i) rect(s, 0.4 + i * 1.533, 6.05, 0.015, 0.7, LINE);
-  });
-  note(s, "※空き家数：総務省「住宅・土地統計調査」");
-}
-{
-  const s = content(S2, "遺品整理市場の現状");
-  banner(s, "業界の現状", 0.95, { size: 28, lines: false, sub: "遺品整理業者が抱える課題と、見えてきた市場のチャンス" });
-  rect(s, 0.6, 1.95, 8.8, 4.95, "FBF7F1", { line: "D9C7B2", round: true, r: 0.05 });
-  rect(s, 0.6, 1.95, 8.8, 0.6, BROWN);
-  txt(s, "遺品整理業の現状", 0.6, 1.95, 8.8, 0.6, { size: 18, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
-  const I = [["不用品回収を中心とした事業者が多い", "遺品整理という名義でも、実際には不用品回収の片付けを中心とした\nサービスが多く、「想いの整理」まで対応できる事業者は限られている。"], ["グリーフケアや供養への対応に差がある", "ご遺族への寄り添い方や供養の提案など、精神的なケアまで\n提供できる事業者はまだ多いとはいえない。"], ["サービス品質にばらつきがある", "会社規模や基準は業者に差があり、対応・料金・作業品質などが\nお客様満足度に大きく影響している。"]];
-  I.forEach((it, i) => {
-    const y = 2.7 + i * 1.1;
-    s.addShape(pres.shapes.OVAL, { x: 0.8, y: y + 0.05, w: 0.45, h: 0.45, fill: { color: BROWN }, line: { type: "none" }, objectName: nm("num") });
-    txt(s, String(i + 1), 0.8, y + 0.05, 0.45, 0.45, { size: 15, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
-    txt(s, it[0], 1.4, y, 7.8, 0.5, { size: 16, bold: true, color: BROWN, valign: "middle", margin: 0 });
-    txt(s, it[1], 1.4, y + 0.48, 7.8, 0.55, { size: 11, bold: true, color: DARK, margin: 0, ls: 1.2 });
-    if (i < 2) rect(s, 0.8, y + 1.05, 8.4, 0.01, "D9C7B2");
-  });
-  rect(s, 0.8, 6.05, 8.4, 0.65, "FCEFD9", { round: true });
-  txt(s, "「遺品整理＝片付け・回収」だけではない、心に寄り添うサービスが求められています。", 0.9, 6.05, 8.2, 0.65, { size: 12.5, bold: true, color: BROWN, align: "center", valign: "middle", margin: 0 });
-}
-{
-  const s = content(S2, "遺品整理市場の成長性", "ライフサイクルの考え方：成長期は一番店が決まっていない。安定期に入ると価格競争になり、一番店化は難しい。");
-  subhead(s, "ライフサイクルから分析する遺品整理市場", { w: 9 });
-  const phases = [["導入期", 0.9, "D5DCE8"], ["成長期", 2.6, RED], ["成熟期", 3.3, "8FA3C4"], ["安定期", 2.9, "8FA3C4"], ["衰退期", 2.0, "B8C3D6"]];
-  const bx = 0.6, bw = 1.2, base = 5.3;
-  phases.forEach((p, i) => {
-    const x = bx + i * 1.45;
-    rect(s, x, base - p[1], bw, p[1], p[2]);
-    txt(s, p[0], x, base + 0.05, bw, 0.35, { size: 12, bold: true, color: i === 1 ? RED : NAVY, align: "center" });
-  });
-  txt(s, "遺品整理\n総合型", bx + 1.45, base - 2.6 + 0.1, bw, 0.7, { size: 12, bold: true, color: WHITE, align: "center" });
-  txt(s, "リフォーム\n新築住宅", bx + 2 * 1.45, base - 3.3 + 0.1, bw, 0.7, { size: 11, bold: true, color: WHITE, align: "center" });
-  rect(s, 7.95, 1.7, 1.65, 1.75, RED);
-  txt(s, "成長期\n地域一番店が不在", 7.95, 1.7, 1.65, 1.75, { size: 12, bold: true, color: WHITE, align: "center", valign: "middle" });
-  rect(s, 7.95, 3.6, 1.65, 1.75, "8FA3C4");
-  txt(s, "安定期\n価格競争が激化し、一番店化は困難", 7.95, 3.6, 1.65, 1.75, { size: 11, bold: true, color: WHITE, align: "center", valign: "middle" });
-  redMsg(s, "地域一番店が不在の今が、参入のタイミングです。");
-}
-
-// =====================================================================
-// ビジネスモデル概要
-// =====================================================================
-const S3 = "ビジネスモデル概要";
-pres.addSection({ title: S3 });
-divider(S3, "ビジネスモデル概要");
-{
-  const s = content(S3, "ビジネスモデルと売上目標");
-  subhead(s, "事業モデル");
-  txt(s, [
-    { text: "商圏人口", options: { fontSize: 18 } }, { text: "20", options: { fontSize: 36 } }, { text: "万人・平均客単価", options: { fontSize: 18 } }, { text: "30", options: { fontSize: 36 } }, { text: "万円で　売上", options: { fontSize: 18 } }, { text: "1億円", options: { fontSize: 32 } }, { text: "構築モデル", options: { fontSize: 18 } },
-  ], 0.6, 1.55, 9.0, 0.75, { bold: true, color: RED, align: "center", valign: "middle", margin: 0 });
-  txt(s, "（※　但し、商圏人口や会社の認知度や実績で年商には変動が生じます。商圏人口20万人を想定しています。）\n（※　数字はあくまでモデル数値であり、確約するものではありません。）", 0.9, 2.3, 8.5, 0.55, { size: 10, color: GRAY, margin: 0, ls: 1.2 });
-  s.addShape(pres.shapes.OVAL, { x: 0.5, y: 3.15, w: 4.6, h: 2.9, fill: { color: "EEF0F3" }, line: { color: "BFC5CE", width: 6 }, objectName: "model_ring" });
-  rect(s, 1.75, 3.0, 2.1, 0.7, WHITE, { line: LINE, round: true, shadow: true });
-  txt(s, "遺品整理", 1.75, 3.0, 2.1, 0.7, { size: 24, bold: true, color: RED, align: "center", valign: "middle", margin: 0 });
-  photo(s, 1.6, 3.85, 2.4, 1.4, "戸建住宅の写真");
-  rect(s, 0.4, 5.45, 1.9, 0.5, WHITE, { line: LINE, round: true });
-  txt(s, "（不用品回収）", 0.4, 5.45, 1.9, 0.5, { size: 13, bold: true, color: DARK, align: "center", valign: "middle", margin: 0 });
-  rect(s, 3.3, 5.45, 1.9, 0.5, WHITE, { line: LINE, round: true });
-  txt(s, "（出張買取）", 3.3, 5.45, 1.9, 0.5, { size: 13, bold: true, color: DARK, align: "center", valign: "middle", margin: 0 });
-  rect(s, 5.45, 3.05, 4.15, 2.95, WHITE, { line: BLUE, lw: 1.5 });
-  txt(s, "１．40代〜70代以上の故人の遺品整理をしたい人がターゲット。\n\n２．不用品回収や出張買取も対応するが、単価が大きい「戸建の遺品整理」をメインで集客。\n\n３．バックエンド商品を重視。解体・リフォーム・不動産仲介・葬儀等へ繋げる工夫でLTVをUPさせる。", 5.6, 3.15, 3.9, 2.8, { size: 12.5, bold: true, color: DARK, ls: 1.1 });
-}
-{
-  const s = content(S3, "ビジネスモデルと売上目標", "【要確認】1年目の営業利益：元資料の記載は106万円だが、経費の内訳を足すと586万円になる。差額480万円の項目を確定させる。");
-  txt(s, [{ text: "数値計画", options: { fontSize: 24 } }, { text: "（3年間）", options: { fontSize: 16 } }], 0.4, 0.98, 3.2, 0.6, { bold: true, color: NAVY, valign: "middle", margin: 0 });
-  txt(s, "3年目には売上1億円を達成し、営業利益率23.1%の高収益体制へ\n安定した成長と収益性の向上を実現します。", 3.6, 0.98, 4.2, 0.6, { size: 10.5, bold: true, color: DARK, valign: "middle", margin: 0 });
-  const B = (t) => ({ text: t, options: { bold: true } });
-  table(s, [
-    ["項目", "1年目", "", "2年目", "", "3年目", ""],
-    [B("売上"), B("¥36,000,000"), "", B("¥54,000,000"), "", B("¥100,000,000"), ""],
-    ["処分費", "¥10,800,000", "30%", "¥16,200,000", "30%", "¥30,000,000", "30%"],
-    ["その他消耗品費", "¥1,000,000", "資材等", "¥1,500,000", "件数増加に伴い", "¥2,000,000", "件数増加に伴い"],
-    [B("粗利"), B("¥24,200,000"), "67%", B("¥36,300,000"), "67%", B("¥68,000,000"), "68%"],
-    ["アルバイト事務", "¥1,200,000", "事務1名", "¥1,200,000", "事務1名", "¥1,200,000", "事務1名"],
-    ["広告宣伝費・広報費", "¥4,840,000", "粗利の20%", "¥7,260,000", "粗利の20%", "¥13,600,000", "粗利の20%"],
-    ["その他事業経費", "¥1,500,000", "", "¥2,000,000", "", "¥2,500,000", ""],
-    ["人件費", "¥6,000,000", "専任1名", "¥12,000,000", "専任2名", "¥18,000,000", "専任3名"],
-    ["作業員アルバイト", "¥4,800,000", "アルバイト2名", "¥4,800,000", "アルバイト2名", "¥9,600,000", "アルバイト4名"],
-    [B("営業利益"), B("¥1,060,000"), "", B("¥9,040,000"), "", B("¥23,100,000"), ""],
-    [B("営業利益率"), B("2.94%"), "", B("16.74%"), "", B("23.10%"), ""],
-  ], 0.4, 1.65, 7.0, [1.45, 1.05, 0.8, 1.05, 0.8, 1.05, 0.8], { size: 8.5, rowH: 0.34, firstColFill: true });
-  rect(s, 7.6, 1.65, 2.0, 0.45, NAVY);
-  txt(s, "初期投資", 7.6, 1.65, 2.0, 0.45, { size: 14, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
-  rect(s, 7.6, 2.1, 2.0, 1.5, WHITE, { line: LINE });
-  txt(s, [{ text: "HP制作費 ", options: { fontSize: 11 } }, { text: "150万円", options: { fontSize: 16, color: RED, breakLine: true } }, { text: " ", options: { fontSize: 6, breakLine: true } }, { text: "古物商許可取得費用\n", options: { fontSize: 11 } }, { text: "5〜8万円", options: { fontSize: 16, color: RED } }], 7.7, 2.15, 1.85, 1.4, { bold: true, color: DARK, valign: "middle" });
-  s.addShape(pres.shapes.ISOSCELES_TRIANGLE, { x: 8.35, y: 3.7, w: 0.5, h: 0.22, rotate: 180, fill: { color: NAVY }, line: { type: "none" }, objectName: "tri_inv" });
-  rect(s, 7.6, 4.0, 2.0, 0.45, NAVY);
-  txt(s, "投資回収", 7.6, 4.0, 2.0, 0.45, { size: 14, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
-  rect(s, 7.6, 4.45, 2.0, 1.25, WHITE, { line: LINE });
-  txt(s, [{ text: "2年目", options: { fontSize: 22, color: RED } }, { text: "で回収", options: { fontSize: 13, color: RED, breakLine: true } }, { text: "2年目の営業利益904万円により、初期投資を回収見込み。", options: { fontSize: 9.5, color: DARK } }], 7.7, 4.5, 1.85, 1.15, { bold: true, valign: "middle" });
-  txt(s, [
-    { text: "【特徴】", options: { color: DARK, breakLine: true } },
-    { text: "初期投資費用が低く、社員1名からスタート可能", options: { color: RED } }, { text: "であり、", options: { color: DARK, breakLine: true } },
-    { text: "20%以上の利益率", options: { color: RED } }, { text: "を目指せるビジネスモデルである。", options: { color: DARK } },
-  ], 0.4, 5.85, 9.2, 1.15, { size: 17, bold: true, margin: 0, ls: 1.1 });
-  note(s, MODEL_NOTE);
-}
-{
-  const s = content(S3, "ビジネスモデルと売上目標");
-  banner(s, "遺品整理を中心としたシナジーと商流の流れ", 0.95, { lines: false, size: 20, sub: "さまざまな入口から遺品整理に繋がり、整理後の出口サービスまでワンストップで提供" });
-  panel(s, 0.4, 1.95, 2.75, 2.95, "入口（案件の発生源）", NAVY);
-  txt(s, "① 葬儀会社\n　葬儀後に遺品整理の相談が発生\n② 老人ホーム紹介\n　入居前の生前整理が必要\n③ 不動産仲介・不動産売却\n　売却前には家財撤去が必須", 0.5, 2.42, 2.6, 2.4, { size: 10.5, bold: true, color: DARK, ls: 1.25 });
-  arrowR(s, 3.2, 3.25, 0.45, 0.35, NAVY);
-  s.addShape(pres.shapes.OVAL, { x: 3.7, y: 2.0, w: 2.6, h: 2.6, fill: { color: NAVY }, line: { color: LINE, width: 3 }, objectName: "center_ihin" });
-  txt(s, "遺品整理\n（元請けで受注）", 3.7, 2.45, 2.6, 0.95, { size: 17, bold: true, color: WHITE, align: "center", valign: "middle" });
-  txt(s, "遺品の仕分け・整理\n貴重品探索・供養品の選定\n買取・処分・搬出", 3.7, 3.4, 2.6, 0.8, { size: 9.5, bold: true, color: WHITE, align: "center", valign: "middle" });
-  arrowR(s, 6.35, 3.25, 0.45, 0.35, GREEN);
-  panel(s, 6.85, 1.95, 2.75, 2.95, "出口（整理後のサービス）", GREEN);
-  txt(s, "④ 解体業者\n⑤ 一般廃棄物業者\n⑥ リユース・買取\n⑦ 清掃業\n⑧ リフォーム会社\n⑨ 不動産会社（売却・活用）", 6.95, 2.42, 2.6, 2.4, { size: 11, bold: true, color: DARK, ls: 1.3 });
-  rect(s, 0.4, 5.05, 4.5, 1.9, "FFF6EE", { line: ORANGE, dash: "dash" });
-  txt(s, "パターンA：解体会社からの残置物撤去依頼（下請けの流れ）", 0.5, 5.1, 4.3, 0.4, { size: 10.5, bold: true, color: ORANGE });
-  steps(s, [["解体業者", "残置物撤去を依頼"], ["遺品整理会社", "撤去・処分"], ["解体業者", "解体工事"]], 5.55, 1.3, { x: 0.5, w: 4.3, num: false, size: 9.5, hsize: 10.5, hh: 0.42, colors: [ORANGE, ORANGE, ORANGE] });
-  rect(s, 5.1, 5.05, 4.5, 1.9, "EEF3FB", { line: BLUE, dash: "dash" });
-  txt(s, "パターンB：遺品整理を元請けで受注し、解体まで一括対応（元請けの流れ）", 5.2, 5.1, 4.3, 0.4, { size: 10.5, bold: true, color: BLUE });
-  steps(s, [["お客様", "遺品整理を依頼"], ["遺品整理会社", "遺品整理を実施"], ["解体・不動産", "解体・売却・活用"]], 5.55, 1.3, { x: 5.2, w: 4.3, num: false, size: 9.5, hsize: 10.5, hh: 0.42, colors: [BLUE, BLUE, BLUE] });
-}
-{
-  const s = content(S3, "ビジネスモデルと売上目標");
-  subhead(s, "遺品整理から広がる7つの収益機会", { w: 9 });
-  txt(s, [{ text: "遺品整理を中心に、関連サービスを階段状にご提案していくことで、\nお客様の課題を", options: { color: DARK } }, { text: "ワンストップで解決", options: { color: ORANGE } }, { text: "し、", options: { color: DARK } }, { text: "粗利を最大化", options: { color: ORANGE } }, { text: "します。", options: { color: DARK } }], 0.4, 1.5, 9.2, 0.65, { size: 13, bold: true, margin: 0 });
-  const st = [["遺品整理（基本サービス）", ORANGE], ["買取・リユース", GOLD], ["供養・お焚き上げ", "7FA650"], ["特殊清掃・消臭・除菌", GREEN], ["解体工事", BLUE], ["不動産売却・買取サポート", NAVY], ["リフォーム・リノベーション", PURPLE]];
-  st.forEach((t, i) => {
-    const x = 0.4 + i * 0.32, y = 6.3 - i * 0.6, w = 3.6;
-    rect(s, x, y, w, 0.52, t[1]);
-    txt(s, String(i + 1), x, y, 0.45, 0.52, { size: 16, bold: true, color: WHITE, align: "center", valign: "middle" });
-    txt(s, t[0], x + 0.45, y, w - 0.5, 0.52, { size: 12, bold: true, color: WHITE, valign: "middle" });
-  });
-  panel(s, 6.0, 2.35, 3.6, 4.5, "高粗利化の具体例（1件あたり）", NAVY);
-  table(s, [["項目", "売上"], ["遺品整理（基本）", "30万円"], ["買取・リユース", "▲5万円（値引き）"], ["特殊清掃", "20万円"], ["供養・お焚き上げ", "5万円"], ["解体工事", "150万円"], ["不動産売却サポート", "売却価格の3%"], ["リフォーム", "200万円"]], 6.1, 2.85, 3.4, [1.75, 1.65], { size: 9.5, rowH: 0.3 });
-  txt(s, [{ text: "売上合計 ", options: { fontSize: 12, color: DARK } }, { text: "490万円", options: { fontSize: 20, color: RED, breakLine: true } }, { text: "粗利合計 ", options: { fontSize: 12, color: DARK } }, { text: "180万円", options: { fontSize: 20, color: RED } }], 6.1, 5.4, 3.4, 1.35, { bold: true, align: "center", valign: "middle" });
-  note(s, MODEL_NOTE);
-}
-
-// =====================================================================
-// 許可・資格について
-// =====================================================================
-const S4 = "許可・資格について";
-pres.addSection({ title: S4 });
-divider(S4, "許可・資格について");
-{
-  const s = content(S4, "資格・許可について", "前提条件（お客様と許可業者の直接契約、当社は運搬しない、現場で許可業者へ引き渡す）と自治体ごとのルールを確認したうえで説明する。");
-  rect(s, 2.6, 0.98, 4.8, 0.42, NAVY, { round: true, r: 0.2 });
-  txt(s, "遺品整理・不用品回収業の新しいスタンダード", 2.6, 0.98, 4.8, 0.42, { size: 12, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
-  txt(s, [{ text: "三社間契約", options: { color: NAVY } }, { text: "を活用した", options: { color: NAVY, fontSize: 18 } }, { text: "安心・合法・低リスク", options: { color: GOLD } }, { text: "のサービス提供", options: { color: NAVY, fontSize: 18 } }], 0.4, 1.45, 9.2, 0.6, { size: 24, bold: true, align: "center", valign: "middle", margin: 0 });
-  txt(s, "当社は「一廃許可」を持たなくても、一般廃棄物業者との三社間契約により、すべての工程を法令に沿って提供できます。", 0.4, 2.05, 9.2, 0.35, { size: 10.5, bold: true, color: DARK, align: "center", margin: 0 });
-  const D = [[0.4, "お客様と一般廃棄物業者が直接契約", "お客様", "一般廃棄物業者\n（許可業者）", "❶直接契約（回収・処分の契約）\n❷回収・処分の実施", GREEN], [5.1, "お客様と当社が契約", "お客様", "当社\n（遺品整理）", "❶サービス契約（仕分け・搬出の契約）\n❷仕分け・搬出などの作業実施", NAVY]];
-  D.forEach(([x, h, a, b, mid, c]) => {
-    rect(s, x, 2.5, 4.5, 1.85, WHITE, { line: NAVY });
-    rect(s, x + 0.8, 2.42, 2.9, 0.34, NAVY, { round: true, r: 0.15 });
-    txt(s, h, x + 0.8, 2.42, 2.9, 0.34, { size: 10.5, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
-    rect(s, x + 0.12, 2.95, 1.2, 1.25, LBLUE);
-    txt(s, a, x + 0.12, 2.95, 1.2, 1.25, { size: 12, bold: true, color: NAVY, align: "center", valign: "middle", margin: 0 });
-    rect(s, x + 3.18, 2.95, 1.2, 1.25, c);
-    txt(s, b, x + 3.18, 2.95, 1.2, 1.25, { size: 10.5, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
-    s.addShape(pres.shapes.LEFT_RIGHT_ARROW, { x: x + 1.45, y: 3.35, w: 1.6, h: 0.3, fill: { color: c }, line: { type: "none" }, objectName: nm("lr") });
-    txt(s, mid.replace("❶", "①").replace("❷", "②"), x + 1.35, 2.85, 1.8, 0.5, { size: 7.5, bold: true, color: DARK, align: "center", valign: "middle", margin: 0 });
-  });
-  txt(s, [{ text: "一般廃棄物業者は直接お客様と契約するため、当社は", options: { color: DARK } }, { text: "「一廃許可」を持っていなくても", options: { color: RED } }, { text: "事業が可能です。", options: { color: DARK } }], 0.4, 4.4, 9.2, 0.4, { size: 12, bold: true, align: "center", valign: "middle", margin: 0 });
-  panel(s, 0.4, 4.85, 5.9, 2.15, "当社のサービス提供の流れ", NAVY);
-  ["ご相談・\nお見積り", "仕分け・\n整理", "搬出・\n運搬", "許可業者へ\n引渡し", "回収・処分\n（許可業者）"].forEach((t, k) => {
-    const x = 0.5 + k * 1.16;
-    rect(s, x, 5.45, 1.0, 1.35, LBLUE, { line: LINE });
-    txt(s, String(k + 1), x, 5.5, 1.0, 0.35, { size: 13, bold: true, color: NAVY, align: "center", margin: 0 });
-    txt(s, t, x, 5.85, 1.0, 0.85, { size: 9.5, bold: true, color: DARK, align: "center", valign: "middle", margin: 0 });
-    if (k < 4) arrowR(s, x + 1.01, 6.0, 0.14, 0.25, NAVY);
-  });
-  panel(s, 6.45, 4.85, 3.15, 2.15, "三社間契約を導入するメリット", NAVY);
-  txt(s, "■ 法令遵守で安心\n■ 許可がなくても事業可能\n■ 信頼性の高いサービス提供\n■ 事業拡大に集中できる", 6.55, 5.32, 3.0, 1.6, { size: 11.5, bold: true, color: NAVY, ls: 1.35 });
-}
-{
-  const s = content(S4, "資格・許可について");
-  const C = [["① 一般廃棄物収集運搬許可", "許可がなくても事業は可能。\n許可を取得すれば、利益率をもっと高められます。", [["利益率の向上", "自社で回収・運搬が完結するため、外注コストを抑え、収益性が向上します。"], ["スケジュールの柔軟性アップ", "外注の調整が不要になり、スケジュールを柔軟にコントロールできます。"], ["サービスの幅が広がる", "スポット対応や即日対応など、多様なニーズに応えられます。"]], GREEN], ["② 古物商許可", "「片付け」だけなら不要ですが、\n「買取」を行う場合は古物商許可が必要になります。", [["取得までの流れ", "書類準備 → 警察署へ申請 → 審査（約40日）→ 許可証交付 → 買取サービス開始"], ["費用", "申請手数料：約19,000円\n各種証明書：約1,000〜3,000円"], ["取得後に必要なこと", "本人確認／古物台帳への記録（3年間保管）／古物商プレートの掲示"]], NAVY]];
-  C.forEach(([h, sub, items, c], i) => {
-    const x = 0.4 + i * 4.7, w = 4.5;
-    rect(s, x, 1.0, w, 0.6, c);
-    txt(s, h, x + 0.1, 1.0, w - 0.2, 0.6, { size: 16, bold: true, color: WHITE, valign: "middle" });
-    rect(s, x, 1.6, w, 5.35, WHITE, { line: c });
-    txt(s, sub, x + 0.15, 1.7, w - 0.3, 0.75, { size: 11.5, bold: true, color: c, ls: 1.2 });
-    items.forEach((it, k) => {
-      const y = 2.55 + k * 1.42;
-      rect(s, x + 0.15, y, w - 0.3, 1.3, i ? LBLUE : LGREEN);
-      txt(s, it[0], x + 0.25, y + 0.05, w - 0.5, 0.4, { size: 12.5, bold: true, color: c });
-      txt(s, it[1], x + 0.25, y + 0.45, w - 0.5, 0.8, { size: 10.5, bold: true, color: DARK, ls: 1.2 });
+  function divider(section, title, notes) {
+    const s = pres.addSlide({ masterName: "DIVIDER", sectionTitle: section });
+    s.addText(title, { placeholder: "title" });
+    if (notes) s.addNotes(notes);
+    return s;
+  }
+  function rect(s, x, y, w, h, fill, opt = {}) {
+    s.addShape(opt.round ? pres.shapes.ROUNDED_RECTANGLE : pres.shapes.RECTANGLE, {
+      x, y, w, h, fill: fill ? { color: fill } : { type: "none" }, line: opt.line ? { color: opt.line, width: opt.lw || 1, dashType: opt.dash || "solid" } : { type: "none" },
+      rectRadius: opt.round ? (opt.r || 0.08) : undefined, objectName: nm("box"),
+      shadow: opt.shadow ? { type: "outer", color: "000000", opacity: 0.18, blur: 5, offset: 2, angle: 90 } : undefined,
     });
-  });
-}
-
-// =====================================================================
-// 各業態におけるシナジー
-// =====================================================================
-const S5 = "各業態におけるシナジー";
-pres.addSection({ title: S5 });
-divider(S5, "各業態における\nシナジー");
-{
-  const s = content(S5, "既存ビジネスとのシナジー");
-  subhead(s, "遺品整理事業参入で得られるシナジー", { w: 9 });
-  txt(s, "業種を問わず、遺品整理事業には本業を伸ばす4つのシナジーがあります。", 0.4, 1.5, 9.2, 0.4, { size: 13, bold: true, color: DARK, margin: 0 });
-  rect(s, 0.4, 2.0, 9.2, 3.5, WHITE, { line: NAVY });
-  rect(s, 0.4, 2.0, 9.2, 0.5, NAVY);
-  txt(s, "遺品整理事業参入によるシナジー", 0.4, 2.0, 9.2, 0.5, { size: 15, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
-  const E = [["商流の川上の獲得", "売却・解体・リフォームを決める前のお客様と、最初に接点を持てる。", "相見積もりを回避！"], ["既存資産の活用", "既存顧客・車両・職人・店舗・会員組織をそのまま活かせる。", "追加投資を抑制！"], ["外注費の内製化", "外注していた残置物撤去や家財処分が、自社の粗利に変わる。", "自社施工で粗利UP！"], ["紹介の増加", "「困ったらあの会社」と地域で認知され、紹介が集まる。", "安定した受注へ！"]];
-  E.forEach((e, i) => {
-    const x = 0.55 + i * 2.27, w = 2.12;
-    rect(s, x, 2.65, w, 2.7, LBLUE);
-    s.addShape(pres.shapes.OVAL, { x: x + 0.1, y: 2.75, w: 0.42, h: 0.42, fill: { color: NAVY }, line: { type: "none" }, objectName: nm("num") });
-    txt(s, String(i + 1), x + 0.1, 2.75, 0.42, 0.42, { size: 14, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
-    txt(s, e[0], x + 0.58, 2.72, w - 0.62, 0.5, { size: 12.5, bold: true, color: NAVY, valign: "middle", margin: 0 });
-    txt(s, e[1], x + 0.1, 3.35, w - 0.2, 1.3, { size: 10.5, bold: true, color: DARK, ls: 1.25 });
-    pill(s, x + 0.1, 4.85, w - 0.2, e[2]);
-    if (i < 3) s.addShape(pres.shapes.ISOSCELES_TRIANGLE, { x: x + w + 0.02, y: 3.85, w: 0.2, h: 0.12, rotate: 90, fill: { color: NAVY }, line: { type: "none" }, objectName: nm("tri") });
-  });
-  band(s, "遺品整理事業の参入は、どの業種にとっても「本業の入口」をつくり、「客単価の向上」と「安定受注」を実現する戦略となります。", 5.75, 1.0, { label: "まとめ", size: 13 });
-}
-{
-  const s = content(S5, "既存ビジネスとのシナジー", "貴社の業種の行を指しながら説明し、次ページ以降の業種別ページへ進む。");
-  subhead(s, "業種別のシナジー", { w: 9 });
-  table(s, [
-    ["業種", "本業の課題", "遺品整理で得られること", "つながる本業"],
-    ["不動産会社", "仕入れ競争・広告費の高騰、案件の長期化", "売却を考える前の所有者と出会える／残置物撤去の外注費が利益に", "売買仲介・買取再販・賃貸管理"],
-    ["解体業者", "価格競争、紹介依存、職人の稼働の波", "解体前の案件を元請けで獲得／家財撤去の利益も自社に", "解体工事・土地活用"],
-    ["住宅・リフォーム業", "新築縮小、大型案件不足、OB客との接点不足", "相続した実家のリノベ相談の入口になる", "リフォーム・リノベーション"],
-    ["葬儀業", "家族葬化で単価下落、葬儀後の収益がない", "葬儀後の困りごとを自社で受け、会員満足度が上がる", "法要・供養・墓じまい・相続相談"],
-    ["ケアマネ・包括支援", "片付けの相談先不足、業務負担の増加", "施設入居前の生前整理に対応でき、家族の信頼が上がる", "入居相談・地域連携"],
-    ["便利業", "小口案件ばかりで利益率が低い、ブランド力が弱い", "高単価商品を持てる／専門店として信頼される", "不用品回収・ハウスクリーニング"],
-    ["リサイクル業", "良質な仕入れが不安定、一般客との接点が少ない", "良質なリユース品を直接仕入れられる", "資源回収・リユース販売"],
-    ["買取業", "高価値品の仕入れが不安定、買取できない物が多い", "家一軒分から仕入れられ「全部お願いできる」が強みに", "出張買取・店舗販売"],
-  ], 0.4, 1.6, 9.2, [1.5, 2.5, 3.25, 1.95], { size: 9.5, align: "left", rowH: 0.56, firstColFill: true });
-}
-
-const INDUSTRIES = [
-  { name: "不動産会社",
-    issues: [["仕入れ競争の激化", "ポータルサイトや一括査定経由の案件が増え、競合との奪い合いが激しい。"], ["集客コストの高騰", "反響サイト・Web広告・チラシなどの集客費用が上昇している。"], ["案件の長期化", "売却前の片付けや相続手続きに時間がかかり、案件が長引く。"], ["残置物撤去の外注", "売買・仲介で発生する残置物撤去を、1現場30〜50万円で外注している。"]],
-    syn: [["相続案件の入口獲得", "売却を考える前の段階で、所有者と接点を持てる。", "風上で情報獲得！"], ["物件仕入れの強化", "相続物件の情報を、競合よりも早く取得できる。", "仕入れが増える！"], ["残置物撤去の内製化", "外注していた撤去費用を、自社の粗利に転換できる。", "外注費を粗利へ！"], ["売却スピード向上", "片付けから売却まで一貫して進められる。", "案件の長期化を防止！"]],
-    eff: [["売却相談の増加", "片付けをきっかけに売却相談が増える。"], ["仕入れの安定化", "ポータルに依存しない仕入れルートを確立。"], ["粗利の向上", "外注していた撤去費用が自社の利益に。"], ["地域での信頼向上", "相続の困りごとを解決する会社として認知。"], ["事業の拡大", "買取再販・リフォーム・賃貸管理まで展開。"]],
-    flow: ["遺品整理\n（家財整理）", "不動産情報の\n取得", "売却・買取再販", "リフォーム・\n解体"],
-    sum: "遺品整理事業の参入は、不動産会社にとって「相続案件の入口獲得」「物件仕入れの強化」「売却スピード向上」を実現し、持続的な成長につながる強力な戦略となります。" },
-  { name: "解体業者",
-    issues: [["利益率の低下", "解体単体の価格競争で利益率が下がっている。"], ["集客コストの増加", "ネット広告や紹介依存により、集客コストが年々上昇している。"], ["新たな収益源の確保", "解体工事以外で収益を生み出し、売上の柱を増やしたい。"], ["職人稼働の平準化", "工事案件に波があり、職人の稼働が不安定になっている。"]],
-    syn: [["解体前案件の獲得", "遺品整理を起点に、解体につながる案件を自社で獲得。", "ワンストップで受注！"], ["客単価の向上", "解体工事のみよりも、受注単価が大きく向上。", "単価UPで売上拡大！"], ["粗利の向上", "外注していた家財撤去を自社で行うことで、中間マージンを削減。", "自社施工で粗利UP！"], ["紹介依存からの脱却", "エンドユーザーとの接点が増え、直接受注の割合を高められる。", "直接取引で安定受注！"]],
-    eff: [["受注件数の増加", "遺品整理をきっかけに解体につながる案件が増える。"], ["売上の安定化", "解体工事の波をカバーする新たな収益源に。"], ["地域での信頼向上", "「片付けから解体まで任せられる」安心感。"], ["職人の稼働率向上", "工事の合間でも稼働でき、稼働率が向上。"], ["将来の事業拡大", "リフォーム・不動産・売却までの展開が期待できる。"]],
-    flow: ["遺品整理\n（家財整理）", "家財撤去・処分\n（運搬・処分）", "解体工事", "不動産・売却\n（提携連携）"],
-    sum: "遺品整理事業の参入は、解体業者にとって「解体前案件の獲得」「客単価の向上」「粗利の向上」「安定受注」を実現し、持続的な成長につながる強力な戦略となります。" },
-  { name: "住宅・リフォーム業",
-    issues: [["新築市場の縮小", "人口減少や世帯数の減少により、新築需要が年々減少している。"], ["大型リフォーム案件の不足", "単価の低い小規模工事が増え、利益が伸び悩んでいる。"], ["OB顧客との接点不足", "築年数が経過したOB顧客との関係が希薄化している。"], ["空き家問題の増加", "親の死去により発生する空き家が増え、活用提案が求められている。"]],
-    syn: [["実家リノベ案件の獲得", "遺品整理をきっかけに実家の活用相談につなげる。", "「片付け」から「活用提案」へ！"], ["相続空き家市場の攻略", "片付けから活用までワンストップで対応できる体制を構築。", "成長市場を先取り！"], ["リフォーム受注の増加", "売却ではなく“活用”の提案ができ、受注につながる。", "「活かす」提案が強みに！"], ["他事業との連携強化", "不動産・解体・士業などと連携し、競合優位性を高める。", "ワンストップ体制！"]],
-    eff: [["新たな顧客層の獲得", "相続や高齢化で発生する空き家所有者にリーチ。"], ["高単価案件の増加", "リノベーション・フルリフォームなど高単価案件を獲得。"], ["OB顧客との関係強化", "整理を通じて再接点を持ち、将来の提案につなげる。"], ["事業の安定化", "新築依存から脱却し、安定した事業ポートフォリオへ。"], ["地域での競争優位性", "片付けから活用まで対応できる企業としてブランド力向上。"]],
-    flow: ["遺品整理\n（片付け・整理）", "不動産・相続相談\n（提携先連携）", "リノベ・リフォーム\n提案・施工", "アフターサポート\n（定期点検など）"],
-    sum: "遺品整理事業の参入は、リフォーム・住宅会社にとって「実家リノベ案件の獲得」「相続空き家市場の攻略」「リフォーム受注の増加」を実現する重要な戦略です。" },
-  { name: "葬儀業",
-    issues: [["葬儀単価の下落", "価格競争により、葬儀単価が下落し、収益が減少している。"], ["集客コストの高騰", "紹介サイトや広告費の上昇により、新規集客コストが年々増加している。"], ["アフター収益不足", "葬儀後の顧客接点が少なく、継続的な収益機会が限られている。"], ["会員組織活用不足", "会員やOB顧客との接点を十分に活かせておらず、LTVが低下している。"]],
-    syn: [["葬儀後サポート強化", "遺族の「その後の困りごと」を解決し、信頼度と満足度が向上。", "信頼を獲得！"], ["アフター売上創出", "遺品整理・生前整理・空き家整理などのニーズを獲得し、新たな収益源に。", "新たな収益を確保！"], ["会員組織の活用", "会員向け特典・優待サービスで、会員満足度と継続率が向上。", "会員の価値向上！"], ["関連事業への展開", "不動産・解体・墓じまい・相続相談など関連事業へ展開が可能に。", "事業を拡大！"]],
-    eff: [["顧客満足度の向上", "葬儀後の不安や負担を解消し「頼んでよかった」と思われる。"], ["アフター収益の増加", "葬儀単価の下落を補う新たな収益の柱を確立。"], ["紹介・口コミの増加", "ご遺族や会員からの紹介が増え、新規顧客を獲得。"], ["LTVの向上", "リピートや関連サービスの利用が増加。"], ["競合との差別化", "葬儀＋アフターサポートのワンストップ体制で差別化。"]],
-    flow: ["葬儀施行\n（本業）", "遺品整理\n（片付け・整理）", "関連サービス\n（生前整理など）", "関連事業連携\n（不動産・相続等）"],
-    sum: "遺品整理事業の参入は、葬儀業者にとって「葬儀後サポート強化」「アフター売上創出」「会員組織の活用」「関連事業への展開」を実現し、安定した収益基盤と持続的な成長につながる強力な戦略となります。" },
-  { name: "ケアマネジャー・包括支援センター",
-    issues: [["相談先不足", "整理に関する相談先や、専門業者の紹介先が不足。"], ["高齢者の住環境問題", "空き家・独居高齢者の増加で、家の片付け・管理が課題に。"], ["家族からの相談増加", "施設入居や相続等の相談が増加し、専門的な対応が必要。"], ["業務負担の増加", "片付けや不用品処分の相談対応に時間を取られ、負担が大きい。"]],
-    syn: [["地域課題の解決", "空き家や放置物件の問題を解決し、地域包括ケアの一翼を担う。", "地域の安心・安全に！"], ["生前整理ニーズに対応", "施設入居前や高齢者の生前整理を支援し、本人・家族の安心に。", "高齢者の暮らしをサポート！"], ["家族支援の強化", "遠方に住む家族の負担を軽減し、安心して相談できる体制を提供。", "感謝される支援で信頼向上！"], ["地域包括ケアとの連携強化", "多職種と連携し、地域包括ケアのハブとしての役割を強化。", "支援の幅が拡大！"]],
-    eff: [["信頼・満足度の向上", "困りごとをワンストップで解決し、利用者や家族の信頼が高まる。"], ["相談件数の増加", "安心して紹介できる体制で、片付け・整理の相談が増加。"], ["業務負担の軽減", "専門業者と連携することで、コア業務に集中できる。"], ["地域包括ケアの推進", "地域課題の解決に貢献し、地域包括ケアシステムの推進に寄与。"], ["他事業者との連携強化", "不動産・葬儀・士業などとの連携が深まる。"]],
-    flow: ["相談対応\n（ケアマネ・包括）", "専門業者の紹介\n（遺品整理事業）", "整理・片付け\n実施", "関連サービスへ連携\n（不動産・解体等）"],
-    sum: "遺品整理事業の参入は、ケアマネジャー・包括支援センターにとって「地域課題の解決」「生前整理ニーズへの対応」「家族支援の強化」「地域包括ケアとの連携強化」を実現し、信頼される存在としての価値を高めます。" },
-  { name: "便利業",
-    issues: [["利益率が低い", "単価が低く、利益が残りにくい。"], ["案件数依存", "小口案件が多く、件数をこなしても十分な利益を確保しづらい。"], ["生産性が低い", "移動や見積りの時間が多く、効率が悪化している。"], ["ブランド力が弱い", "専門性や信頼性をアピールしづらい。"]],
-    syn: [["高単価商品化", "高単価案件を獲得し、1件あたりの粗利が大幅にアップ！", "粗利が大幅UP！"], ["顧客単価の向上", "生前整理や空き家片付けなど関連サービス展開で、顧客単価が向上！", "関連サービスで単価UP！"], ["既存顧客の活用", "過去の小口依頼顧客へ提案し、リピート・追加受注が増加！", "リピートが増加！"], ["ブランド力の向上", "「遺品整理の専門店」として信頼性が高まり、選ばれる理由が明確に！", "選ばれる理由が明確に！"]],
-    eff: [["収益性の向上", "高単価案件の増加により、売上・利益が安定。"], ["安定した案件確保", "季節や天候に左右されにくく、年間を通じて案件獲得が可能。"], ["顧客満足度の向上", "遺族や依頼者の負担を軽減し、満足度・信頼感が向上。"], ["紹介・口コミの増加", "満足度の高いサービスが口コミや紹介につながる。"], ["事業の専門特化", "専門サービスの確立により、価格競争から脱却。"]],
-    flow: ["生前整理・\n片付け", "遺品整理", "空き家片付け", "各種オプション\n（リフォーム・買取等）"],
-    sum: "遺品整理事業の参入は、便利屋業者にとって「高単価商品化」「顧客単価の向上」「ブランド力の向上」「安定収益の確保」を実現し、持続的な成長につながる強力な戦略となります。" },
-  { name: "リサイクル業",
-    issues: [["良質な仕入れが安定しない", "市場価格に左右されやすく、資源物の安定確保が難しい。"], ["利益率が低い", "回収・選別のみでは利益率が伸びにくい。"], ["一般のお客様との接点が少ない", "法人案件が中心となり、個人顧客からの直接依頼が少ない。"], ["回収できる物が限定される", "資源物以外は処分や廃棄となり、収益機会を逃している。"]],
-    syn: [["良質なリユース品を直接確保", "遺品整理現場から家具・家電・骨董品・ブランド品などを直接回収。", "仕入れコストを抑えて利益率UP！"], ["お客様との直接取引が増える", "一般のお客様から遺品整理を直接受注でき、地域密着企業として信頼を獲得。", "新規顧客の獲得につながる！"], ["リユース・買取収益を最大化", "家具・家電・古物・金属などを適正にリユース・資源化。", "利益率の高い事業へ！"], ["周辺サービスへ展開", "不用品回収・生前整理・解体・リフォームなどへ展開可能。", "地域密着サービスへ発展！"]],
-    eff: [["顧客数の増加", "一般家庭からの直接依頼が増加。"], ["利益率向上", "リユース・買取利益で収益性アップ。"], ["回収量増加", "資源物の回収量が増え、安定した仕入れを確保。"], ["地域ブランド向上", "「困ったら相談できる会社」として認知が拡大。"], ["継続収益化", "生前整理・空き家管理・不用品回収などへ展開。"]],
-    flow: ["遺品整理", "選別・\n仕分け", "リユース・\n買取", "資源回収・\n処分"],
-    sum: "遺品整理事業への参入は、リサイクル業者にとって「良質な仕入れの確保」「利益率向上」「一般顧客の獲得」「地域密着サービスの拡大」を実現する新たな成長戦略です。" },
-  { name: "買取業",
-    issues: [["高価値商品の仕入れが安定しない", "商品の仕入れはお客様の持込みや出張買取に依存し、安定した仕入れルートの確保が難しい。"], ["買取できない品物が多い", "買取対象外の商品はお客様自身で処分する必要があり、機会損失につながっている。"], ["一度の売上が小さい", "買取のみでは一案件あたりの売上が限られ、利益拡大に限界がある。"], ["相続世代との接点が少ない", "家の整理や相続相談など、高単価案件につながる入口が少ない。"]],
-    syn: [["高価値商品の仕入れを強化", "遺品整理現場からブランド品・貴金属・時計・骨董品・家具・家電などを直接査定・買取。", "高利益商品の仕入れが増える！"], ["買取できない物も対応可能", "不要品の処分や搬出まで対応できるため、お客様の手間を大幅に軽減。", "「全部お願いできる」が強み！"], ["客単価・利益率アップ", "買取利益だけでなく、遺品整理・搬出・仕分け・不用品回収などの売上を追加。", "一案件あたりの売上が大幅UP！"], ["次のビジネスへ展開", "遺品整理を入口に、生前整理・空き家整理・解体・不動産売却などの紹介が可能。", "継続的な売上につながる！"]],
-    eff: [["高利益商品の仕入れ増加", "ブランド品・貴金属・骨董品などの買取機会が増加。"], ["客単価向上", "買取だけでなく遺品整理費用も受注可能。"], ["顧客満足度向上", "整理から買取まで一括対応で安心感を提供。"], ["地域ブランド向上", "「相続・片付けの相談先」として認知が拡大。"], ["継続収益化", "生前整理・空き家整理・不動産紹介など、継続的な収益を確保。"]],
-    flow: ["遺品整理\n相談", "仕分け・\n査定・買取", "販売", "不用品回収・\n空き家・不動産紹介"],
-    sum: "遺品整理事業への参入は、買取業者にとって「高利益商品の安定仕入れ」「客単価向上」「顧客満足度向上」「継続的な収益機会の創出」を実現する新たな成長戦略です。" },
-];
-function industrySlide(d) {
-  const s = content(S5, "既存ビジネスとのシナジー");
-  subhead(s, d.name, { w: 9 });
-  // 経営課題
-  rect(s, 0.4, 1.55, 2.95, 3.4, WHITE, { line: NAVY });
-  rect(s, 0.4, 1.55, 2.95, 0.42, NAVY);
-  txt(s, "経営課題", 0.4, 1.55, 2.95, 0.42, { size: 14, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
-  d.issues.forEach((it, i) => {
-    const y = 2.03 + i * 0.73;
-    s.addShape(pres.shapes.OVAL, { x: 0.48, y: y + 0.05, w: 0.32, h: 0.32, fill: { color: NAVY }, line: { type: "none" }, objectName: nm("num") });
-    txt(s, String(i + 1), 0.48, y + 0.05, 0.32, 0.32, { size: 11, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
-    txt(s, it[0], 0.86, y, 2.45, 0.32, { size: 10.5, bold: true, color: NAVY, valign: "middle", margin: 0 });
-    txt(s, it[1], 0.86, y + 0.3, 2.45, 0.42, { size: 7.5, color: DARK, margin: 0, ls: 1.1 });
-    if (i < 3) rect(s, 0.5, y + 0.71, 2.75, 0.008, LINE);
-  });
-  // シナジー
-  rect(s, 3.5, 1.55, 6.1, 3.4, WHITE, { line: NAVY });
-  rect(s, 3.5, 1.55, 6.1, 0.42, NAVY);
-  txt(s, "遺品整理事業参入によるシナジー", 3.5, 1.55, 6.1, 0.42, { size: 14, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
-  d.syn.forEach((sy, i) => {
-    const w = 1.42, x = 3.6 + i * (w + 0.08);
-    rect(s, x, 2.05, w, 2.8, LBLUE);
-    s.addShape(pres.shapes.OVAL, { x: x + 0.05, y: 2.12, w: 0.3, h: 0.3, fill: { color: NAVY }, line: { type: "none" }, objectName: nm("num") });
-    txt(s, String(i + 1), x + 0.05, 2.12, 0.3, 0.3, { size: 10, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
-    txt(s, sy[0], x + 0.38, 2.08, w - 0.42, 0.55, { size: 9.5, bold: true, color: NAVY, valign: "middle", margin: 0 });
-    txt(s, sy[1], x + 0.05, 2.7, w - 0.1, 1.6, { size: 8, color: DARK, ls: 1.15 });
-    pill(s, x + 0.04, 4.43, w - 0.08, sy[2]);
-  });
-  // 期待できる効果
-  rect(s, 0.4, 5.05, 5.5, 1.35, WHITE, { line: GREEN });
-  rect(s, 0.5, 4.95, 1.65, 0.3, GREEN);
-  txt(s, "期待できる効果", 0.5, 4.95, 1.65, 0.3, { size: 10.5, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
-  d.eff.forEach((e, i) => {
-    const w = 1.08, x = 0.45 + i * w;
-    txt(s, e[0], x, 5.3, w, 0.3, { size: 8, bold: true, color: GREEN, align: "center", valign: "middle", margin: 0 });
-    txt(s, e[1], x + 0.03, 5.62, w - 0.06, 0.75, { size: 7, color: DARK, align: "center", margin: 0, ls: 1.1 });
-    if (i) rect(s, x, 5.35, 0.008, 0.95, "B9D8C4");
-  });
-  // ビジネスモデルのイメージ
-  rect(s, 6.05, 5.05, 3.55, 1.35, "F4F0FA", { line: PURPLE });
-  rect(s, 6.05, 5.05, 3.55, 0.3, PURPLE);
-  txt(s, "ビジネスモデルのイメージ", 6.05, 5.05, 3.55, 0.3, { size: 10, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
-  d.flow.forEach((f, i) => {
-    const w = 0.8, x = 6.12 + i * 0.87;
-    rect(s, x, 5.45, w, 0.85, WHITE, { line: "CBBDE3" });
-    txt(s, f, x, 5.45, w, 0.85, { size: 7, bold: true, color: PURPLE, align: "center", valign: "middle", margin: 0 });
-  });
-  band(s, d.sum, 6.5, 0.55, { label: "まとめ", size: 9.5 });
-  return s;
-}
-function realEstateExtra() {
-  const s = content(S5, "既存ビジネスとのシナジー", "【要確認】法改正の出典（法務省の通達等）を確認し、出典欄に記載する。");
-  rect(s, 0.4, 1.0, 3.0, 0.4, NAVY);
-  txt(s, "不動産会社の経営者様へ", 0.4, 1.0, 3.0, 0.4, { size: 12, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
-  txt(s, [{ text: "不動産情報を「風上」で掴む方法の一つが、", options: { color: DARK, fontSize: 20, breakLine: true } }, { text: "使えなくなります。", options: { color: RED, fontSize: 30 } }], 0.4, 1.45, 9.2, 1.1, { bold: true, margin: 0 });
-  panel(s, 0.4, 2.7, 2.95, 2.7, "これまで", BLUE);
-  txt(s, "相続登記が申請される\n↓\n法務局の不動産登記受付帳を開示請求\n↓\n対象の所有者へDM・営業アプローチ\n↓\n売却相談を風上で獲得", 0.5, 3.15, 2.75, 2.2, { size: 10, bold: true, color: DARK, align: "center", ls: 1.15 });
-  panel(s, 3.5, 2.7, 3.0, 2.7, "2026年10月1日から", RED);
-  txt(s, "法改正により取得できる情報が変わります\n\n不動産登記受付帳の様式変更により、「登記の目的」「不動産の所在事項」が表記されなくなります。\n\n営業目的での情報取得が事実上不可能になります。", 3.6, 3.15, 2.8, 2.2, { size: 10, bold: true, color: DARK, ls: 1.15 });
-  panel(s, 6.65, 2.7, 2.95, 2.7, "これから", NAVY);
-  txt(s, "・相続登記を起点としたDM送付ができない\n・売却前の所有者へアプローチが難しくなる\n・ポータルサイト・反響広告・既存の人脈の競争がさらに激化", 6.75, 3.15, 2.75, 2.2, { size: 10, bold: true, color: DARK, ls: 1.2 });
-  rect(s, 0.4, 5.55, 9.2, 1.45, NAVY);
-  txt(s, [{ text: "だからこそ今、新しい「風上チャネル」を持つ必要があります！\n", options: { color: WHITE, fontSize: 13 } }, { text: "その新しい入口の一つが「空き家×遺品整理」です。", options: { color: YEL, fontSize: 20 } }], 0.6, 5.55, 8.8, 1.45, { bold: true, align: "center", valign: "middle" });
-  note(s, "出典：（要記入）");
-}
-function realEstateSim() {
-  const s = content(S5, "既存ビジネスとのシナジー");
-  txt(s, "不動産仲介業者が遺品整理事業を始めることで得られるシナジー", 0.4, 0.98, 9.2, 0.5, { size: 17, bold: true, color: NAVY, valign: "middle", margin: 0 });
-  txt(s, "遺品整理を「不動産案件の入口」にし、物件ランクに応じた最適な出口（買取再販・仲介・解体）で収益化。", 0.4, 1.45, 9.2, 0.35, { size: 10.5, bold: true, color: DARK, margin: 0 });
-  steps(s, [["遺品整理の実施", "年間遺品整理案件数\n120件"], ["不動産に関するご相談", "不動産相談発生率 5〜10%\n＝年間6〜12件"], ["物件のランク分け", "状態・立地・築年数で最適な出口に振り分け"], ["シナジーによる収益化", "買取再販・仲介・解体それぞれで収益を確保"]], 1.9, 1.6, { size: 10, hsize: 10.5, hh: 0.45 });
-  table(s, [
-    ["区分", "年間件数", "1件あたり粗利（目安）", "年間粗利", "最適な出口"],
-    ["S・Aランク（立地良・築浅）", "2〜3件", "100万〜300万円", "200万〜900万円", "買取再販"],
-    ["Bランク（標準）", "3〜4件", "約100万円", "300万〜600万円", "売買仲介"],
-    ["Cランク（立地悪・築古）", "2〜3件", "30万〜100万円", "60万〜300万円", "解体"],
-    [{ text: "合計", options: { bold: true } }, { text: "7〜10件", options: { bold: true } }, "―", { text: "約560万〜1,800万円", options: { bold: true, color: RED } }, ""],
-  ], 0.4, 3.7, 9.2, [2.6, 1.2, 2.0, 2.0, 1.4], { size: 10.5, rowH: 0.42 });
-  band(s, "遺品整理からつながる不動産案件を、物件ランクに応じて最適な出口へ。「買取再販・仲介・解体」の連携で、売上アップ・利益拡大を実現しましょう！", 6.0, 0.95, { size: 12.5 });
-  note(s, MODEL_NOTE);
-}
-INDUSTRIES.forEach((d, i) => {
-  industrySlide(d);
-  if (i === 0) { realEstateExtra(); realEstateSim(); }
-});
-
-// =====================================================================
-// セミナーでのご質問について
-// =====================================================================
-const S6 = "セミナーでのご質問について";
-pres.addSection({ title: S6 });
-divider(S6, "セミナーでの\nご質問について", "事後経営相談はここから。最初にヒアリングページ（書き込み版）で前回の内容を確認する。");
-{
-  const s = content(S6, "セミナーでのご質問について", "セミナーのアンケートや前回いただいた質問を記入し、該当ページを開きながら回答する。");
-  tag(s, "いただいた質問");
-  table(s, [["いただいたご質問", "回答", "参照ページ"], ...Array.from({ length: 7 }, () => ["", "", ""])], 0.4, 1.45, 9.2, [3.3, 4.8, 1.1], { size: 12, align: "left", rowH: 0.68 });
-}
-
-// =====================================================================
-// 貴社で進めるには
-// =====================================================================
-const S7 = "貴社で進めるには";
-pres.addSection({ title: S7 });
-divider(S7, "貴社で進めるには");
-{
-  const s = content(S7, "商圏分析", "地域データは自治体の統計・住宅土地統計調査などから取得する。");
-  tag(s, "商圏データ");
-  subhead(s, "貴社商圏の遺品整理市場");
-  const K = [["商圏人口", "○○万人"], ["年間死亡者数", "○,○○○人"], ["65歳以上の単身世帯", "○,○○○世帯"], ["空き家数", "○,○○○戸"]];
-  K.forEach((k, i) => {
-    const x = 0.4 + i * 2.33;
-    rect(s, x, 1.65, 2.15, 1.4, LBLUE, { line: LINE });
-    txt(s, k[0], x, 1.72, 2.15, 0.4, { size: 12, bold: true, color: NAVY, align: "center" });
-    txt(s, k[1], x, 2.15, 2.15, 0.7, { size: 22, bold: true, color: RED, align: "center", valign: "middle" });
-  });
-  ph(s, 0.4, 3.25, 5.0, 3.1, "商圏地図", "対象エリア（市区町村）と、競合業者の位置をプロットした地図を配置");
-  ph(s, 5.6, 3.25, 4.0, 3.1, "競合状況", "商圏内の遺品整理事業者／商圏内の○○業者の動き\n（Googleマップ・HPで調査）");
-  redMsg(s, "貴社商圏の遺品整理市場は、約○億円と試算されます。");
-}
-{
-  const s = content(S7, "商品設計", "料金はパック料金で見せる（内訳をそのまま見せると不安・不信感につながる）。");
-  tag(s, "料金・オプション");
-  const L = [0.4, 4.7];
-  rect(s, 0.4, 1.0, 4.1, 0.5, "5A5F6A");
-  txt(s, "✕ 悪い見せ方（内訳をそのまま見せる）", 0.4, 1.0, 4.1, 0.5, { size: 13, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
-  rect(s, 0.4, 1.5, 4.1, 5.45, WHITE, { line: "5A5F6A" });
-  txt(s, "内訳を細かく見せると、かえって不安や不信感につながります。", 0.5, 1.55, 3.9, 0.4, { size: 9.5, bold: true, color: DARK, align: "center", margin: 0 });
-  table(s, [["【間取り：2LDKの場合の料金例】", ""], ["交通費", "20,000円"], ["作業費", "80,000円"], ["処理費", "60,000円"], ["基本清掃費", "10,000円"], ["運搬費", "30,000円"], [{ text: "合計", options: { bold: true } }, { text: "200,000円", options: { bold: true } }]], 0.55, 2.0, 2.4, [1.2, 1.2], { size: 9.5, rowH: 0.32, head: "5A5F6A" });
-  txt(s, "何にいくらかかるのかよくわからない…\n高いのか安いのか判断できない…\n追加料金が発生しそうで不安…", 3.0, 2.0, 1.45, 2.2, { size: 8, color: DARK, ls: 1.2 });
-  txt(s, "悪い見せ方のデメリット\n✕ 料金の内訳が多く、分かりにくい\n✕ 何が必要で何が不要かわからず不安になる\n✕ 他社比較がしにくい\n✕ 追加料金を疑われ、信頼を損なう", 0.55, 4.45, 3.8, 1.6, { size: 9.5, bold: true, color: DARK, ls: 1.3 });
-  rect(s, 4.7, 1.0, 4.9, 0.5, "C8102E");
-  txt(s, "○ 良い見せ方（パック料金で見せる）", 4.7, 1.0, 4.9, 0.5, { size: 13, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
-  rect(s, 4.7, 1.5, 4.9, 5.45, WHITE, { line: "C8102E" });
-  table(s, [["間取り", "物量の目安", "人数", "料金（税込）"], ["1K", "段ボール20箱程度", "1名", "30,000円〜"], ["1LDK", "段ボール50箱程度", "2〜3名", "80,000円〜"], ["2LDK", "段ボール100箱程度", "3〜4名", "150,000円〜"], ["3LDK", "段ボール150箱程度", "4〜6名", "200,000円〜"], ["4LDK以上", "段ボール200箱以上", "5名〜", "300,000円〜"]], 4.8, 1.6, 4.7, [0.9, 1.75, 0.8, 1.25], { size: 9.5, rowH: 0.33, head: "C8102E" });
-  txt(s, "仕分け・搬出・処分・簡易清掃・運搬まで含んだ安心のパック料金です！", 4.8, 3.65, 4.7, 0.35, { size: 9.5, bold: true, color: RED, align: "center", margin: 0 });
-  txt(s, "さらに安心のオプション（必要な場合のみ追加）", 4.8, 4.05, 4.7, 0.3, { size: 10, bold: true, color: DARK, margin: 0 });
-  const O = [["供養", "15,000円〜"], ["特殊清掃", "30,000円〜"], ["原状回復", "40,000円〜"], ["解体", "100,000円〜"], ["空き家管理", "5,000円〜/月"], ["買取", "お値引き"]];
-  O.forEach((o, i) => {
-    const x = 4.8 + i * 0.79;
-    rect(s, x, 4.4, 0.74, 0.85, "FFF5F5", { line: "E8B4B8" });
-    txt(s, o[0] + "\n" + o[1], x, 4.4, 0.74, 0.85, { size: 7.5, bold: true, color: DARK, align: "center", valign: "middle", margin: 0 });
-  });
-  txt(s, "良い見せ方のメリット\n✓ 総額がすぐにわかり、安心して検討できる\n✓ 他社比較がしやすく、選ばれやすい\n✓ 追加オプションは必要な方だけ提案できる\n✓ 信頼感が高まり、成約率が向上する", 4.85, 5.35, 4.6, 1.55, { size: 9.5, bold: true, color: DARK, ls: 1.25 });
-}
-{
-  const s = content(S7, "ビジネスモデルと売上目標", "1年目は準備期間を含めた月ごとの立ち上がりで示す。兼任スタート案と専任採用案を並べる。");
-  tag(s, "貴社の数値");
-  subhead(s, "貴社版 数値計画");
-  s.addChart(pres.charts.BAR, [{ name: "月間契約件数（目安）", labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"], values: [0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10] }], {
-    x: 0.4, y: 1.6, w: 4.6, h: 3.4, barDir: "col", chartColors: [NAVY], showValue: true, dataLabelPosition: "outEnd", dataLabelFontSize: 9, dataLabelColor: DARK,
-    showTitle: true, title: "1年目の月間契約件数（例）", titleFontSize: 12, titleColor: NAVY, titleFontFace: "+mn-lt",
-    catAxisLabelFontSize: 9, valAxisLabelFontSize: 9, catAxisLabelColor: GRAY, valAxisLabelColor: GRAY, catAxisLabelFontFace: "+mn-lt", valAxisLabelFontFace: "+mn-lt", dataLabelFontFace: "+mn-lt",
-    valGridLine: { color: "E5E7EB", size: 0.5 }, catGridLine: { style: "none" }, showLegend: false, objectName: "ramp_chart",
-  });
-  table(s, [["", "兼任スタート案", "専任採用案"], ["1年目の体制", "既存営業1名が兼任", "専任営業1名を採用"], ["人件費", "本業と按分", "年600万円"], ["1年目売上", "○○万円", "○○万円"], ["2年目売上", "○○万円", "○○万円"], ["3年目売上", "○○万円", "○○万円"]], 5.2, 1.6, 4.4, [1.4, 1.5, 1.5], { size: 10.5, rowH: 0.5 });
-  ph(s, 5.2, 4.75, 4.4, 1.35, "前提条件", "商圏人口・平均単価・契約率・広告予算など");
-  redMsg(s, "準備期間を含めて、無理のない立ち上がりを計画します。");
-  note(s, MODEL_NOTE);
-}
-{
-  const s = content(S7, "ビジネスモデルと売上目標", "仲介手数料は宅建業法の上限（売買価格400万円超：3%＋6万円、税別）で計算。発生率は貴社の実績に合わせて調整する。");
-  tag(s, "発生率・単価");
-  subhead(s, "本業を含めた収益シミュレーション", { w: 6 });
-  table(s, [
-    ["項目（10件受託した場合）", "計算", "粗利"],
-    ["遺品整理", "30万円 × 10件 × 粗利率60%", "180万円"],
-    ["不動産売買（10件中1件）", "売買価格2,000万円の仲介手数料（両手）", "132万円"],
-    ["解体工事（10件中1件）", "工事費150万円 × 粗利率30%", "45万円"],
-    [{ text: "合計", options: { bold: true } }, "", { text: "357万円", options: { bold: true, color: RED } }],
-  ], 0.4, 1.65, 6.2, [2.2, 2.9, 1.1], { size: 11, rowH: 0.55 });
-  rect(s, 6.8, 1.65, 2.8, 2.75, LBLUE, { line: LINE });
-  txt(s, [{ text: "1件あたりの粗利\n", options: { fontSize: 12, color: NAVY } }, { text: "遺品整理のみ　", options: { fontSize: 11, color: DARK } }, { text: "18万円\n", options: { fontSize: 18, color: NAVY } }, { text: "本業を含めると　", options: { fontSize: 11, color: DARK } }, { text: "約36万円", options: { fontSize: 22, color: RED } }], 6.85, 1.7, 2.7, 2.65, { bold: true, align: "center", valign: "middle", ls: 1.3 });
-  txt(s, "※仲介手数料は宅建業法の上限（3%＋6万円、税別）で計算しています。", 0.4, 4.55, 9.2, 0.3, { size: 9.5, color: GRAY });
-  redMsg(s, "本業まで含めると、遺品整理単体の約2倍の利益が残ります。", { y: 5.4 });
-  note(s, MODEL_NOTE);
-}
-
-// ---- 集客について ----
-divider(S7, "集客について", "", true);
-{
-  const s = content(S7, "集客について");
-  subhead(s, "遺品整理事業で業績を上げるための集客3ステップ", { w: 9.2 });
-  const C = [["① 一丁目一番地", "専門店HPと屋号を決める", "・信頼される屋号（ブランド）を決定\n・専門店としてのコンセプトを明確化", "ここがすべてのスタートライン", NAVY], ["② HPの設計・コンテンツ整備", "わかりやすく、頼みやすい\n反響が取れるHPにする", "・わかりやすい動線設計（相談までスムーズ）\n・料金・サービスを明確に掲載\n・事例・お客様の声で信頼性を強化\n・スマホ最適化で見やすく使いやすく", "反響が取れるHPを構築", BLUE], ["③ 販促活動で集客を最大化", "多様なチャネルで\n幅広く集客し、相談件数を最大化", "・チラシ・ポスティング\n・WEB広告（検索・ディスプレイ）\n・SNS広告\n・地域情報サイト\n・紹介・提携先からのご紹介\n・会員・既存顧客へのDM", "集客の最大化を実現", "1E7A8A"]];
-  C.forEach((c, i) => {
-    const x = 0.4 + i * 3.13, w = 2.94;
-    rect(s, x, 1.65, w, 5.3, WHITE, { line: c[4], lw: 1.5 });
-    rect(s, x, 1.65, w, 0.55, c[4]);
-    txt(s, c[0], x, 1.65, w, 0.55, { size: 12.5, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
-    txt(s, c[1], x + 0.1, 2.3, w - 0.2, 0.8, { size: 12.5, bold: true, color: DARK, align: "center", valign: "middle" });
-    photo(s, x + 0.2, 3.15, w - 0.4, 1.2, "イメージ");
-    txt(s, c[2], x + 0.12, 4.45, w - 0.24, 1.75, { size: 9.5, bold: true, color: DARK, ls: 1.25 });
-    rect(s, x + 0.15, 6.3, w - 0.3, 0.5, i === 0 ? "FBEFD5" : LBLUE);
-    txt(s, c[3], x + 0.15, 6.3, w - 0.3, 0.5, { size: 11, bold: true, color: NAVY, align: "center", valign: "middle", margin: 0 });
-    if (i < 2) arrowR(s, x + w + 0.02, 3.9, 0.17, 0.4, NAVY);
-  });
-  s.addShape(pres.shapes.RECTANGLE, { x: 0.36, y: 1.61, w: 3.02, h: 5.38, fill: { color: WHITE, transparency: 100 }, line: { color: RED, width: 2.5 }, objectName: "red_frame" });
-}
-{
-  const s = content(S7, "集客について");
-  rect(s, 0.4, 1.0, 9.2, 4.95, NAVY);
-  banner(s, "ホームページ完成後の集客戦略", 1.1, { color: WHITE, size: 22 });
-  txt(s, "5つの集客施策で、安定した反響を継続的に獲得する", 0.4, 1.65, 9.2, 0.4, { size: 13, bold: true, color: "F6C700", align: "center", margin: 0 });
-  const F = [["01", "SEO対策", "検索で見つけてもらう", "お役立ち記事の作成\n地域ページの充実\n事例・FAQの掲載", "長期的に反響が増える\n資産型集客"], ["02", "MEO対策", "地域検索で選ばれる", "Googleビジネス最適化\n写真・投稿の定期更新\n口コミの獲得", "地域密着で信頼される\n集客力アップ"], ["03", "Web広告", "今すぐ客を集める", "Google広告・SNS広告\n地域・年齢を細かく設定\n短期間で問い合わせ増加", "即効性が高く\n短期間で反響を獲得"], ["04", "チラシ・販促", "地域に認知してもらう", "折込チラシ・ポスティング\nDM・冊子・チェックリスト\n相談会・セミナー開催", "潜在層にアプローチし\n認知と信頼を拡大"], ["05", "アライアンス提携", "紹介で安定的に獲得する", "葬儀会社・不動産会社\nケアマネ・士業・便利屋など\n紹介ネットワークを構築", "広告費に依存せず\n安定した紹介を獲得"]];
-  F.forEach((f, i) => {
-    const x = 0.55 + i * 1.8, w = 1.7;
-    rect(s, x, 2.15, w, 3.65, WHITE, { round: true, r: 0.05 });
-    s.addShape(pres.shapes.OVAL, { x: x + w / 2 - 0.25, y: 2.0, w: 0.5, h: 0.4, fill: { color: NAVY }, line: { color: WHITE, width: 1 }, objectName: nm("num") });
-    txt(s, f[0], x + w / 2 - 0.25, 2.0, 0.5, 0.4, { size: 11, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
-    txt(s, f[1], x, 2.45, w, 0.45, { size: 14, bold: true, color: NAVY, align: "center", valign: "middle", margin: 0 });
-    txt(s, f[2], x, 2.88, w, 0.3, { size: 8.5, bold: true, color: GOLD, align: "center", margin: 0 });
-    txt(s, f[3], x + 0.08, 3.3, w - 0.16, 1.3, { size: 8.5, bold: true, color: DARK, ls: 1.35 });
-    rect(s, x + 0.08, 4.85, w - 0.16, 0.8, NAVY);
-    txt(s, f[4], x + 0.08, 4.85, w - 0.16, 0.8, { size: 8.5, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
-  });
-  redMsg(s, "遺品整理専門店として、５つの施策で効率的に集客を行う", { y: 6.2, size: 21 });
-}
-{
-  const s = content(S7, "紙販促について");
-  subhead(s, "紙販促");
-  photo(s, 0.4, 1.6, 4.3, 5.3, "チラシ（表面）の画像");
-  txt(s, "1.「遺品整理」を大きく打ち出す\n一目で何のサービスかわかるよう、最も目立つ位置に大きく掲載します。\n\n2.「誰のためのサービスか」を明確にする\n実家の片付けや相続で悩む方など、対象者を具体的に伝えます。\n\n3.「何を解決できるか」を明確にする\n遺品整理・空き家整理・買取など対応内容を分かりやすく示します。\n\n4.「保存版」を強調する\n今すぐ必要でなくても保管してもらえるよう促します。\n\n5.「実績・安心材料」を掲載する\n口コミ・実績・資格などで信頼感を高めます。", 4.95, 1.6, 4.65, 5.3, { size: 12, bold: true, color: DARK, ls: 1.15 });
-}
-{
-  const s = content(S7, "紙販促について");
-  subhead(s, "紙販促");
-  photo(s, 0.4, 1.6, 4.3, 5.3, "チラシ（裏面）の画像");
-  txt(s, "1. 対応サービスを記載する\n整理後の悩みまでワンストップで対応できることを伝えます。\n\n2. 料金プランを掲載する\n費用の目安を示し、問い合わせの不安を軽減します。\n\n3. 料金をわかりやすくする\n間取り別・物量別で比較しやすく掲載します。\n\n4. 追加料金の考え方を明記する\n料金トラブルへの不安を解消します。\n\n5. 作業量の目安を掲載する\nどのプランが適切か判断しやすくします。", 4.95, 1.6, 4.65, 5.3, { size: 12, bold: true, color: DARK, ls: 1.15 });
-}
-{
-  const s = content(S7, "アライアンス提携について");
-  subhead(s, "アライアンス提携");
-  txt(s, [{ text: "アライアンス提携とは、地域のさまざまな専門企業や団体と", options: { color: DARK } }, { text: "信頼関係", options: { color: RED } }, { text: "を築き、\nお互いにお客様を紹介し合うことで、", options: { color: DARK } }, { text: "継続的に高単価・相続関連案件を獲得する仕組み", options: { color: RED } }, { text: "です。", options: { color: DARK } }], 0.4, 1.5, 9.2, 0.65, { size: 12.5, bold: true, margin: 0 });
-  const B = [["ポイント", "地域の相続・空き家案件の発生源を押さえ、継続的に高単価案件を獲得する仕組みです。"], ["具体的にすること", "・不動産会社　・司法書士　・行政書士　・税理士\n・葬儀社　・ケアマネジャー　・地域包括支援センター\n・解体会社　・リフォーム会社　・ガス会社　・役所 など\nと提携する。"], ["意味合い", "単なる紹介獲得ではなく、地域の相続・空き家案件が最初に集まる会社（地域の案件ハブ）になることが目的です。"]];
-  B.forEach((b, i) => {
-    const y = 2.3 + i * 1.5;
-    rect(s, 0.4, y, 1.7, 0.36, NAVY, { round: true, r: 0.15 });
-    txt(s, b[0], 0.4, y, 1.7, 0.36, { size: 11, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
-    rect(s, 0.4, y + 0.4, 4.2, 1.0, WHITE, { line: NAVY });
-    txt(s, b[1], 0.5, y + 0.42, 4.0, 0.95, { size: 9.5, bold: true, color: DARK, valign: "middle", ls: 1.2 });
-  });
-  s.addShape(pres.shapes.OVAL, { x: 4.85, y: 2.2, w: 4.75, h: 4.0, fill: { color: "FFF8E8" }, line: { type: "none" }, objectName: "net_bg" });
-  rect(s, 6.35, 3.75, 1.75, 0.9, NAVY, { round: true });
-  txt(s, "当社\n（遺品整理業）", 6.35, 3.75, 1.75, 0.9, { size: 11, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
-  const N = [["不動産会社", 6.55, 2.3], ["葬儀社", 8.3, 2.85], ["解体会社", 8.4, 4.0], ["リフォーム会社", 8.1, 5.15], ["役所", 6.55, 5.55], ["ケアマネジャー", 4.95, 5.15], ["税理士", 4.9, 4.0], ["司法書士\n行政書士", 5.0, 2.85]];
-  N.forEach(([t, x, y]) => {
-    rect(s, x, y, 1.35, 0.55, WHITE, { line: LINE, shadow: true });
-    txt(s, t, x, y, 1.35, 0.55, { size: 9, bold: true, color: DARK, align: "center", valign: "middle", margin: 0 });
-  });
-  band(s, "期待できる効果：「高単価案件の獲得」「相見積もりを回避」「案件の継続的な流入」「相互送客による関係強化」", 6.4, 0.6, { size: 11 });
-}
-{
-  const s = content(S7, "アライアンス提携について");
-  subhead(s, "アライアンス提携");
-  txt(s, [{ text: "初回訪問の目的は「ご挨拶と情報提供」。", options: { color: DARK } }, { text: "相手に安心感を与え、資料を置かせてもらう", options: { color: RED } }, { text: "ことをゴールにします。", options: { color: DARK } }], 0.4, 1.5, 9.2, 0.4, { size: 12.5, bold: true, margin: 0 });
-  panel(s, 0.4, 2.0, 5.3, 4.95, "基本トークの流れ（5ステップ）", NAVY);
-  const T = [["挨拶・自己紹介", "「はじめまして、○○（会社名）の□□と申します。本日はお時間をいただき、ありがとうございます。」"], ["訪問の目的を伝える", "「本日は営業のご案内ではなく、御社のお役に立てるかもしれない情報をお届けに伺いました。」"], ["相手のメリットを伝える", "「遺品整理や生前整理でお困りのお客様がいらっしゃった際に、御社がお役に立てると思っております。」"], ["資料のお渡し", "「サービス内容や事例をまとめた資料です。ご参考になれば幸いです。」"], ["今後のつながりをつくる", "「何かお困りのお客様がいらっしゃいましたら、いつでもご相談ください。」"]];
-  T.forEach((t, i) => {
-    const y = 2.5 + i * 0.88;
-    s.addShape(pres.shapes.OVAL, { x: 0.5, y: y + 0.12, w: 0.38, h: 0.38, fill: { color: NAVY }, line: { type: "none" }, objectName: nm("num") });
-    txt(s, String(i + 1), 0.5, y + 0.12, 0.38, 0.38, { size: 12, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
-    rect(s, 0.95, y + 0.08, 1.6, 0.48, LBLUE);
-    txt(s, t[0], 0.95, y + 0.08, 1.6, 0.48, { size: 9.5, bold: true, color: NAVY, align: "center", valign: "middle", margin: 0 });
-    txt(s, t[1], 2.6, y, 3.05, 0.75, { size: 8, color: DARK, valign: "middle", ls: 1.15 });
-  });
-  panel(s, 5.85, 2.0, 3.75, 2.75, "トークのポイント", NAVY);
-  txt(s, "■ 売り込まない\n　まずは「信頼関係の土台づくり」を最優先に。\n■ 相手の立場で話す\n　「御社のお役に立つかもしれない」というスタンスで。\n■ 資料を置くことをゴールにする\n■ 次回のきっかけをつくる", 5.95, 2.48, 3.55, 2.2, { size: 9.5, bold: true, color: DARK, ls: 1.2 });
-  panel(s, 5.85, 4.9, 3.75, 2.05, "初回訪問のゴール", NAVY);
-  steps(s, [["資料", "置かせてもらう"], ["安心感", "持ってもらう"], ["関係", "相談できる第一歩"]], 5.4, 1.4, { x: 5.95, w: 3.55, num: false, size: 8.5, hsize: 10, hh: 0.42 });
-}
-
-// ---- 営業について ----
-divider(S7, "営業について", "", true);
-{
-  const s = content(S7, "営業について");
-  banner(s, "遺品整理事業 営業KPI", 0.98, { lines: false, size: 26, sub: "契約率80%を基準にした3年間の営業目標" });
-  table(s, [
-    ["", "1年目", "2年目", "3年目"],
-    ["営業人員", "1名", "2名", "3名"],
-    ["売上", "¥36,000,000", "¥54,000,000", "¥100,000,000"],
-    ["単価", "¥300,000", "¥300,000", "¥300,000"],
-    ["年間契約件数", "120件", "180件", "333件"],
-    ["月間契約件数", "10件", "15件", "28件"],
-    ["月間集客件数", "12.5件", "18.75件", "35件"],
-    ["一人当たり契約件数（月）", "10件", "7.5件", "約9.3件"],
-  ], 0.8, 1.95, 8.4, [2.7, 1.9, 1.9, 1.9], { size: 13, rowH: 0.5, firstColFill: true });
-  band(s, "ポイント：「契約率80%」を基準に設定　／　売上は3年で約2.8倍　／　「一人当たり生産性」を最大化", 6.2, 0.6, { size: 12 });
-  note(s, "※契約率は全期間80%を基準として算出しています。");
-}
-{
-  const s = content(S7, "営業について");
-  numHead(s, "01", "遺品整理営業の全体フロー", "遺品整理営業は「グリーフケア×課題解決提案×スピード対応」で信頼を獲得し、契約・高粗利化につなげます。");
-  steps(s, [["問い合わせ", ""], ["現地確認", ""], ["見積提出・契約", ""], ["作業実施", ""]], 1.95, 0.5, { x: 0.4, w: 6.1, num: false, hh: 0.5, size: 9, hsize: 11, colors: [NAVY, NAVY, NAVY, NAVY] });
-  rect(s, 0.4, 2.6, 6.1, 4.35, WHITE, { line: NAVY });
-  rect(s, 1.5, 2.6, 3.9, 0.38, NAVY);
-  txt(s, "案件の規模で営業方法を使い分ける", 1.5, 2.6, 3.9, 0.38, { size: 11.5, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
-  const A = [["30万円未満の案件", "オンライン中心で効率化", ["0次接客（電話ヒアリング）", "アンケート送付（SMS・LINE）", "写真提出（お客様）", "オンライン見積提出", "電話クロージング・契約", "作業実施"], "・現地訪問を省略し、コスト削減→価格に反映\n・即日見積・即対応で契約率アップ", ORANGE], ["30万円以上の案件", "現地訪問中心で信頼と提案力を強化", ["0次接客（電話ヒアリング）", "事前情報収集・日程調整", "現地確認（訪問）", "見積提示・追加提案", "即決クロージング・契約", "作業実施"], "・信頼構築と正確な見積で安心感を提供\n・追加提案で単価アップを実現", BLUE]];
-  A.forEach(([h, sub, st, pt, c], i) => {
-    const x = 0.5 + i * 3.0, w = 2.9;
-    rect(s, x + 0.3, 3.08, w - 0.6, 0.3, c, { round: true, r: 0.15 });
-    txt(s, h, x + 0.3, 3.08, w - 0.6, 0.3, { size: 10, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
-    txt(s, sub, x, 3.4, w, 0.3, { size: 10.5, bold: true, color: c, align: "center", margin: 0 });
-    st.forEach((t, k) => {
-      rect(s, x + 0.05, 3.75 + k * 0.38, w - 0.1, 0.34, i ? "EEF3FB" : "FFF4EA");
-      txt(s, `STEP${k + 1}　${t}`, x + 0.12, 3.75 + k * 0.38, w - 0.2, 0.34, { size: 8.5, bold: true, color: DARK, valign: "middle", margin: 0 });
-    });
-    txt(s, pt, x + 0.05, 6.1, w - 0.1, 0.8, { size: 8.5, bold: true, color: DARK, ls: 1.2 });
-  });
-  panel(s, 6.65, 1.95, 2.95, 5.0, "3つの重要ポイント", NAVY);
-  txt(s, [{ text: "1 スピード対応\n", options: { color: ORANGE, fontSize: 13 } }, { text: "問い合わせ後5分以内の架電が理想。スピードが信頼に直結します。\n\n", options: { color: DARK } }, { text: "2 ヒアリング力\n", options: { color: ORANGE, fontSize: 13 } }, { text: "お客様の状況・課題・希望を正確に把握し、最適な提案につなげます。\n\n", options: { color: DARK } }, { text: "3 信頼構築と提案力\n", options: { color: ORANGE, fontSize: 13 } }, { text: "遺族の気持ちに寄り添い、課題解決のプロとして信頼を獲得します。", options: { color: DARK } }], 6.75, 2.45, 2.75, 4.4, { size: 9.5, bold: true, ls: 1.15 });
-}
-{
-  const s = content(S7, "営業について");
-  numHead(s, "02", "0次接客の重要性", "お問い合わせ後、初めてお客様とお会いする前に行う電話でのヒアリングが、その後の成約を大きく左右します。");
-  txt(s, [{ text: "お客様は", options: { color: DARK } }, { text: "電話の印象", options: { color: RED } }, { text: "で「この会社に任せたいか」を判断しています。", options: { color: DARK } }], 0.4, 1.9, 9.2, 0.45, { size: 15, bold: true, align: "center", valign: "middle", margin: 0 });
-  panel(s, 0.4, 2.45, 2.9, 4.5, "お客様が知りたいこと", ORANGE);
-  txt(s, [{ text: "この会社は信頼できる？\n", options: { color: ORANGE, fontSize: 12 } }, { text: "親身に話を聞いてくれるか、丁寧に対応してくれるかを見ています。\n\n", options: { color: DARK } }, { text: "高くない？\n", options: { color: ORANGE, fontSize: 12 } }, { text: "料金の目安や追加料金の有無など、費用に関する不安を解消したいと思っています。\n\n", options: { color: DARK } }, { text: "対応は丁寧？\n", options: { color: ORANGE, fontSize: 12 } }, { text: "不安な気持ちに寄り添ってくれる、安心して相談できる雰囲気を重視しています。", options: { color: DARK } }], 0.5, 2.92, 2.7, 3.95, { size: 9.5, bold: true, ls: 1.15 });
-  panel(s, 3.45, 2.45, 2.9, 4.5, "0次接客の3つの目的", NAVY);
-  txt(s, "① 要望の正確な把握\n現状やご要望を正確に把握し、最適な提案につなげる。\n\n② 単価アップにつながる情報収集\nオプションや付帯サービスの提案材料を収集する。\n\n③ 信頼の獲得\n「この会社なら安心して任せられる」と思ってもらう。", 3.55, 2.92, 2.7, 3.95, { size: 9.5, bold: true, color: DARK, ls: 1.15 });
-  panel(s, 6.5, 2.45, 3.1, 4.5, "営業側が確認すること", NAVY);
-  txt(s, "■ 基本情報\nご入電者様と故人様の関係／決定権者（キーマン）／ご住所／作業希望時期／予算感／他社への相談状況\n■ 現場の状況\n間取り・階数／エレベーター／駐車スペース／物量／重量物\n■ お客様の個別事情\n捜索物／買取希望／供養や特殊清掃の希望／立会い予定\n■ 遺品整理後のご予定\n売却／解体／リフォーム／賃貸の退去", 6.6, 2.92, 2.9, 3.95, { size: 8.5, bold: true, color: DARK, ls: 1.15 });
-}
-{
-  const s = content(S7, "営業について");
-  numHead(s, "03", "契約率を上げるクロージング", "見積説明とクロージングの質が契約率を左右します。お客様の不安を解消し、安心してご契約いただきましょう。");
-  panel(s, 0.4, 1.95, 3.0, 4.0, "クロージングの基本ステップ", NAVY);
-  txt(s, "① 見積内容のご説明\n明確で分かりやすく説明し、不安や疑問を解消する\n\n② 安心のご提供\n追加料金なし・作業品質・保証などをお伝えして安心感を醸成\n\n③ 日程のご提案\n具体的な日程を提示し、スピード感を持ってご案内\n\n④ 契約のご提案・締結\n契約方法を案内し、スムーズにご契約へ", 0.5, 2.42, 2.8, 3.5, { size: 9.5, bold: true, color: DARK, ls: 1.15 });
-  panel(s, 3.55, 1.95, 6.05, 4.0, "よくあるお客様の不安と解消トーク例", NAVY);
-  table(s, [["お客様の不安", "解消トーク例"], ["他社と比較したい", "お気持ちはよく分かります。ただ、ご希望の日程が埋まってしまう可能性がございますので、まずは日程だけでも仮押さえさせていただきますと安心です。"], ["金額が高いかも…", "ご予算に合わせて最適なプランをご提案しております。また、買取や供養などを活用して費用を抑えることも可能です。"], ["追加料金が不安", "お見積りはすべてコミコミ価格です。当日お荷物が増えない限り、追加料金は一切かかりません。"], ["作業スタッフが信頼できるか不安", "当社は自社スタッフが対応いたします。礼儀・マナー研修を徹底しておりますので、安心してお任せいただけます。"]], 3.65, 2.45, 5.85, [1.7, 4.15], { size: 8.5, align: "left", rowH: 0.68 });
-  rect(s, 0.4, 6.05, 9.2, 0.9, "FFF4EA", { line: ORANGE });
-  txt(s, [{ text: "契約を後押しする3つのキーフレーズ　", options: { color: ORANGE, fontSize: 11 } }, { text: "①共感「そのお気持ち、よく分かります。」　②安心「追加料金は一切ありません。」　③希少性「ご希望の日程は埋まりやすいので、早めのご決断がおすすめです。」", options: { color: DARK, fontSize: 9.5 } }], 0.5, 6.05, 9.0, 0.9, { bold: true, valign: "middle" });
-}
-
-// ---- 見積出しについて ----
-divider(S7, "見積出しについて", "", true);
-{
-  const s = content(S7, "見積作成について");
-  const C = [["ダンボールのサイズと立米換算", "140ダンボールとは？", "3辺の合計が140cmのダンボールです。", "10箱で約1立米（1㎥）", "140ダンボール10箱分の容量がおよそ1立米になります。"], ["2トントラックの積載目安", "最大積載量は約10〜12立米", "ダンボールに換算すると、約100〜120箱分を積むことができます。", "10〜12立米／100〜120箱分", "※トラックのサイズや荷物の形状により、積載量は前後します。"], ["作業量の目安（1人あたり）", "1人あたり1.2立米／日", "荷物の種類や現場の状況により、多少前後します。", "1.2立米／日", "※荷物の種類・搬出経路・作業環境により変動します。"]];
-  C.forEach((c, i) => {
-    const x = 0.4 + i * 3.13, w = 2.94;
-    rect(s, x, 1.0, w, 0.5, PURPLE);
-    txt(s, c[0], x, 1.0, w, 0.5, { size: 12, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
-    rect(s, x, 1.5, w, 5.45, WHITE, { line: "CBBDE3" });
-    txt(s, c[1], x + 0.1, 1.6, w - 0.2, 0.45, { size: 13, bold: true, color: DARK, font: MINCHO });
-    txt(s, c[2], x + 0.1, 2.05, w - 0.2, 0.7, { size: 10, color: DARK, ls: 1.2 });
-    photo(s, x + 0.15, 2.8, w - 0.3, 1.8, "写真");
-    rect(s, x + 0.15, 4.75, w - 0.3, 1.25, "F4F0FA");
-    txt(s, c[3], x + 0.15, 4.75, w - 0.3, 1.25, { size: 16, bold: true, color: PURPLE, align: "center", valign: "middle", font: MINCHO });
-    txt(s, c[4], x + 0.1, 6.05, w - 0.2, 0.8, { size: 9, color: DARK, ls: 1.2 });
-  });
-}
-{
-  const s = content(S7, "見積作成について", "立米単価は紹介案件の場合 7,000〜10,000円が目安。");
-  photo(s, 0.4, 1.0, 5.0, 5.9, "遺品整理 現地調査・見積シート（段ボール換算方式）");
-  txt(s, "140サイズ段ボール\n＝0.605m × 0.435m × 0.345m\n≒ 約0.09㎥\n≒ 0.1㎥\n\n1リューベ＝140サイズ10箱\n\n1リューベ単価＝12,000〜15,000円\n※紹介等の場合は7,000〜10,000円", 5.6, 1.1, 4.0, 3.6, { size: 15, color: DARK, ls: 1.2 });
-  txt(s, "段ボール何箱分に該当するか確認。\n箱単価を決めることで、見積金額を算出。", 5.6, 5.0, 4.0, 1.4, { size: 18, bold: true, color: RED, valign: "middle" });
-}
-
-// ---- 現場について ----
-divider(S7, "現場について", "", true);
-{
-  const s = content(S7, "営業の現場担当について");
-  txt(s, "遺品整理事業　3ヶ年の人員体制イメージ", 0.4, 0.98, 9.2, 0.55, { size: 24, bold: true, color: NAVY, valign: "middle", margin: 0 });
-  txt(s, "正社員は営業・管理機能を担い、現場作業は派遣・アルバイトを中心に運営", 0.4, 1.5, 9.2, 0.38, { size: 13, bold: true, color: DARK, margin: 0 });
-  const Y = [["1年目｜立上げ期", "基盤をつくる\nまずは一歩、着実に", "正社員営業 1名", "問い合わせ対応／現地見積／契約／現場作業／協力スタッフへの指示", "派遣社員・アルバイト中心。正社員も大型家具の搬出など現場に入る", "まずは営業＋現場の両方を経験"], ["2年目｜拡大期", "案件を増やし\n仕組みを強化", "正社員営業 2名", "営業・見積対応を分担しながら、現場管理・スタッフ指示を強化", "派遣社員・アルバイトを活用。正社員は「作業員」から「現場責任者」へ移行", "案件数の拡大と管理体制の強化"], ["3年目｜組織化期", "安定した成長と\n持続できる組織へ", "正社員営業 3名", "営業／見積／案件管理／現場監督／スタッフ育成・品質管理", "実作業は派遣社員・アルバイト中心。正社員は現場監督・管理業務が中心", "営業・管理機能を中心とした組織へ"]];
-  Y.forEach((y, i) => {
-    const x = 0.4 + i * 3.13, w = 2.94;
-    rect(s, x, 2.0, w, 4.0, "F5F7FA", { line: LINE });
-    rect(s, x, 2.0, w, 0.6, NAVY);
-    txt(s, y[0], x + 0.1, 2.0, 1.75, 0.6, { size: 13, bold: true, color: WHITE, valign: "middle", margin: 0 });
-    txt(s, y[1], x + 1.8, 2.0, w - 1.85, 0.6, { size: 7.5, bold: true, color: WHITE, valign: "middle", margin: 0 });
-    txt(s, "正社員体制", x + 0.1, 2.68, w - 0.2, 0.3, { size: 10.5, bold: true, color: NAVY, margin: 0 });
-    rect(s, x + 0.15, 2.98, w - 0.3, 0.42, "DCE6F5");
-    txt(s, y[2], x + 0.15, 2.98, w - 0.3, 0.42, { size: 13, bold: true, color: NAVY, align: "center", valign: "middle", margin: 0 });
-    txt(s, "主な役割", x + 0.1, 3.5, w - 0.2, 0.3, { size: 10.5, bold: true, color: NAVY, margin: 0 });
-    txt(s, y[3], x + 0.1, 3.8, w - 0.2, 0.75, { size: 9, bold: true, color: DARK, ls: 1.15 });
-    txt(s, "現場体制", x + 0.1, 4.55, w - 0.2, 0.3, { size: 10.5, bold: true, color: NAVY, margin: 0 });
-    txt(s, y[4], x + 0.1, 4.85, w - 0.2, 0.75, { size: 9, bold: true, color: DARK, ls: 1.15 });
-    rect(s, x + 0.1, 5.55, w - 0.2, 0.38, "E3ECF8");
-    txt(s, y[5], x + 0.1, 5.55, w - 0.2, 0.38, { size: 9.5, bold: true, color: NAVY, align: "center", valign: "middle", margin: 0 });
-  });
-  txt(s, "役割の進化", 0.4, 6.1, 1.5, 0.3, { size: 11, bold: true, color: DARK, margin: 0 });
-  steps(s, [["営業＋現場作業", ""], ["営業＋現場管理", ""], ["営業・案件管理＋現場監督", ""]], 6.45, 0.48, { num: false, hh: 0.48, hsize: 12, colors: ["7FA3D6", "4F7FC0", NAVY] });
-}
-{
-  const s = content(S7, "現場について");
-  subhead(s, "遺品整理の絶対遵守3大ルール");
-  txt(s, "故人様とご遺族のお気持ちを第一に考え、後悔のない遺品整理を行うために、必ず守るルールです。", 0.4, 1.5, 9.2, 0.4, { size: 12.5, bold: true, color: DARK, margin: 0 });
-  const R3 = [["捨てる前に必ず確認", "現金・通帳・カード・印鑑・権利書・写真・アルバム・手紙は必ず確認し、誤って処分しない。"], ["迷ったら捨てない\n→確認保留ケースへ", "判断に迷うものはその場で処分せず「確認保留ケース」で保管。後からご遺族様と一緒に確認する。"], ["全品手作業確認", "ポケット・封筒・引き出し・箱の中まで、すべての品を一つひとつ手作業で確認する。"]];
-  R3.forEach((r, i) => {
-    const x = 0.4 + i * 3.13, w = 2.94;
-    rect(s, x, 2.05, w, 3.0, WHITE, { line: RED, lw: 1.5 });
-    rect(s, x, 2.05, w, 0.85, RED);
-    txt(s, `ルール${i + 1}\n` + r[0].split("\n")[0], x, 2.05, w, 0.85, { size: 13, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
-    txt(s, r[1], x + 0.15, 3.0, w - 0.3, 1.95, { size: 11, bold: true, color: DARK, ls: 1.3 });
-  });
-  table(s, [["作業前", "作業中", "引き渡し", "完了報告"], ["近隣挨拶・養生・作業前の写真撮影", "時計回りの仕分け・貴重品の記録と保管", "全室をご一緒に確認・貴重品をお渡し", "写真付きの作業完了報告書にご署名"]], 0.4, 5.25, 9.2, [2.3, 2.3, 2.3, 2.3], { size: 10.5, rowH: 0.5 });
-  redMsg(s, "3大ルールの徹底が、ご遺族の安心と信頼につながります。", { y: 6.4 });
-}
-
-// =====================================================================
-// 成功事例
-// =====================================================================
-const S8C = "成功事例";
-pres.addSection({ title: S8C });
-divider(S8C, "成功事例企業が続出！", "事例企業名・数値は掲載許可を確認してから使う。");
-function caseSlide(name, area, r1, r2, right) {
-  const s = content(S8C, "成功事例紹介", "【要確認】掲載許可。");
-  tag(s, "HP画像");
-  subhead(s, `${name}（${area}）`, { w: 6 });
-  photo(s, 0.4, 1.6, 7.5, 2.9, "HPのファーストビュー画像");
-  txt(s, [{ text: "立上げ2年目", options: { color: RED, fontSize: 24 } }, { text: "で\n遺品整理事業\n", options: { color: DARK, fontSize: 16 } }, { text: r1, options: { color: RED, fontSize: 20 } }, { text: "\nを実現！", options: { color: DARK, fontSize: 16 } }], 0.4, 4.7, 5.0, 2.2, { bold: true, valign: "middle", ls: 1.05 });
-  s.addShape(pres.shapes.LINE, { x: 5.5, y: 4.8, w: 0, h: 1.9, line: { color: DARK, width: 2.5 }, objectName: nm("vline") });
-  txt(s, right, 5.7, 4.7, 3.9, 2.2, { size: 16, color: DARK, valign: "middle", ls: 1.2 });
-  return s;
-}
-caseSlide("株式会社 蒼炎様", "東京都多摩市", "売上8000万円・営業利益：3000万円", "", "参入2年で初期投資を回収し、\n“不用品買取”\n“空き家買取”“買取”など\n事業の裾野を拡大しながら\n成長中の会社。\n販促費用50万円/月\n反響数：40件/月");
-caseSlide("Mevius Moving Works様", "大阪府大阪市", "売上6000万円・営業利益率30%超", "", "不動産会社からの紹介を中心\nに集客を行い、成約率80%超\nを実現！引越し事業と連携を\n図り、遺品整理事業を強化！");
-
-// =====================================================================
-// 船井総研がご提供できること
-// =====================================================================
-const S9 = "船井総研がご提供できること";
-pres.addSection({ title: S9 });
-{
-  const s = pres.addSlide({ masterName: "BLANK", sectionTitle: S9 });
-  rect(s, 0, 0.3, 10, 0.08, NAVY);
-  photo(s, 0, 0.38, 10, 3.3, "オフィス写真");
-  rect(s, 0, 3.68, 10, 0.08, NAVY);
-  txt(s, "船井総研がご提供できること", 0.9, 4.6, 7, 0.8, { size: 30, color: DARK, valign: "middle" });
-  for (let r = 0; r < 4; r++) for (let i = 0; i < 12; i++) {
-    const d = 0.07 - i * 0.004;
-    s.addShape(pres.shapes.OVAL, { x: 7.75 + i * 0.13, y: 4.78 + r * 0.13, w: d, h: d, fill: { color: NAVY, transparency: i * 6 }, line: { type: "none" }, objectName: nm("dot") });
   }
-  s.addShape(pres.shapes.OVAL, { x: 7.5, y: 6.2, w: 6, h: 3, fill: { color: NAVY }, line: { type: "none" }, objectName: "wave9" });
-  s.addNotes("事後経営相談の最後に使う。");
-}
-{
-  const s = content(S9, "船井総研がご提供できること");
-  banner(s, "貴社の課題に合わせて、3つのサービスでトータルにご支援します。", 1.15, { size: 15 });
-  const SV = [["01", "遺品整理ホームページ\nディレクション支援", "WEBSITE SUPPORT", "集客・成約につながるホームページの企画・制作を、専門チームがトータルでサポートします。", NAVY], ["02", "遺品整理ツール＆\nマニュアル導入支援", "TOOL & MANUAL", "業務マニュアル・各種チェックリスト・帳票など、現場でそのまま使えるツールの導入を支援します。", "1F4E3D"], ["03", "遺品整理事業立上げ\n月次コンサルティング", "CONSULTING", "事業の立上げから軌道化・成長まで、経験豊富なコンサルタントが月次で継続的にご支援します。", "8A3B12"]];
-  SV.forEach((v, i) => {
-    const x = 0.4 + i * 3.13, w = 2.94;
-    rect(s, x, 1.85, w, 1.05, v[4]);
-    txt(s, v[0], x + 0.08, 1.85, 0.75, 1.05, { size: 26, color: WHITE, valign: "middle", margin: 0 });
-    txt(s, v[1], x + 0.8, 1.88, w - 0.85, 0.8, { size: 12, bold: true, color: WHITE, valign: "middle", margin: 0 });
-    txt(s, v[2], x + 0.8, 2.62, w - 0.9, 0.25, { size: 7, color: WHITE, align: "right", margin: 0 });
-    photo(s, x, 2.9, w, 2.4, "イメージ写真");
-    rect(s, x, 5.3, w, 1.0, "EEF1F6");
-    txt(s, v[3], x + 0.1, 5.3, w - 0.2, 1.0, { size: 10, bold: true, color: DARK, align: "center", valign: "middle" });
-  });
-  band(s, "ともに、地域に必要とされる遺品整理事業を。", 6.45, 0.55, { size: 15 });
-}
-{
-  const s = content(S9, "船井総研がご提供できること");
-  rect(s, 0.4, 1.0, 6.2, 0.6, NAVY);
-  txt(s, "01　遺品整理ホームページディレクション支援", 0.55, 1.0, 6.0, 0.6, { size: 15, bold: true, color: WHITE, valign: "middle", margin: 0 });
-  txt(s, "成果につながるホームページを、プロの視点でトータルサポート\n商圏の競合調査からコンセプト設計、キャッチコピー提案まで、貴社の強みを最大限に活かしたホームページづくりをサポートします。", 0.4, 1.7, 4.8, 1.0, { size: 10, bold: true, color: DARK, ls: 1.2 });
-  const H = [["競合状況の調査", "・商圏内の遺品整理事業者\n・商圏内の○○業者の動き"], ["強みの整理と打出し検討", "貴社の強み・差別化ポイントを整理し、効果的な打ち出し方を検討します。"], ["コンセプト設計のご提案", "ターゲット・訴求軸・メッセージを設計し、ホームページの方向性をご提案します。"], ["キャッチコピーのご提案", "お客様の心に響くキャッチコピーを複数パターンご提案します。"]];
-  H.forEach((h, i) => {
-    const y = 2.8 + i * 0.82;
-    s.addShape(pres.shapes.OVAL, { x: 0.4, y: y + 0.17, w: 0.4, h: 0.4, fill: { color: NAVY }, line: { type: "none" }, objectName: nm("num") });
-    txt(s, String(i + 1), 0.4, y + 0.17, 0.4, 0.4, { size: 13, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
-    rect(s, 0.95, y, 4.25, 0.74, "F2F4F8", { round: true });
-    txt(s, h[0], 1.05, y + 0.02, 4.1, 0.3, { size: 12, bold: true, color: DARK, margin: 0 });
-    txt(s, h[1], 1.05, y + 0.32, 4.1, 0.42, { size: 8.5, color: DARK, margin: 0 });
-  });
-  rect(s, 0.95, 6.15, 4.25, 0.7, NAVY);
-  txt(s, "デザイン制作のみ\nホームページ制作会社様へ依頼", 0.95, 6.15, 4.25, 0.7, { size: 12, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
-  rect(s, 5.4, 1.75, 4.2, 5.1, "F2F4F8");
-  txt(s, "ご提案イメージ", 5.4, 1.8, 4.2, 0.4, { size: 13, bold: true, color: NAVY, align: "center", margin: 0 });
-  photo(s, 5.55, 2.25, 3.9, 4.45, "競合調査・コンセプト提案書の事例");
-}
-{
-  const s = content(S9, "船井総研がご提供できること");
-  rect(s, 0.4, 1.0, 6.2, 0.6, "1F4E3D");
-  txt(s, "02　遺品整理ツール＆マニュアル導入支援", 0.55, 1.0, 6.0, 0.6, { size: 15, bold: true, color: WHITE, valign: "middle", margin: 0 });
-  const MN = [["事業概要マニュアル", "正しい知識と仕組みで、安定した事業運営を実現。", "事業の全体像から収益モデル、運営体制までを体系化"], ["営業マニュアル", "成果を出す営業の型が、すべてここに。", "信頼構築から提案・クロージングまで、営業の「型」を標準化"], ["遺品整理現場マニュアル", "現場で迷わず、誰でも高品質。", "現場の「判断・作業・安全・品質」を標準化（全60ページ以上）"], ["遺品整理集客マニュアル", "現場で迷わず、誰でも成果を出せる。", "反響から問い合わせ、成約までの集客の流れを標準化（全60ページ以上）"]];
-  MN.forEach((m, i) => {
-    const x = 0.4 + (i % 2) * 4.7, y = 1.75 + Math.floor(i / 2) * 2.6, w = 4.5;
-    txt(s, m[1], x, y, w, 0.3, { size: 10, color: DARK, font: MINCHO, margin: 0 });
-    txt(s, m[0], x, y + 0.3, w, 0.6, { size: 22, color: DARK, font: MINCHO, valign: "middle", margin: 0 });
-    txt(s, m[2], x, y + 0.9, w, 0.35, { size: 9, color: DARK, margin: 0 });
-    photo(s, x, y + 1.3, w, 1.15, "マニュアルのページ画像");
-  });
-}
-{
-  const s = content(S9, "船井総研がご提供できること");
-  rect(s, 0.4, 1.0, 6.2, 0.6, "8A3B12");
-  txt(s, "03　遺品整理事業立上げ月次コンサルティング", 0.55, 1.0, 6.0, 0.6, { size: 15, bold: true, color: WHITE, valign: "middle", margin: 0 });
-  s.addShape(pres.shapes.OVAL, { x: 3.5, y: 2.3, w: 3.0, h: 3.0, fill: { color: WHITE }, line: { color: NAVY, width: 1 }, objectName: "sol_ring" });
-  s.addShape(pres.shapes.OVAL, { x: 4.05, y: 2.85, w: 1.9, h: 1.9, fill: { color: "2F3A4F" }, line: { type: "none" }, objectName: "sol_center" });
-  txt(s, "遺品整理\nソリューション", 4.05, 2.85, 1.9, 1.9, { size: 15, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
-  const D = [["①事業戦略策定", "・3ヵ年経営計画策定\n・販促計画策定\n・財務分析", 0.4, 1.8, BLUE], ["②商品設計提案", "遺品整理・不用品回収・買取\n商品設計", 0.4, 4.2, "F2B705"], ["③集客戦略策定", "・ホームページ制作ディレクション\n・チラシ制作代行\n・WEBマーケティング分析", 6.4, 1.8, BLUE], ["④営業戦略策定", "・顧客管理システム導入\n・アプローチブック制作", 6.4, 3.45, "F2B705"], ["⑤採用戦略策定", "・採用戦略策定\n・作業員アルバイト用求人作成", 5.6, 5.0, BLUE]];
-  D.forEach(([h, b, x, y, c]) => {
-    rect(s, x, y, 3.2, 0.6, c, { round: true, r: 0.3 });
-    txt(s, h, x, y, 3.2, 0.6, { size: 17, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
-    txt(s, b, x + 0.3, y + 0.65, 3.0, 0.9, { size: 10.5, color: DARK, ls: 1.2 });
-  });
-  redMsg(s, "事業計画から商品設計・集客・営業まで一気通貫でサポートします。", { y: 6.45, size: 18 });
-}
-{
-  const s = content(S9, "船井総研がご提供できること");
-  banner(s, "1日の打ち合わせの例", 0.98, { size: 26 });
-  panel(s, 0.4, 1.7, 3.0, 4.6, "支援内容", NAVY);
-  txt(s, "① 事業戦略立案\n　事業計画、数値計画、商圏分析\n② 現状数値分析\n　売上・粗利・営業利益分析\n③ 集客力強化\n　定番チラシ・HP集客打合せ、リスティング運用、HPレポート分析\n④ 営業力強化\n　プロセス導入、営業ツール・トーク開発、研修\n⑤ 組織・管理力強化\n　案件管理のクラウド化、リーダー研修\n⑥ 店舗力強化\n⑦ 採用強化", 0.5, 2.15, 2.85, 4.1, { size: 8.5, bold: true, color: DARK, ls: 1.1 });
-  arrowR(s, 3.45, 3.8, 0.3, 0.35, "F2B705");
-  panel(s, 3.8, 1.7, 3.0, 4.6, "4時間基本パッケージ", NAVY);
-  txt(s, [{ text: "★13：00〜13：30\n", options: { color: RED } }, { text: "①事業全体数値確認\n・事業数値進捗確認／営業KPIの確認\n", options: { color: DARK } }, { text: "★13：30〜14：30\n", options: { color: RED } }, { text: "②営業\n・営業進捗確認／追客案件の確認／営業ツール修正\n", options: { color: DARK } }, { text: "★14：40〜16：30\n", options: { color: RED } }, { text: "③集客\n・WEB・HP改善提案／集客スケジュールの策定／販促強化策\n", options: { color: DARK } }, { text: "★16：30〜17：00\n", options: { color: RED } }, { text: "④採用\n・採用進捗確認・人員体制確認", options: { color: DARK } }], 3.9, 2.15, 2.85, 4.1, { size: 9, bold: true, ls: 1.1 });
-  arrowR(s, 6.85, 3.8, 0.3, 0.35, "F2B705");
-  panel(s, 7.2, 1.7, 2.4, 4.6, "実行管理サポート", NAVY);
-  txt(s, "★LINEサポート\n★TELサポート\n★メールサポート\n★ZOHO Cliqサポート\n★ハングアウト\n★ツール共有\n\n・進捗確認\n・課題相談解決\n\n※TELは9：00〜20：00\n※日曜は出れない場合もございます", 7.3, 2.15, 2.25, 4.1, { size: 9.5, bold: true, color: DARK, ls: 1.2 });
-  rect(s, 1.2, 6.4, 7.6, 0.6, NAVY);
-  txt(s, [{ text: "30日間で ", options: { color: WHITE } }, { text: "実行を最大化させる", options: { color: "F6C700" } }], 1.2, 6.4, 7.6, 0.6, { size: 20, bold: true, align: "center", valign: "middle", margin: 0 });
-}
-{
-  const s = content(S9, "新規立上げスケジュール", "開始月を実際の月名に差し替える。");
-  tag(s, "開始月");
-  const X0 = 2.2, MW = 1.22, Y0 = 1.45;
-  rect(s, 0.4, Y0, 9.2, 0.75, "000000");
-  for (let m = 0; m < 6; m++) txt(s, `${m + 1}ヶ月目`, X0 + m * MW, Y0, MW, 0.75, { size: 14, color: WHITE, align: "center", valign: "middle" });
-  const G = [["業者探し", 0, 2, "協力業者探し・原価確認", "5B9BD5"], ["商品設計", 0, 2, "基本パック・オプション・商品設計", "70AD47"], ["ブランド\n設計", 0, 2, "屋号・ロゴ・キャッチコピー\n・ブランドコンセプト", "4472C4"], ["HP制作", 0.45, 2.3, "TOPページ公開→全ページ公開", "ED7D31"], ["営業体制\n構築", 1.65, 4.35, "営業ツール制作・営業事例紹介・営業研修", "FFC000"], ["集客施策", 1.65, 4.35, "チラシ制作・WEB広告配信・SEO・MEO・AIO反響分析", "44546A"], ["アライアンス\n提携", 1.1, 4.9, "リストアップ・提携資料作成→提携に向けた営業活動", "F0605D"]];
-  G.forEach((g, i) => {
-    const y = Y0 + 0.75 + i * 0.66;
-    rect(s, 0.4, y, 9.2, 0.66, WHITE, { line: "000000", lw: 0.75 });
-    txt(s, g[0], 0.5, y, 1.65, 0.66, { size: 13, color: DARK, align: "center", valign: "middle" });
-    rect(s, X0 + g[1] * MW, y + 0.1, g[2] * MW, 0.46, g[4], { shadow: true });
-    txt(s, g[3], X0 + g[1] * MW, y + 0.1, g[2] * MW, 0.46, { size: 9, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
-  });
-}
-
-// =====================================================================
-// コンサルティング形式・費用について
-// =====================================================================
-const S10 = "コンサルティング形式・費用について";
-pres.addSection({ title: S10 });
-{
-  const s = pres.addSlide({ masterName: "BLANK", sectionTitle: S10 });
-  photo(s, 5.0, 0, 5.0, 7.5, "握手の写真（青のオーバーレイ）");
-  rect(s, 5.0, 0, 5.0, 7.5, BLUE);
-  txt(s, "コンサルティング\n形式・費用について", 0.4, 2.8, 4.4, 1.6, { size: 28, bold: true, color: "1C4FA0", align: "center", valign: "middle" });
-}
-{
-  const s = content(S10, "船井総研がご提供できること", "【要確認】プラン2（ツールのみ）の価格と研究会の年会費。最新の企画書（96p）の価格を記載。");
-  const PL = [["❶【HP制作ディレクションのみ】", [["遺品整理　商品設計＋ホームページ制作ディレクション", "700,000円（税抜）"]], "➢ 制作費用別途　ホームページ制作会社様へデザイン制作費用はお支払いが必要です。", "DCE3F0"], ["❷【マニュアル・オリジナルツールのみ】", [["遺品整理　マニュアル・オリジナルツール導入支援", "1,500,000円（税抜）"]], "", "E2EFDA"], ["❸【マニュアル・オリジナルツール＋HP制作ディレクション＋月次支援", [["遺品整理　HP制作ディレクション", "700,000円（税抜）"], ["遺品整理　マニュアル・オリジナルツール導入支援　※②より50万円お値引き", "1,000,000円（税抜）"], ["遺品整理　業績アップ月次支援コンサルティング", "200,000円（税抜）/月"]], "", "FBE5D6"]];
-  let y = 1.05;
-  PL.forEach((p) => {
-    txt(s, p[0].replace("❶", "①").replace("❷", "②").replace("❸", "③").replace("＋月次支援", "＋月次支援】"), 0.4, y, 9.2, 0.42, { size: 13.5, bold: true, color: DARK, margin: 0 });
-    y += 0.45;
-    p[1].forEach((r) => {
-      rect(s, 0.4, y, 6.2, 0.42, p[3], { line: "000000", lw: 1.5 });
-      txt(s, r[0], 0.5, y, 6.05, 0.42, { size: 10.5, bold: true, color: DARK, valign: "middle", margin: 0 });
-      rect(s, 6.6, y, 3.0, 0.42, p[3], { line: "000000", lw: 1.5 });
-      txt(s, r[1], 6.65, y, 2.9, 0.42, { size: 13, bold: true, color: DARK, valign: "middle", align: "right", margin: 0 });
-      y += 0.42;
+  function oval(s, x, y, w, h, fill, opt = {}) {
+    s.addShape(pres.shapes.OVAL, { x, y, w, h, fill: { color: fill }, line: opt.line ? { color: opt.line, width: opt.lw || 1 } : { type: "none" }, objectName: nm("oval") });
+  }
+  function txt(s, t, x, y, w, h, opt = {}) {
+    if (Array.isArray(t)) {
+      const out = [];
+      t.forEach((r) => {
+        const parts = r.text.split("\n");
+        parts.forEach((p, k) => {
+          const o = Object.assign({ align: opt.align || "left" }, r.options);
+          if (k < parts.length - 1) o.breakLine = true;
+          if (p !== "" || k < parts.length - 1) out.push({ text: p, options: o });
+        });
+      });
+      t = out;
+    }
+    s.addText(t, {
+      x, y, w, h, fontFace: opt.font || FONT, fontSize: opt.size || 12, bold: !!opt.bold, color: opt.color || DARK,
+      align: opt.align || "left", valign: opt.valign || "top", margin: opt.margin === undefined ? 0.04 : opt.margin,
+      lineSpacingMultiple: opt.ls || 1.12, paraSpaceAfter: opt.psa || 0, isTextBox: true, objectName: nm("text"), fit: "none",
     });
-    if (p[2]) { txt(s, p[2], 0.4, y + 0.03, 9.2, 0.28, { size: 8.5, bold: true, color: RED, align: "right", margin: 0 }); y += 0.3; }
-    y += 0.18;
-  });
-  txt(s, "➢ 月次支援はオンライン＋必要に応じてご訪問となります。\n➢ コンサルティングは月次支援と研究会の両方を含むサービスとなります。\n➢ 月次支援のご契約は「クラウドサイン」、研究会のご契約は「船井総研マイページからのお手続き」と別になりますのでご了承ください。\n➢ 月次支援、交通費のお支払いは、毎月のご支援終了後、請求書を送付させていただき、銀行振り込みとなります。\n➢ PPC運用代行サービスは運用費用に対して、20%の手数料が発生します。（月ごとの広告費用の実額に対して計算されますので、毎月の請求金額が変動いたします。）\n➢ コンサルティングフィーは更新時に、事前確認の上、変動いたしますのでご了承ください。", 0.4, y, 9.2, 7.0 - y, { size: 8.5, bold: true, color: RED, ls: 1.15 });
-}
-{
-  const s = content(S10, "コンサルティング形式・費用について");
-  rect(s, 0.4, 1.05, 9.2, 0.6, "F2F4F8");
-  txt(s, "コンサルティングに伴う契約概要", 0.7, 1.05, 8, 0.6, { size: 20, bold: true, color: "1C4FA0", valign: "middle", margin: 0 });
-  const items = [
-    "月次支援は原則1年契約とします。（調査期間は除く）",
-    "月次支援フィーとは別に交通費は毎月固定額をご請求させていただきます。",
-    "月次支援2年目以降のコンサルフィーはコンサルタントの役職に応じて金額が変動する場合がございます。",
-    "月次支援フィーのご入金が滞りますと、コンサルティングが中止となりますので、ご入金は必ずお守り下さい。",
-    "月次支援のご契約を締結する場合は、研究会のご入会が必須となります。",
-    "月次支援でご提案した施策に、別途費用がかかる場合がございます。（購入費、印刷費、サイト制作費等）",
-    "月次支援のご契約は一定の成果を保証するものではありません。成果がないことを理由に返金は、一切行いませんのでご了承ください。",
-    "当企画書で記載している数値シミュレーションや事例はあくまでも一例であり、諸条件などにより数値が大きく変わりこの通りになることを保証したものではないことをご了承ください。",
-    "当企画書で記載している数値や提案内容は、税理士や会計士、弁護士などの法律で定められた資格者による判断を保証するものではありません。",
-    "月次支援で他社をご紹介することがございますが、他社とのご契約に関しては、直接契約となり、弊社は一切の責任を負いませんので、ご了承ください。",
-    "月次支援のお時間は内容によって変動がありますが、1回あたり約2〜4時間を目安としております。",
-    "弊社でお手伝いさせていただいたWEBサイトを活用し、リスティング広告を実施する場合、リスティング広告費用の20%〜が運用手数料として発生いたします。",
-    "月次支援で、顧客情報などの個人情報を含む資料には原則取り扱うことができませんので、ご了承ください。",
-    "月次支援で、弊社が制作したツールは、弊社に著作権が発生します。",
-    "弊社の営業時間は平日（9時30分〜18時）ですので、お打ち合わせ、連絡について事前にご了承をお願いいたします。",
+  }
+  const B = (t, o = {}) => ({ text: t, options: Object.assign({ bold: true }, o) });
+  const HL = (t, o = {}) => ({ text: t, options: Object.assign({ bold: true, highlight: MARK }, o) });
+  function icon(s, k, x, y, d, color, bg) {
+    if (bg) {
+      oval(s, x, y, d, d, bg);
+      const p = d * 0.22;
+      s.addImage({ data: IC(k, color), x: x + p, y: y + p, w: d - 2 * p, h: d - 2 * p, objectName: nm("icon") });
+    } else {
+      s.addImage({ data: IC(k, color), x, y, w: d, h: d, objectName: nm("icon") });
+    }
+  }
+  function num(s, n, x, y, d, fill, color) {
+    oval(s, x, y, d, d, fill);
+    txt(s, String(n), x, y, d, d, { size: Math.round(d * 28), bold: true, color: color || WHITE, align: "center", valign: "middle", margin: 0 });
+  }
+  function arrowR(s, x, y, w, h, color) { s.addShape(pres.shapes.RIGHT_ARROW, { x, y, w, h, fill: { color: color || NAVY }, line: { type: "none" }, objectName: nm("arrow") }); }
+  function arrowD(s, x, y, w, h, color) { s.addShape(pres.shapes.DOWN_ARROW, { x, y, w, h, fill: { color: color || NAVY }, line: { type: "none" }, objectName: nm("arrow") }); }
+  function chevron(s, x, y, w, h, fill, t, opt = {}) {
+    s.addShape(opt.first ? pres.shapes.PENTAGON : pres.shapes.CHEVRON, { x, y, w, h, fill: { color: fill }, line: { type: "none" }, objectName: nm("chev") });
+    txt(s, t, x + (opt.first ? 0.05 : h * 0.35), y, w - (opt.first ? h * 0.4 : h * 0.75), h, { size: opt.size || 11, bold: true, color: opt.color || WHITE, align: "center", valign: "middle", margin: 0 });
+  }
+  function line(s, x, y, w, h, color, width, opt = {}) {
+    s.addShape(pres.shapes.LINE, { x, y, w, h, flipV: !!opt.flipV, line: { color, width: width || 1.5, dashType: opt.dash || "solid", endArrowType: opt.arrow ? "triangle" : undefined }, objectName: nm("line") });
+  }
+  function msg(s, t, opt = {}) {
+    txt(s, t, 0.4, opt.y || 1.0, opt.w || 9.2, opt.h || 0.5, { size: opt.size || 16, bold: true, color: opt.color || NAVY, valign: "middle", margin: 0, align: opt.align || "left" });
+  }
+  function key(s, t, opt = {}) {
+    txt(s, t, 0.3, opt.y || 6.45, 9.4, opt.h || 0.55, { size: opt.size || 18, bold: true, color: RED, align: "center", valign: "middle", margin: 0 });
+  }
+  function foot(s, t) { txt(s, t, 2.3, 7.12, 6.85, 0.3, { size: 8, color: GRAY, align: "right", valign: "middle", margin: 0 }); }
+  function photo(s, x, y, w, h, label) {
+    rect(s, x, y, w, h, "E8EBF0", { line: "C2C8D2" });
+    icon(s, "photo", x + w / 2 - 0.22, y + h / 2 - 0.38, 0.44, MGRAY);
+    txt(s, label, x, y + h / 2 + 0.08, w, 0.4, { size: 9.5, color: MGRAY, align: "center", margin: 0 });
+  }
+  function table(s, rows, x, y, w, colW, opt = {}) {
+    const fs = opt.size || 11;
+    const data = rows.map((r, i) => r.map((cell, j) => {
+      const isObj = typeof cell === "object" && cell !== null;
+      const base = { fontFace: FONT, fontSize: fs, valign: "middle", margin: [3, 6, 3, 6], border: { type: "solid", pt: 0.75, color: LINE }, align: j === 0 ? "left" : (opt.align || "center") };
+      if (i === 0) Object.assign(base, { bold: true, color: WHITE, fill: { color: opt.head || NAVY }, align: "center" });
+      else Object.assign(base, { color: DARK, fill: { color: (i % 2 === 0) ? LGRAY : WHITE } });
+      if (opt.firstColFill && j === 0 && i > 0) Object.assign(base, { bold: true, fill: { color: LBLUE }, color: NAVY });
+      if (isObj) Object.assign(base, cell.options || {});
+      return { text: isObj ? cell.text : String(cell), options: base };
+    }));
+    s.addTable(data, { x, y, w, colW, rowH: opt.rowH, autoPage: false, objectName: nm("table") });
+  }
+  function frame(s, x, y, w, h, head, color, opt = {}) {
+    rect(s, x, y, w, h, opt.bg || WHITE, { line: color, lw: 1.25 });
+    rect(s, x, y, w, opt.hh || 0.42, color);
+    txt(s, head, x, y, w, opt.hh || 0.42, { size: opt.hsize || 13, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
+  }
+  function bubble(s, t, x, y, w, h, opt = {}) {
+    s.addShape(pres.shapes.ROUNDED_RECTANGULAR_CALLOUT, { x, y, w, h, fill: { color: opt.fill || WHITE }, line: { color: opt.line || LINE, width: 1 }, objectName: nm("bubble") });
+    txt(s, t, x + 0.05, y, w - 0.1, h * 0.85, { size: opt.size || 10.5, bold: true, color: opt.color || DARK, align: "center", valign: "middle", margin: 0 });
+  }
+  function dashBox(s, x, y, w, h, iconKey, label) {
+    rect(s, x, y, w, h, "FAFAFA", { line: "9AA5B8", dash: "dash" });
+    icon(s, iconKey, x + w / 2 - 0.35, y + h / 2 - 0.6, 0.7, MGRAY);
+    txt(s, label, x + 0.1, y + h / 2 + 0.2, w - 0.2, 0.9, { size: 10.5, color: GRAY, align: "center", ls: 1.3 });
+  }
+
+  // =====================================================================
+  // 表紙・はじめに
+  // =====================================================================
+  const S0 = "はじめに";
+  pres.addSection({ title: S0 });
+  {
+    const s = pres.addSlide({ masterName: "BLANK", sectionTitle: S0 });
+    s.addShape(pres.shapes.OVAL, { x: -2.5, y: 5.7, w: 16, h: 5, fill: { color: NAVY }, line: { type: "none" }, objectName: "cover_wave1" });
+    s.addShape(pres.shapes.OVAL, { x: 1.5, y: 6.25, w: 14, h: 4, fill: { color: BLUE }, line: { type: "none" }, objectName: "cover_wave2" });
+    s.addShape(pres.shapes.OVAL, { x: 6.2, y: -2.6, w: 7, h: 3.4, fill: { color: NAVY }, line: { type: "none" }, objectName: "cover_wave3" });
+    s.addShape(pres.shapes.OVAL, { x: 7.4, y: -2.9, w: 6, h: 3.2, fill: { color: BLUE }, line: { type: "none" }, objectName: "cover_wave4" });
+    s.addShape(pres.shapes.OVAL, { x: -0.5, y: -0.4, w: 1.6, h: 1.6, fill: { color: BLUE }, line: { type: "none" }, objectName: "cover_circle" });
+    for (let i = 0; i < 12; i++) {
+      const d = 0.13 - i * 0.008;
+      s.addShape(pres.shapes.OVAL, { x: 0.75 + i * 0.2, y: 1.85 - d / 2, w: d, h: d, fill: { color: NAVY, transparency: i * 6 }, line: { type: "none" }, objectName: nm("dot") });
+    }
+    txt(s, "株式会社○○ 様", 0.7, 2.1, 8, 0.5, { size: 20, font: MINCHO });
+    txt(s, "遺品整理事業\n参入のご提案", 0.7, 2.65, 8.6, 1.7, { size: 38, font: MINCHO, ls: 1.05 });
+    txt(s, "株式会社 船井総合研究所\n専門工事支援部\n○○ ○○", 0.7, 4.6, 6, 0.95, { size: 12, ls: 1.2 });
+    s.addNotes("【要カスタマイズ】会社名・担当者名を差し替える。\n事前経営相談：「遺品整理とは」〜「各業態におけるシナジー」まで。事後経営相談：「ご質問への回答」以降。");
+  }
+  {
+    const s = content(S0, "会社紹介");
+    txt(s, "株式会社船井総合研究所", 0.4, 1.0, 5.6, 0.5, { size: 18, bold: true, valign: "middle", margin: 0 });
+    txt(s, "経営コンサルティング業界で初めて株式公開を果たした、日本最大級の経営コンサルティングファーム。現場の即時業績アップ支援に強みを持ち、社会的価値の高いグレートカンパニーの創造をミッションとしています。", 0.4, 1.5, 5.6, 1.1, { size: 11, ls: 1.3 });
+    const ST = [["1970年", "創立"], ["約1,500名", "連結従業員数"], ["約1,000名", "コンサルタント数"], ["10,000社以上", "全国の支援先"]];
+    ST.forEach((st, i) => {
+      const x = 0.4 + (i % 2) * 2.85, y = 2.75 + Math.floor(i / 2) * 1.35;
+      rect(s, x, y, 2.7, 1.2, LBLUE);
+      txt(s, st[0], x, y + 0.12, 2.7, 0.6, { size: 24, bold: true, color: NAVY, align: "center", valign: "middle", margin: 0 });
+      txt(s, st[1], x, y + 0.75, 2.7, 0.35, { size: 11, color: GRAY, align: "center", margin: 0 });
+    });
+    txt(s, "創設者　船井 幸雄　／　代表取締役社長　真貝 大介　／　資本金　3,000百万円", 0.4, 5.55, 5.6, 0.35, { size: 10, margin: 0 });
+    photo(s, 6.3, 1.0, 3.3, 2.5, "大阪本社");
+    txt(s, "大阪本社　イノゲート大阪 21階・22階\n大阪府大阪市北区梅田三丁目2番123号", 6.3, 3.55, 3.3, 0.55, { size: 9, color: GRAY, margin: 0 });
+    photo(s, 6.3, 4.2, 3.3, 2.15, "東京本社");
+    txt(s, "東京本社　八重洲セントラルタワー 35階\n東京都中央区八重洲二丁目2番1号", 6.3, 6.4, 3.3, 0.55, { size: 9, color: GRAY, margin: 0 });
+  }
+  {
+    const s = content(S0, "遺品整理事業 専門コンサルタント", "【要カスタマイズ】担当コンサルタントの写真・経歴・ミッションを差し替える。");
+    photo(s, 0.4, 1.05, 2.6, 3.1, "担当コンサルタント写真");
+    txt(s, [B("専門工事支援部\n", { fontSize: 11, color: GRAY }), B("○○ ○○\n", { fontSize: 22, color: NAVY }), B("遺品整理士 など保有資格", { fontSize: 11, color: GRAY })], 3.2, 1.05, 3.5, 1.2, { ls: 1.2 });
+    txt(s, "【経歴】\n新卒で船井総合研究所に入社。遺品整理・リフォーム業界を専門に、新規事業の立上げから既存事業の活性化まで、業績アップのご支援に従事。", 3.2, 2.3, 6.4, 1.0, { size: 11, ls: 1.3 });
+    rect(s, 3.2, 3.35, 6.4, 0.8, LBLUE);
+    txt(s, [B("ミッション　", { color: NAVY }), B("遺品整理を『片付け』から、安心できる住まいと暮らしの『再編集』へ", { color: DARK })], 3.35, 3.35, 6.2, 0.8, { size: 12, valign: "middle" });
+    txt(s, "遺品整理事業の専門チーム（専門工事支援部）", 0.4, 4.4, 9, 0.4, { size: 14, bold: true, color: NAVY, margin: 0 });
+    const M = [["阪口 和輝", "チームリーダー\n古民家鑑定士"], ["堂野 宗一郎", "コンサルタント\n遺品整理士"], ["廣瀬 聡太朗", "コンサルタント"], ["伊木 颯志朗", "コンサルタント"]];
+    M.forEach((m, i) => {
+      const x = 0.4 + i * 2.33;
+      oval(s, x, 4.95, 0.95, 0.95, "E8EBF0", { line: "C2C8D2" });
+      icon(s, "user", x + 0.25, 5.18, 0.45, MGRAY);
+      txt(s, m[0], x + 1.05, 4.95, 1.25, 0.38, { size: 12, bold: true, valign: "middle", margin: 0 });
+      txt(s, m[1], x + 1.05, 5.33, 1.25, 0.65, { size: 9, color: GRAY, margin: 0 });
+    });
+  }
+  {
+    const s = content(S0, "貴社のお話を伺います", "【使い方】事前経営相談ではこのページで伺い、手元でメモする。事後経営相談では伺った内容を書き込んだ版に差し替え、最初に確認する。他社名・外注先名は書かない。");
+    const H = [["search", "セミナー・資料DLのきっかけ", "お申し込み・ダウンロードに至った理由"], ["building", "貴社の現状", "事業規模・売上構成、人員、許認可、車両・倉庫"], ["warn", "課題", "本業の課題、片付け・残置物の相談状況"], ["question", "知りたいこと・疑問点", "セミナーで知りたいこと／資料で気になった点"], ["target", "遺品整理事業の位置づけ", "会社の中でどう考えているか"]];
+    H.forEach((h, i) => {
+      const y = 1.1 + i * 1.18;
+      icon(s, h[0], 0.45, y + 0.12, 0.62, WHITE, NAVY);
+      txt(s, h[1], 1.25, y + 0.05, 2.7, 0.42, { size: 13, bold: true, color: NAVY, valign: "middle", margin: 0 });
+      txt(s, h[2], 1.25, y + 0.47, 2.7, 0.5, { size: 9.5, color: GRAY, margin: 0 });
+      for (let k = 0; k < 2; k++) line(s, 4.1, y + 0.45 + k * 0.45, 5.5, 0, "B8C0CC", 0.75, { dash: "dash" });
+    });
+  }
+
+  // =====================================================================
+  // 遺品整理とは
+  // =====================================================================
+  const S1 = "遺品整理とは";
+  pres.addSection({ title: S1 });
+  divider(S1, "遺品整理とは");
+  {
+    const s = content(S1, "遺品整理とは", "不用品回収との違い（想いの整理・貴重品の捜索・供養）を強調する。");
+    msg(s, "遺品整理の流れ【3ステップ】");
+    const C = [["box", "整理（仕分け）", "一つひとつ確認しながら「残す物」「貴重品」「処分する物」に仕分け", ORANGE], ["dolly", "搬出", "仕分けが終わった荷物を、建物を傷つけないよう丁寧に運び出し", GREEN], ["truck", "トラックへの積込", "安全に積み込み、許可業者による適正な処理・リサイクルへ", NAVY]];
+    C.forEach((c, i) => {
+      const x = 0.4 + i * 3.13;
+      rect(s, x, 1.6, 2.85, 2.05, WHITE, { line: c[3], lw: 1.5, round: true, r: 0.06 });
+      icon(s, c[0], x + 0.2, 1.78, 0.7, WHITE, c[3]);
+      txt(s, `STEP ${i + 1}`, x + 1.05, 1.78, 1.7, 0.3, { size: 10, bold: true, color: c[3], margin: 0 });
+      txt(s, c[1], x + 1.05, 2.06, 1.75, 0.42, { size: 15, bold: true, color: c[3], valign: "middle", margin: 0 });
+      txt(s, c[2], x + 0.2, 2.65, 2.5, 0.95, { size: 10.5, ls: 1.25 });
+      if (i < 2) arrowR(s, x + 2.9, 2.45, 0.2, 0.32, MGRAY);
+    });
+    txt(s, "不用品回収との違い", 0.4, 3.9, 9.2, 0.4, { size: 15, bold: true, color: NAVY, margin: 0 });
+    rect(s, 0.4, 4.35, 4.45, 2.05, LGRAY);
+    rect(s, 5.15, 4.35, 4.45, 2.05, LBLUE, { line: NAVY, lw: 1.5 });
+    txt(s, "不用品回収", 0.4, 4.4, 4.45, 0.4, { size: 13, bold: true, color: MGRAY, align: "center", margin: 0 });
+    txt(s, "遺品整理（専門店）", 5.15, 4.4, 4.45, 0.4, { size: 13, bold: true, color: NAVY, align: "center", margin: 0 });
+    txt(s, "・不要な物を早く安く回収する\n・貴重品・思い出の品は対応しないことが多い\n・供養や心のケアは行わない\n・回収して終わり", 0.6, 4.85, 3.9, 1.5, { size: 11, color: GRAY, ls: 1.35 });
+    txt(s, "・故人とご遺族の想いを整理する\n・1点ずつ手で確認し、貴重品を見つけてお渡し\n・供養・お焚き上げ、ご遺族への寄り添い\n・相続・売却・解体・リフォームまで相談できる", 5.5, 4.85, 4.0, 1.5, { size: 11, bold: true, color: NAVY, ls: 1.35 });
+    s.addShape(pres.shapes.OVAL, { x: 4.6, y: 5.0, w: 0.8, h: 0.8, fill: { color: RED }, line: { color: WHITE, width: 2 }, objectName: "vs" });
+    txt(s, "VS", 4.6, 5.0, 0.8, 0.8, { size: 15, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
+    key(s, "遺品整理は「片付け」ではなく、心に寄り添う専門サービスです。", { y: 6.5, size: 16 });
+  }
+  {
+    const s = content(S1, "遺品整理ビジネスのミッション");
+    rect(s, 0, 0.85, 10, 6.25, "F7F4EE");
+    txt(s, [B("遺品整理", { color: DARK }), B("は、\n", { color: DARK, fontSize: 20 }), B("地域", { color: GREEN }), B("の", { color: DARK }), B("福祉", { color: GREEN }), B("と", { color: DARK }), B("空き家問題", { color: GREEN }), B("を\n", { color: DARK }), B("解決する事業です", { color: DARK })], 0.5, 1.05, 5.6, 1.8, { size: 26, font: MINCHO, ls: 1.15 });
+    txt(s, "私たちは、故人とご遺族の想いに寄り添い、\n地域の未来を支える遺品整理を行っています。", 0.5, 2.9, 5.6, 0.7, { size: 12, ls: 1.3 });
+    photo(s, 6.2, 1.05, 3.4, 2.45, "スタッフとご遺族の写真");
+    line(s, 0.5, 3.95, 9.0, 0, "B9A98F", 1);
+    rect(s, 2.2, 3.75, 5.6, 0.4, "F7F4EE");
+    txt(s, "遺品整理をしたいお客様は、こんなお悩みを抱えています", 2.2, 3.75, 5.6, 0.4, { size: 13, bold: true, align: "center", valign: "middle", margin: 0 });
+    const P = [["heart", "遺品を丁寧に扱ってくれる、\n安心できる業者を探している"], ["clock", "実家にわざわざ帰って\n片付ける時間がない"], ["search", "ネットで出てきた会社が\n安心できるか分からない"]];
+    P.forEach((p, i) => {
+      const x = 0.5 + i * 3.05;
+      icon(s, p[0], x, 4.35, 0.75, GREEN, "E3EEDF");
+      txt(s, p[1], x + 0.85, 4.33, 2.1, 0.8, { size: 11, bold: true, valign: "middle", ls: 1.2 });
+    });
+    oval(s, 0.5, 5.4, 1.25, 1.25, GREEN);
+    txt(s, "私たちの\nミッション", 0.5, 5.4, 1.25, 1.25, { size: 12, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
+    txt(s, [B("そんな業界の問題を解決するべく、\n", { color: DARK }), B("地域密着", { color: GREEN }), B("で", { color: DARK }), B("安心できる遺品整理業者", { color: GREEN }), B("を増やし、\n地域の福祉と未来を支えていきます。", { color: DARK })], 1.95, 5.38, 7.5, 1.3, { size: 15, font: MINCHO, ls: 1.25, valign: "middle" });
+  }
+
+  // =====================================================================
+  // 市場性
+  // =====================================================================
+  const S2 = "市場性";
+  pres.addSection({ title: S2 });
+  divider(S2, "市場性");
+  {
+    const s = content(S2, "遺品整理市場の成長性");
+    msg(s, "3つの追い風が、遺品整理市場を拡大しています");
+    const W = [["users", "市場拡大の波", "多死社会の到来", "年間死亡者数は今後も増加し、遺品整理・実家整理の需要が拡大", ORANGE], ["home", "社会課題の波", "空き家 約900万戸", "放置空き家も増え、活用・売却・解体の需要が拡大", BLUE], ["law", "法改正の波", "相続登記の義務化", "相続後3年以内の登記が必要になり、放置が難しくなる", GREEN]];
+    W.forEach((w, i) => {
+      const x = 0.4 + i * 3.13;
+      rect(s, x, 1.6, 2.94, 2.85, WHITE, { line: LINE, shadow: true });
+      icon(s, w[0], x + 1.07, 1.75, 0.8, WHITE, w[4]);
+      txt(s, w[1], x, 2.62, 2.94, 0.32, { size: 11, bold: true, color: w[4], align: "center", margin: 0 });
+      txt(s, w[2], x, 2.95, 2.94, 0.45, { size: 16, bold: true, align: "center", valign: "middle", margin: 0 });
+      txt(s, w[3], x + 0.2, 3.45, 2.54, 0.9, { size: 10.5, color: GRAY, align: "center", ls: 1.25 });
+    });
+    s.addShape(pres.shapes.ISOSCELES_TRIANGLE, { x: 4.55, y: 4.58, w: 0.9, h: 0.32, rotate: 180, fill: { color: NAVY }, line: { type: "none" }, objectName: "tri" });
+    rect(s, 0.4, 5.0, 9.2, 0.55, NAVY);
+    txt(s, [B("3つの波が重なり、", { color: WHITE }), B("「放置」", { color: YEL }), B("から", { color: WHITE }), B("「活用・処分」", { color: YEL }), B("へ動く人が急増", { color: WHITE })], 0.4, 5.0, 9.2, 0.55, { size: 16, align: "center", valign: "middle", margin: 0 });
+    const O = [["box", "遺品整理"], ["home", "実家整理"], ["wrench", "リフォーム"], ["hammer", "解体"], ["yen", "売却"], ["key", "賃貸活用"]];
+    O.forEach((o, i) => {
+      const x = 0.55 + i * 1.53;
+      icon(s, o[0], x + 0.35, 5.7, 0.5, NAVY);
+      txt(s, o[1], x, 6.25, 1.2, 0.35, { size: 11, bold: true, color: NAVY, align: "center", margin: 0 });
+    });
+    foot(s, "※空き家数：総務省「住宅・土地統計調査」。最新の公表値に合わせて更新してください。");
+  }
+  {
+    const s = content(S2, "遺品整理業界の現状");
+    msg(s, "遺品整理業者が抱える課題と、見えてきた市場のチャンス");
+    const I = [["truck", "不用品回収を中心とした事業者が多い", "遺品整理という名前でも、実際は不用品回収の片付けが中心。「想いの整理」まで対応できる事業者は限られています。"], ["pray", "グリーフケアや供養への対応に差がある", "ご遺族への寄り添い方や供養の提案など、心のケアまで提供できる事業者はまだ多くありません。"], ["warn", "サービス品質にばらつきがある", "対応・料金・作業品質が業者によって大きく違い、お客様の満足度に影響しています。"]];
+    I.forEach((it, i) => {
+      const y = 1.65 + i * 1.4;
+      rect(s, 0.4, y, 9.2, 1.25, i % 2 ? WHITE : LBROWN, { line: "D9C7B2" });
+      icon(s, it[0], 0.6, y + 0.24, 0.78, WHITE, BROWN);
+      txt(s, it[1], 1.6, y + 0.1, 7.8, 0.45, { size: 15, bold: true, color: BROWN, valign: "middle", margin: 0 });
+      txt(s, it[2], 1.6, y + 0.55, 7.8, 0.65, { size: 11, ls: 1.25, margin: 0 });
+    });
+    key(s, "「片付け・回収」ではなく、心に寄り添う専門店が求められています。", { y: 6.0, size: 17 });
+  }
+  {
+    const s = content(S2, "今が参入のタイミング", "ライフサイクルの考え方：成長期は一番店が決まっていない。安定期に入ると価格競争になり、一番店化は難しい。");
+    msg(s, "商品のライフサイクルで見ると、遺品整理は「成長期」にあります");
+    const P = [["導入期", 0.75, 1.3], ["成長期", 2.05, 1.6], ["成熟期", 3.65, 1.55], ["安定期", 5.2, 1.55], ["衰退期", 6.75, 1.45]];
+    P.forEach((p, i) => {
+      rect(s, p[1], 1.65, p[2], 4.3, i === 1 ? "FCE8E6" : (i % 2 ? LGRAY : WHITE));
+      txt(s, p[0], p[1], 5.62, p[2], 0.32, { size: 11, bold: true, color: i === 1 ? RED : GRAY, align: "center", margin: 0 });
+    });
+    s.addChart(pres.charts.LINE, [{ name: "市場規模", labels: ["", "", "", "", "", "", "", "", "", "", "", "", "", ""], values: [2, 3, 5, 9, 15, 23, 30, 34, 36, 36, 35, 33, 30, 27] }], {
+      x: 0.6, y: 1.65, w: 7.75, h: 3.95, lineSmooth: true, lineSize: 4, chartColors: [NAVY], lineDataSymbol: "none",
+      catAxisHidden: true, valAxisHidden: true, valGridLine: { style: "none" }, catGridLine: { style: "none" }, showLegend: false, valAxisMinVal: 0, valAxisMaxVal: 40, objectName: "lifecycle",
+    });
+    rect(s, 2.3, 2.35, 1.35, 0.55, RED, { round: true });
+    txt(s, "遺品整理\n（いまここ）", 2.3, 2.35, 1.35, 0.55, { size: 10, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
+    txt(s, "リフォーム・新築など", 4.0, 1.7, 2.4, 0.3, { size: 10, color: GRAY, align: "center", margin: 0 });
+    rect(s, 8.35, 1.65, 1.25, 2.05, RED);
+    txt(s, [B("成長期\n", { fontSize: 13 }), B("地域一番店が不在。今なら一番店をとれる", { fontSize: 10 })], 8.38, 1.7, 1.19, 1.95, { color: WHITE, align: "center", valign: "middle" });
+    rect(s, 8.35, 3.9, 1.25, 2.05, "8FA3C4");
+    txt(s, [B("安定期\n", { fontSize: 13 }), B("大手参入で価格競争。一番店化は困難", { fontSize: 10 })], 8.38, 3.95, 1.19, 1.95, { color: WHITE, align: "center", valign: "middle" });
+    key(s, "地域一番店をとれるのは、専門店がまだ少ない「今」です。", { y: 6.35, size: 17 });
+    foot(s, "※商品のライフサイクル理論（船井流）に基づく考え方です。");
+  }
+
+  // =====================================================================
+  // ビジネスモデル概要
+  // =====================================================================
+  const S3 = "ビジネスモデル概要";
+  pres.addSection({ title: S3 });
+  divider(S3, "ビジネスモデル概要");
+  {
+    const s = content(S3, "事業モデルの全体像");
+    const T = [["map", "商圏人口", "20万人"], ["yen", "平均客単価", "30万円"], ["chart", "目指す売上", "1億円"]];
+    T.forEach((t, i) => {
+      const x = 0.55 + i * 3.15;
+      rect(s, x, 1.05, 2.6, 1.45, i === 2 ? RED : LBLUE, { round: true });
+      icon(s, t[0], x + 0.15, 1.2, 0.45, i === 2 ? WHITE : NAVY);
+      txt(s, t[1], x + 0.7, 1.15, 1.8, 0.45, { size: 12, bold: true, color: i === 2 ? WHITE : NAVY, valign: "middle", margin: 0 });
+      txt(s, t[2], x, 1.65, 2.6, 0.75, { size: 32, bold: true, color: i === 2 ? WHITE : RED, align: "center", valign: "middle", margin: 0 });
+      if (i < 2) txt(s, i === 0 ? "×" : "＝", x + 2.6, 1.3, 0.55, 0.9, { size: 30, bold: true, color: NAVY, align: "center", valign: "middle", margin: 0 });
+    });
+    txt(s, "※商圏人口や会社の認知度・実績により年商は変動します。数字はモデル数値であり、確約するものではありません。", 0.4, 2.6, 9.2, 0.3, { size: 9, color: GRAY, align: "center", margin: 0 });
+    const P = [["users", "ターゲット", "親の家を相続する40〜70代。\n遠方に住むご家族も多い"], ["home", "主力商品", "単価の大きい\n「戸建の遺品整理」を中心に集客"], ["link", "バックエンド", "解体・リフォーム・不動産・供養へ\nつなげて1顧客あたりの利益を高める"]];
+    P.forEach((p, i) => {
+      const x = 0.4 + i * 3.13;
+      rect(s, x, 3.1, 2.94, 2.75, WHITE, { line: LINE, shadow: true });
+      icon(s, p[0], x + 1.1, 3.25, 0.75, WHITE, NAVY);
+      txt(s, p[1], x, 4.08, 2.94, 0.4, { size: 15, bold: true, color: NAVY, align: "center", margin: 0 });
+      txt(s, p[2], x + 0.15, 4.55, 2.64, 1.1, { size: 11, align: "center", ls: 1.3 });
+    });
+    txt(s, "不用品回収・出張買取にも対応しつつ、戸建の遺品整理を軸にします", 0.4, 5.95, 9.2, 0.35, { size: 11, color: GRAY, align: "center", margin: 0 });
+    key(s, "初期投資が低く、社員1名からスタートできるビジネスモデルです。", { y: 6.4, size: 17 });
+  }
+  {
+    const s = content(S3, "3年間の数値計画", "経費の内訳は「収支計画（3年間）」のページで説明する。");
+    msg(s, "3年目に売上1億円・営業利益率20%超を目指します");
+    s.addChart(pres.charts.BAR, [{ name: "売上（万円）", labels: ["1年目（立上げ期）", "2年目（拡大期）", "3年目（組織化期）"], values: [3600, 5400, 10000] }], {
+      x: 0.4, y: 1.55, w: 5.6, h: 4.35, barDir: "col", barGapWidthPct: 60, chartColors: [NAVY], showValue: true, dataLabelPosition: "outEnd", dataLabelFontSize: 13, dataLabelFontBold: true, dataLabelColor: NAVY, dataLabelFormatCode: "#,##0\"万円\"",
+      showTitle: true, title: "売上の推移", titleFontSize: 13, titleColor: NAVY, titleFontFace: "+mn-lt", catAxisLabelFontSize: 10, catAxisLabelColor: DARK, catAxisLabelFontFace: "+mn-lt", dataLabelFontFace: "+mn-lt",
+      valAxisHidden: true, valGridLine: { style: "none" }, catGridLine: { style: "none" }, showLegend: false, valAxisMaxVal: 12000, valAxisMinVal: 0, objectName: "sales_chart",
+    });
+    txt(s, "営業利益率", 0.4, 6.0, 1.0, 0.38, { size: 10, color: GRAY, valign: "middle", margin: 0 });
+    [["2.9%", 1.35], ["16.7%", 3.0], ["23.1%", 4.65]].forEach((r, i) => {
+      rect(s, r[1], 6.0, 1.05, 0.38, i === 2 ? RED : LBLUE, { round: true });
+      txt(s, r[0], r[1], 6.0, 1.05, 0.38, { size: 13, bold: true, color: i === 2 ? WHITE : NAVY, align: "center", valign: "middle", margin: 0 });
+    });
+    frame(s, 6.3, 1.55, 3.3, 2.15, "初期投資", NAVY);
+    txt(s, [B("HP制作費　", { fontSize: 11 }), B("約150万円\n", { fontSize: 18, color: RED }), B("古物商許可　", { fontSize: 11 }), B("5〜8万円", { fontSize: 18, color: RED })], 6.4, 2.05, 3.1, 1.55, { valign: "middle", ls: 1.4 });
+    arrowD(s, 7.7, 3.78, 0.5, 0.35, NAVY);
+    frame(s, 6.3, 4.2, 3.3, 1.75, "投資回収", RED);
+    txt(s, [B("2年目", { fontSize: 26, color: RED }), B("で回収\n", { fontSize: 14, color: RED }), B("2年目の営業利益 904万円で回収見込み", { fontSize: 10 })], 6.4, 4.65, 3.1, 1.25, { align: "center", valign: "middle" });
+    txt(s, "前提：商圏人口20万人／平均客単価30万円／契約率80%", 6.3, 6.0, 3.3, 0.38, { size: 9, color: GRAY, valign: "middle", margin: 0 });
+    foot(s, MODEL_NOTE);
+  }
+  {
+    const s = content(S3, "仕事の入口と出口（商流）");
+    msg(s, "さまざまな入口から遺品整理につながり、整理後の出口サービスまでワンストップで提供", { size: 13 });
+    txt(s, "入口（案件の発生源）", 0.4, 1.55, 2.7, 0.35, { size: 12, bold: true, color: NAVY, margin: 0 });
+    const IN = [["pray", "葬儀会社", "葬儀後に片付けの相談"], ["hospital", "介護・老人ホーム", "入居前の生前整理"], ["building", "不動産会社", "売却前の家財撤去"]];
+    IN.forEach((it, i) => {
+      const y = 1.95 + i * 0.85;
+      rect(s, 0.4, y, 2.7, 0.72, LBLUE, { round: true });
+      icon(s, it[0], 0.5, y + 0.13, 0.46, NAVY);
+      txt(s, it[1], 1.05, y + 0.04, 2.0, 0.35, { size: 11.5, bold: true, color: NAVY, margin: 0 });
+      txt(s, it[2], 1.05, y + 0.37, 2.0, 0.3, { size: 9.5, color: GRAY, margin: 0 });
+    });
+    arrowR(s, 3.2, 2.85, 0.45, 0.4, NAVY);
+    oval(s, 3.75, 1.85, 2.5, 2.5, NAVY);
+    txt(s, [B("遺品整理\n", { fontSize: 18 }), B("（元請けで受注）\n", { fontSize: 11 }), B("仕分け・貴重品捜索\n買取・搬出", { fontSize: 9.5, color: SKY })], 3.75, 1.85, 2.5, 2.5, { color: WHITE, align: "center", valign: "middle" });
+    arrowR(s, 6.35, 2.85, 0.45, 0.4, GREEN);
+    txt(s, "出口（整理後のサービス）", 6.9, 1.55, 2.7, 0.35, { size: 12, bold: true, color: GREEN, margin: 0 });
+    const OUT_ = [["gem", "買取・リユース"], ["broom", "清掃・特殊清掃"], ["hammer", "解体工事"], ["wrench", "リフォーム"], ["yen", "不動産売却"], ["recycle", "許可業者（処分）"]];
+    OUT_.forEach((o, i) => {
+      const x = 6.9 + (i % 2) * 1.37, y = 1.95 + Math.floor(i / 2) * 0.85;
+      rect(s, x, y, 1.3, 0.72, LGREEN, { round: true });
+      icon(s, o[0], x + 0.08, y + 0.2, 0.32, GREEN);
+      txt(s, o[1], x + 0.42, y, 0.86, 0.72, { size: 9.5, bold: true, color: GREEN, valign: "middle", margin: 0 });
+    });
+    rect(s, 0.4, 4.65, 4.5, 1.7, LGRAY, { round: true });
+    txt(s, "下請けの流れ（よくある形）", 0.55, 4.72, 4.2, 0.35, { size: 12, bold: true, color: MGRAY, margin: 0 });
+    chevron(s, 0.55, 5.15, 1.45, 0.55, MGRAY, "解体業者", { first: true, size: 10 });
+    chevron(s, 1.9, 5.15, 1.55, 0.55, MGRAY, "残置物撤去", { size: 10 });
+    chevron(s, 3.35, 5.15, 1.45, 0.55, MGRAY, "解体工事", { size: 10 });
+    txt(s, "単価が低く、後工程の利益は他社へ", 0.55, 5.8, 4.2, 0.4, { size: 10.5, color: GRAY, margin: 0 });
+    rect(s, 5.1, 4.65, 4.5, 1.7, "FCE8E6", { round: true, line: RED });
+    txt(s, "元請けの流れ（目指す形）", 5.25, 4.72, 4.2, 0.35, { size: 12, bold: true, color: RED, margin: 0 });
+    chevron(s, 5.25, 5.15, 1.45, 0.55, RED, "お客様", { first: true, size: 10 });
+    chevron(s, 6.6, 5.15, 1.55, 0.55, RED, "遺品整理", { size: 10 });
+    chevron(s, 8.05, 5.15, 1.45, 0.55, RED, "解体・売却", { size: 10 });
+    txt(s, "遺品整理を起点に、解体・売却・活用までご提案", 5.25, 5.8, 4.2, 0.4, { size: 10.5, color: RED, bold: true, margin: 0 });
+    key(s, "元請けで受けると、後工程の大きな利益が自社に残ります。", { y: 6.45, size: 16 });
+  }
+  {
+    const s = content(S3, "遺品整理から広がる7つの収益機会");
+    msg(s, "関連サービスを段階的にご提案し、お客様の課題をワンストップで解決します", { size: 14 });
+    const st = [["box", "遺品整理（基本サービス）", ORANGE], ["gem", "買取・リユース", GOLD], ["pray", "供養・お焚き上げ", "7FA650"], ["broom", "特殊清掃・消臭・除菌", GREEN], ["hammer", "解体工事", BLUE], ["building", "不動産売却・買取サポート", NAVY], ["wrench", "リフォーム・リノベーション", PURPLE]];
+    st.forEach((t, i) => {
+      const x = 0.4 + i * 0.33, y = 5.9 - i * 0.64, w = 3.7;
+      rect(s, x, y, w, 0.56, t[2]);
+      txt(s, String(i + 1), x, y, 0.42, 0.56, { size: 16, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
+      icon(s, t[0], x + 0.45, y + 0.12, 0.32, WHITE);
+      txt(s, t[1], x + 0.85, y, w - 0.9, 0.56, { size: 11.5, bold: true, color: WHITE, valign: "middle", margin: 0 });
+    });
+    oval(s, 0.55, 1.75, 1.5, 1.5, NAVY);
+    txt(s, "遺品整理から\n広がる\n7つの収益機会", 0.55, 1.75, 1.5, 1.5, { size: 10.5, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
+    rect(s, 6.2, 1.65, 3.4, 1.3, LGRAY, { round: true });
+    txt(s, "遺品整理のみ", 6.2, 1.7, 3.4, 0.35, { size: 11, bold: true, color: MGRAY, align: "center", margin: 0 });
+    txt(s, [B("売上 ", { fontSize: 11 }), B("30万円", { fontSize: 22 }), B("　粗利 10万円", { fontSize: 11 })], 6.2, 2.05, 3.4, 0.8, { color: MGRAY, align: "center", valign: "middle" });
+    arrowD(s, 7.65, 3.0, 0.5, 0.4, RED);
+    rect(s, 6.2, 3.45, 3.4, 2.75, "FCE8E6", { round: true, line: RED });
+    txt(s, "関連サービスを提案した場合", 6.2, 3.5, 3.4, 0.35, { size: 11, bold: true, color: RED, align: "center", margin: 0 });
+    txt(s, [B("売上 ", { fontSize: 11 }), B("490万円\n", { fontSize: 28, color: RED }), B("粗利 ", { fontSize: 11 }), B("180万円", { fontSize: 20, color: RED })], 6.2, 3.85, 3.4, 1.3, { align: "center", valign: "middle" });
+    txt(s, "買取▲5万／特殊清掃20万／供養5万／解体150万／不動産売却サポート90万／リフォーム200万", 6.35, 5.2, 3.1, 0.9, { size: 9, color: GRAY, align: "center" });
+    key(s, "遺品整理は、関連サービスにつながる「入口商品」です。", { y: 6.45, size: 16 });
+    foot(s, MODEL_NOTE);
+  }
+  {
+    const s = content(S3, "事業を動かす4つの柱");
+    msg(s, "集客・営業・現場・提携の4つを仕組みにすることで、未経験からでも立ち上げられます", { size: 13.5 });
+    const P = [["horn", "集客", "専門店の屋号とHPをつくり、WEB・チラシで反響をとる", "専門HP（10ページ構成）／SEO・MEO・Web広告／戸建向けチラシ", BLUE], ["phone", "営業", "最初の電話対応と、現地での即決で契約率80%を目指す", "5分以内の電話／30万円未満はオンライン完結／30万円以上は現地で即決", ORANGE], ["check", "現場", "誰がやっても同じ品質になる、作業のルールをつくる", "捨てる前に必ず確認／貴重品の徹底捜索／作業完了報告", GREEN], ["shake", "提携", "不動産・士業・葬儀社などから紹介が集まる仕組みをつくる", "地域の案件ハブになる／提携先の信用を守る／紹介手数料の設計", PURPLE]];
+    P.forEach((p, i) => {
+      const x = i % 2 ? 6.15 : 0.4, y = i < 2 ? 1.6 : 4.1, w = 3.45;
+      rect(s, x, y, w, 2.2, WHITE, { line: p[4], lw: 1.5, round: true, r: 0.05 });
+      icon(s, p[0], x + 0.15, y + 0.15, 0.6, WHITE, p[4]);
+      txt(s, p[1], x + 0.85, y + 0.15, 2.5, 0.6, { size: 18, bold: true, color: p[4], valign: "middle", margin: 0 });
+      txt(s, p[2], x + 0.15, y + 0.85, w - 0.3, 0.6, { size: 11, bold: true, ls: 1.2 });
+      txt(s, p[3], x + 0.15, y + 1.45, w - 0.3, 0.7, { size: 9.5, color: GRAY, ls: 1.2 });
+    });
+    line(s, 3.85, 2.7, 0.45, 0.55, LINE, 2); line(s, 5.7, 2.7, 0.45, 0.55, LINE, 2, { flipV: true });
+    line(s, 3.85, 4.75, 0.45, 0.45, LINE, 2, { flipV: true }); line(s, 5.7, 4.75, 0.45, 0.45, LINE, 2);
+    oval(s, 4.1, 3.05, 1.8, 1.8, NAVY);
+    txt(s, "遺品整理\n事業", 4.1, 3.05, 1.8, 1.8, { size: 15, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
+    key(s, "4つの柱を仕組みにすれば、未経験でも立ち上げられます。", { y: 6.45, size: 16 });
+  }
+
+  // =====================================================================
+  // 許可・資格について
+  // =====================================================================
+  const S4 = "許可・資格について";
+  pres.addSection({ title: S4 });
+  divider(S4, "許可・資格について");
+  {
+    const s = content(S4, "許可がなくても始められる（三社間契約）", "前提条件（お客様と許可業者の直接契約、当社は運搬しない、現場で許可業者へ引き渡す）と自治体ごとのルールを確認したうえで説明する。");
+    msg(s, "お客様・当社・一般廃棄物の許可業者の三者で、役割を分けます");
+    rect(s, 2.3, 1.6, 2.4, 0.85, LBLUE, { round: true, line: NAVY });
+    icon(s, "users", 2.42, 1.75, 0.55, NAVY);
+    txt(s, "お客様", 3.0, 1.6, 1.6, 0.85, { size: 15, bold: true, color: NAVY, valign: "middle", margin: 0 });
+    rect(s, 0.4, 4.0, 2.5, 0.95, NAVY, { round: true });
+    icon(s, "user", 0.52, 4.2, 0.55, WHITE);
+    txt(s, "当社\n（遺品整理）", 1.1, 4.0, 1.75, 0.95, { size: 13, bold: true, color: WHITE, valign: "middle", margin: 0 });
+    rect(s, 4.2, 4.0, 2.5, 0.95, GREEN, { round: true });
+    icon(s, "recycle", 4.32, 4.2, 0.55, WHITE);
+    txt(s, "一般廃棄物\n許可業者", 4.9, 4.0, 1.75, 0.95, { size: 13, bold: true, color: WHITE, valign: "middle", margin: 0 });
+    line(s, 1.65, 2.45, 1.6, 1.55, NAVY, 2.5, { flipV: true });
+    line(s, 3.85, 2.45, 1.6, 1.55, GREEN, 2.5);
+    txt(s, "①サービス契約\n仕分け・搬出・買取", 0.3, 2.85, 2.0, 0.65, { size: 10.5, bold: true, color: NAVY, align: "center", margin: 0 });
+    txt(s, "②直接契約\n収集運搬・処分", 4.8, 2.85, 2.0, 0.65, { size: 10.5, bold: true, color: GREEN, align: "center", margin: 0 });
+    line(s, 2.9, 4.47, 1.3, 0, MGRAY, 1.5, { dash: "dash", arrow: true });
+    txt(s, "現場で引き渡し", 2.9, 4.55, 1.3, 0.3, { size: 9, color: GRAY, align: "center", margin: 0 });
+    frame(s, 7.0, 1.6, 2.6, 3.35, "導入のメリット", NAVY);
+    [["shield", "法令遵守で安心"], ["rocket", "許可がなくても\n早期に開始できる"], ["award", "信頼性の高い\nサービス提供"], ["target", "営業・品質に\n集中できる"]].forEach((m, i) => {
+      icon(s, m[0], 7.15, 2.2 + i * 0.68, 0.4, NAVY);
+      txt(s, m[1], 7.62, 2.12 + i * 0.68, 1.95, 0.56, { size: 10, bold: true, valign: "middle", margin: 0 });
+    });
+    rect(s, 0.4, 5.2, 9.2, 0.95, LGRAY, { round: true });
+    txt(s, [B("従来モデル（当社が回収・処分まで行う）", { color: MGRAY }), B("は、一般廃棄物の許可がない場合、違法行為に該当するリスクがあります。三社間契約なら、", { color: DARK }), B("法令に沿って事業を始められます。", { color: RED })], 0.6, 5.2, 8.8, 0.95, { size: 11.5, valign: "middle" });
+    key(s, "法令に沿った方法で、スモールスタートできます。", { y: 6.4, size: 16 });
+  }
+  {
+    const s = content(S4, "一般廃棄物収集運搬許可と古物商許可");
+    msg(s, "どちらも必須ではありませんが、取得すると収益性がさらに高まります");
+    frame(s, 0.4, 1.6, 4.5, 4.75, "一般廃棄物収集運搬許可", GREEN, { hh: 0.5, hsize: 14 });
+    txt(s, "許可がなくても事業は可能。\n取得すれば、利益率をもっと高められます。", 0.55, 2.2, 4.2, 0.65, { size: 11, bold: true, color: GREEN, ls: 1.25 });
+    [["coins", "利益率の向上", "回収・運搬が自社で完結し、外注コストを抑えられる"], ["cal", "スケジュールの柔軟性", "外注先の都合に左右されず、日程を調整できる"], ["rocket", "サービスの幅が広がる", "スポット対応や即日対応にも応えられる"]].forEach((m, i) => {
+      const y = 3.0 + i * 1.08;
+      icon(s, m[0], 0.6, y + 0.1, 0.62, WHITE, GREEN);
+      txt(s, m[1], 1.35, y, 3.4, 0.4, { size: 12.5, bold: true, color: GREEN, valign: "middle", margin: 0 });
+      txt(s, m[2], 1.35, y + 0.4, 3.4, 0.6, { size: 10, ls: 1.2, margin: 0 });
+    });
+    frame(s, 5.1, 1.6, 4.5, 4.75, "古物商許可", NAVY, { hh: 0.5, hsize: 14 });
+    txt(s, "「片付け」だけなら不要。\n「買取」を行う場合に必要になります。", 5.25, 2.2, 4.2, 0.65, { size: 11, bold: true, color: NAVY, ls: 1.25 });
+    txt(s, "取得までの流れ（審査 約40日）", 5.25, 2.95, 4.2, 0.3, { size: 11, bold: true, color: NAVY, margin: 0 });
+    ["書類準備", "警察署へ申請", "審査", "許可証交付"].forEach((t, i) => chevron(s, 5.25 + i * 1.05, 3.3, 1.12, 0.5, i === 3 ? RED : NAVY, t, { first: i === 0, size: 9 }));
+    rect(s, 5.25, 4.0, 2.05, 1.1, LBLUE);
+    txt(s, [B("費用\n", { fontSize: 10.5, color: NAVY }), B("申請手数料 約19,000円\n各種証明書 約1,000〜3,000円", { fontSize: 9.5 })], 5.3, 4.0, 1.95, 1.1, { valign: "middle", ls: 1.2 });
+    rect(s, 7.4, 4.0, 2.05, 1.1, LBLUE);
+    txt(s, [B("取得後に必要なこと\n", { fontSize: 10.5, color: NAVY }), B("本人確認／古物台帳（3年保管）／プレート掲示", { fontSize: 9.5 })], 7.45, 4.0, 1.95, 1.1, { valign: "middle", ls: 1.2 });
+    txt(s, "対象品の例：ブランド品・貴金属・時計・家具・家電・骨董品・楽器・カメラ・工具", 5.25, 5.25, 4.2, 0.6, { size: 9.5, color: GRAY, ls: 1.2 });
+    key(s, "古物商許可は、早めの取得がおすすめです。", { y: 6.45, size: 16 });
+  }
+
+  // =====================================================================
+  // 各業態におけるシナジー
+  // =====================================================================
+  const S5 = "各業態におけるシナジー";
+  pres.addSection({ title: S5 });
+  divider(S5, "各業態におけるシナジー");
+  {
+    const s = content(S5, "遺品整理がもたらすシナジー");
+    msg(s, "どの業種にとっても、遺品整理には4つの共通する効果があります");
+    const E = [["target", "商流の川上がとれる", "売却・解体・リフォームを決める前のお客様と、最初に出会える。相見積もりになりにくい", 0.4, 1.6, NAVY], ["store", "既存のお客様・資産が活きる", "既存顧客、車両、職人、店舗、会員組織などをそのまま活用できる", 6.2, 1.6, BLUE], ["coins", "外注していた作業が利益に", "残置物撤去や家財処分を外注している場合、その費用が自社の粗利になる", 0.4, 4.35, GREEN], ["friends", "地域の信頼と紹介が増える", "「困ったらあの会社」という存在になり、提携先・お客様からの紹介が増える", 6.2, 4.35, ORANGE]];
+    line(s, 3.8, 2.75, 0.55, 0.45, LINE, 2); line(s, 5.65, 2.75, 0.55, 0.45, LINE, 2, { flipV: true });
+    line(s, 3.8, 4.8, 0.55, 0.45, LINE, 2, { flipV: true }); line(s, 5.65, 4.8, 0.55, 0.45, LINE, 2);
+    E.forEach((e) => {
+      rect(s, e[3], e[4], 3.4, 1.85, WHITE, { line: e[5], lw: 1.5, round: true, r: 0.05 });
+      icon(s, e[0], e[3] + 0.15, e[4] + 0.15, 0.55, WHITE, e[5]);
+      txt(s, e[1], e[3] + 0.8, e[4] + 0.12, 2.5, 0.6, { size: 13, bold: true, color: e[5], valign: "middle", margin: 0 });
+      txt(s, e[2], e[3] + 0.15, e[4] + 0.8, 3.1, 1.0, { size: 10.5, ls: 1.25 });
+    });
+    oval(s, 3.85, 2.85, 2.3, 2.3, NAVY);
+    txt(s, [B("遺品整理\n", { fontSize: 18 }), B("＝本業の「入口」", { fontSize: 12, color: YEL })], 3.85, 2.85, 2.3, 2.3, { color: WHITE, align: "center", valign: "middle" });
+    key(s, "遺品整理は、どの業種にとっても「本業の入口」になります。", { y: 6.45, size: 16 });
+  }
+  const INDS = [
+    { key: "building", name: "不動産", issue: "仕入れ競争・広告費の高騰、案件の長期化", gain: "売却を考える前の所有者と出会える／残置物撤去の外注費が利益に", biz: "売買仲介・買取再販・賃貸管理" },
+    { key: "hammer", name: "解体", issue: "価格競争、紹介依存、職人の稼働の波", gain: "解体前の案件を元請けでとれる／家財撤去の利益も自社に", biz: "解体工事・土地活用" },
+    { key: "wrench", name: "住宅・リフォーム", issue: "新築縮小、大型案件不足、OB客との接点不足", gain: "相続した実家のリノベ相談の入口になる", biz: "リフォーム・リノベーション" },
+    { key: "pray", name: "葬儀", issue: "家族葬化で単価下落、葬儀後の収益がない", gain: "葬儀後の困りごとを自社で受け、会員満足度が上がる", biz: "法要・供養・墓じまい・相続相談" },
+    { key: "hospital", name: "介護（ケアマネ・包括）", issue: "片付けの相談先不足、業務負担の増加", gain: "施設入居前の生前整理に対応でき、家族の信頼が上がる", biz: "入居相談・地域連携" },
+    { key: "tools", name: "便利業", issue: "小口案件ばかりで利益率が低い、ブランド力が弱い", gain: "高単価商品を持てる／専門店として信頼される", biz: "不用品回収・ハウスクリーニング" },
+    { key: "recycle", name: "リサイクル", issue: "良質な仕入れが不安定、一般客との接点が少ない", gain: "良質なリユース品を直接仕入れられる", biz: "資源回収・リユース販売" },
+    { key: "gem", name: "買取", issue: "高価値品の仕入れが不安定、買取できない物が多い", gain: "家一軒分から仕入れられ「全部お願いできる」が強みに", biz: "出張買取・店舗販売" },
   ];
-  txt(s, items.map((t, i) => ({ text: "■ " + t, options: { breakLine: i < items.length - 1, color: i === 6 || i === 14 ? RED : DARK } })), 0.4, 1.8, 9.2, 5.2, { size: 8.5, bold: true, ls: 1.15 });
-  note(s, "※最新の契約条件に合わせて更新してください。");
-}
+  {
+    const s = content(S5, "業種別シナジー一覧", "貴社の業種の行を指しながら説明し、次ページ以降の業種別ページへ。");
+    msg(s, "8つの業種で、遺品整理が本業にもたらす効果");
+    const X = [0.4, 2.45, 5.0, 7.75], W = [2.0, 2.5, 2.7, 1.85];
+    ["業種", "本業の課題", "遺品整理で得られること", "つながる本業"].forEach((h, j) => {
+      rect(s, X[j], 1.55, W[j], 0.42, NAVY);
+      txt(s, h, X[j], 1.55, W[j], 0.42, { size: 11, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
+    });
+    INDS.forEach((d, i) => {
+      const y = 2.02 + i * 0.6, bg = i % 2 ? WHITE : LGRAY;
+      W.forEach((w, j) => rect(s, X[j], y, w, 0.56, j === 0 ? LBLUE : bg));
+      icon(s, d.key, X[0] + 0.08, y + 0.1, 0.36, NAVY);
+      txt(s, d.name, X[0] + 0.5, y, 1.5, 0.56, { size: 10.5, bold: true, color: NAVY, valign: "middle", margin: 0 });
+      txt(s, d.issue, X[1] + 0.05, y, W[1] - 0.1, 0.56, { size: 9, valign: "middle", margin: 0 });
+      txt(s, d.gain, X[2] + 0.05, y, W[2] - 0.1, 0.56, { size: 9, bold: true, color: NAVY, valign: "middle", margin: 0 });
+      txt(s, d.biz, X[3] + 0.05, y, W[3] - 0.1, 0.56, { size: 9, valign: "middle", margin: 0 });
+    });
+  }
+  const INDUSTRIES = [
+    { name: "不動産会社", icon: "building",
+      issues: [["仕入れ競争の激化", "ポータル・一括査定経由で奪い合い"], ["集客コストの高騰", "Web広告・反響サイトの費用が上昇"], ["案件の長期化", "売却前の片付けや相続手続きで止まる"], ["残置物撤去の外注", "1現場30〜50万円で外注している"]],
+      syn: [["相続案件の入口獲得", "売却を考える前の所有者と接点を持てる"], ["物件仕入れの強化", "相続物件の情報を競合より早く取得"], ["残置物撤去の内製化", "外注費を自社の粗利に転換"], ["売却スピードの向上", "片付けから売却まで一貫して進められる"]],
+      flow: ["遺品整理", "不動産相談", "売却・買取再販", "リフォーム・解体"], sum: ["相続案件の入口獲得", "物件仕入れの強化", "売却スピード向上"] },
+    { name: "解体業者", icon: "hammer",
+      issues: [["利益率の低下", "解体単体の価格競争"], ["集客コストの増加", "ネット広告や紹介への依存"], ["新たな収益源の確保", "解体工事以外の売上の柱がほしい"], ["職人稼働の平準化", "工事の波で稼働が不安定"]],
+      syn: [["解体前案件の獲得", "遺品整理を起点に解体案件を自社で獲得"], ["客単価の向上", "解体のみより受注単価が大きく向上"], ["粗利の向上", "外注していた家財撤去を自社で行う"], ["紹介依存からの脱却", "エンドユーザーから直接受注できる"]],
+      flow: ["遺品整理", "家財撤去・処分", "解体工事", "不動産・売却"], sum: ["解体前案件の獲得", "客単価の向上", "粗利の向上", "安定受注"] },
+    { name: "住宅・リフォーム業", icon: "wrench",
+      issues: [["新築市場の縮小", "人口・世帯数の減少で需要が減少"], ["大型案件の不足", "小規模工事が増え利益が伸びない"], ["OB顧客との接点不足", "築年数が経ち関係が希薄化"], ["空き家問題の増加", "活用提案が求められている"]],
+      syn: [["実家リノベ案件の獲得", "整理をきっかけに実家の活用相談へ"], ["相続空き家市場の攻略", "片付けから活用までワンストップ"], ["リフォーム受注の増加", "売るだけでなく「活かす」提案ができる"], ["他事業との連携強化", "不動産・解体・士業と連携し差別化"]],
+      flow: ["遺品整理", "不動産・相続相談", "リノベ・リフォーム", "アフターサポート"], sum: ["実家リノベ案件の獲得", "相続空き家市場の攻略", "リフォーム受注の増加"] },
+    { name: "葬儀業", icon: "pray",
+      issues: [["葬儀単価の下落", "家族葬化・価格競争で収益が減少"], ["集客コストの高騰", "紹介サイトや広告費が上昇"], ["アフター収益の不足", "葬儀後の接点が少ない"], ["会員組織の活用不足", "会員・OB顧客を活かしきれていない"]],
+      syn: [["葬儀後サポートの強化", "ご遺族の「その後の困りごと」を解決"], ["アフター売上の創出", "遺品整理・生前整理が新たな収益源に"], ["会員組織の活用", "会員特典で満足度と継続率が向上"], ["関連事業への展開", "墓じまい・不動産・相続相談へ"]],
+      flow: ["葬儀施行", "遺品整理", "供養・生前整理", "不動産・相続連携"], sum: ["葬儀後サポート強化", "アフター売上創出", "会員組織の活用"] },
+    { name: "ケアマネジャー・包括支援センター", short: "ケアマネ・包括支援", icon: "hospital",
+      issues: [["相談先の不足", "片付けの専門業者の紹介先がない"], ["高齢者の住環境問題", "空き家・独居高齢者の家の片付け"], ["家族からの相談増加", "施設入居・相続などの相談が増加"], ["業務負担の増加", "片付け相談の対応に時間を取られる"]],
+      syn: [["地域課題の解決", "空き家・放置物件の問題を解決"], ["生前整理への対応", "施設入居前の整理を支援"], ["家族支援の強化", "遠方の家族の負担を軽減"], ["地域包括ケアとの連携", "多職種と連携し支援の幅が広がる"]],
+      flow: ["相談対応", "専門業者の紹介", "整理・片付け", "関連サービス連携"], sum: ["地域課題の解決", "生前整理への対応", "家族支援の強化"] },
+    { name: "便利業", icon: "tools",
+      issues: [["利益率が低い", "単価が低く利益が残りにくい"], ["案件数への依存", "小口案件が多く件数頼み"], ["生産性が低い", "移動や見積の時間が多い"], ["ブランド力が弱い", "専門性をアピールしづらい"]],
+      syn: [["高単価商品化", "1件あたりの粗利が大幅にアップ"], ["顧客単価の向上", "生前整理・空き家片付けへ展開"], ["既存顧客の活用", "過去の小口顧客からリピート"], ["ブランド力の向上", "「遺品整理の専門店」として選ばれる"]],
+      flow: ["生前整理・片付け", "遺品整理", "空き家片付け", "各種オプション"], sum: ["高単価商品化", "顧客単価の向上", "ブランド力の向上"] },
+    { name: "リサイクル業", icon: "recycle",
+      issues: [["良質な仕入れが不安定", "市場価格に左右されやすい"], ["利益率が低い", "回収・選別だけでは伸びにくい"], ["一般客との接点が少ない", "法人案件が中心"], ["回収できる物が限られる", "資源物以外は処分になる"]],
+      syn: [["良質なリユース品を確保", "遺品整理の現場から直接回収"], ["お客様との直接取引", "一般家庭から直接受注できる"], ["リユース収益の最大化", "家具・家電・古物を適正に再販"], ["周辺サービスへ展開", "不用品回収・生前整理・解体へ"]],
+      flow: ["遺品整理", "選別・仕分け", "リユース・買取", "資源回収・処分"], sum: ["良質な仕入れの確保", "利益率向上", "一般顧客の獲得"] },
+    { name: "買取業", icon: "gem",
+      issues: [["高価値品の仕入れが不安定", "持込み・出張買取に依存"], ["買取できない品物が多い", "対象外の品は機会損失に"], ["一度の売上が小さい", "買取だけでは利益拡大に限界"], ["相続世代との接点不足", "高単価案件の入口が少ない"]],
+      syn: [["高価値品の仕入れ強化", "現場からブランド品・貴金属を直接買取"], ["買取できない物も対応", "処分・搬出まで「全部お願いできる」"], ["客単価・利益率アップ", "買取利益に整理・搬出の売上を追加"], ["次のビジネスへ展開", "生前整理・空き家整理・不動産紹介"]],
+      flow: ["遺品整理相談", "査定・買取", "販売", "不用品回収・不動産紹介"], sum: ["高利益商品の安定仕入れ", "客単価向上", "継続的な収益機会の創出"] },
+  ];
+  function industrySlide(d) {
+    const s = content(S5, "業種別シナジー｜" + (d.short || d.name));
+    icon(s, d.icon, 0.4, 1.0, 0.5, WHITE, NAVY);
+    txt(s, d.name, 1.0, 1.0, 8, 0.5, { size: 17, bold: true, color: NAVY, valign: "middle", margin: 0 });
+    rect(s, 0.4, 1.65, 3.6, 3.45, LGRAY);
+    txt(s, "経営課題", 0.55, 1.7, 3.3, 0.4, { size: 13, bold: true, color: MGRAY, margin: 0 });
+    d.issues.forEach((it, i) => {
+      const y = 2.15 + i * 0.73;
+      icon(s, "warn", 0.55, y + 0.06, 0.3, MGRAY);
+      txt(s, it[0], 0.95, y, 2.95, 0.36, { size: 11.5, bold: true, valign: "middle", margin: 0 });
+      txt(s, it[1], 0.95, y + 0.35, 2.95, 0.33, { size: 9, color: GRAY, margin: 0 });
+    });
+    arrowR(s, 4.07, 3.1, 0.45, 0.55, RED);
+    rect(s, 4.6, 1.65, 5.0, 3.45, LBLUE, { line: NAVY });
+    txt(s, "遺品整理事業参入によるシナジー", 4.75, 1.7, 4.7, 0.4, { size: 13, bold: true, color: NAVY, margin: 0 });
+    d.syn.forEach((sy, i) => {
+      const x = 4.75 + (i % 2) * 2.4, y = 2.2 + Math.floor(i / 2) * 1.43;
+      rect(s, x, y, 2.3, 1.3, WHITE, { round: true });
+      num(s, i + 1, x + 0.08, y + 0.1, 0.36, NAVY);
+      txt(s, sy[0], x + 0.5, y + 0.06, 1.75, 0.46, { size: 11, bold: true, color: NAVY, valign: "middle", margin: 0 });
+      txt(s, sy[1], x + 0.1, y + 0.56, 2.1, 0.7, { size: 9.5, ls: 1.2, margin: 0 });
+    });
+    txt(s, "ビジネスモデルのイメージ", 0.4, 5.25, 4, 0.32, { size: 11, bold: true, color: PURPLE, margin: 0 });
+    d.flow.forEach((f, i) => chevron(s, 0.4 + i * 2.28, 5.6, 2.42, 0.55, i === 0 ? PURPLE : "7E63A8", f, { first: i === 0, size: 10.5 }));
+    rect(s, 0.4, 6.3, 9.2, 0.65, NAVY);
+    const runs = [B("まとめ：", { color: WHITE })];
+    d.sum.forEach((k) => runs.push(B("「" + k + "」", { color: YEL })));
+    runs.push(B("を実現", { color: WHITE }));
+    txt(s, runs, 0.55, 6.3, 8.9, 0.65, { size: 12, valign: "middle" });
+  }
+  function realEstateChange() {
+    const s = content(S5, "補足｜不動産会社にとっての環境変化", "【要確認】法改正の出典（法務省の通達等）を確認し、出典欄に記載する。");
+    txt(s, [B("不動産情報を「風上」で掴む方法の一つが、", { color: DARK, fontSize: 17 }), B("使えなくなります。", { color: RED, fontSize: 22 })], 0.4, 1.0, 9.2, 0.6, { valign: "middle", margin: 0 });
+    line(s, 0.7, 2.25, 8.6, 0, LINE, 4);
+    [["これまで", 1.1, MGRAY], ["2026年10月〜", 4.4, RED], ["これから", 7.7, NAVY]].forEach(([t, x, c]) => {
+      oval(s, x + 0.5, 2.07, 0.36, 0.36, c);
+      txt(s, t, x - 0.3, 1.65, 2.0, 0.35, { size: 12, bold: true, color: c, align: "center", margin: 0 });
+    });
+    const C = [["相続登記をきっかけに、法務局の不動産登記受付帳を開示請求し、所有者へDM・営業でアプローチできた", LGRAY, MGRAY], ["不動産登記受付帳の様式変更で「登記の目的」「不動産の所在」が表記されなくなり、営業目的での情報取得が事実上できなくなる", "FCE8E6", RED], ["ポータル・反響広告・既存の人脈での競争がさらに激化。新しい「風上の入口」が必要になる", LBLUE, NAVY]];
+    C.forEach((c, i) => {
+      const x = 0.4 + i * 3.13;
+      rect(s, x, 2.7, 2.94, 1.95, c[1], { line: c[2] });
+      txt(s, c[0], x + 0.15, 2.75, 2.64, 1.85, { size: 11, bold: true, valign: "middle", ls: 1.3 });
+    });
+    rect(s, 0.4, 4.9, 9.2, 1.4, NAVY);
+    txt(s, [B("だからこそ今、新しい「風上チャネル」を持つ必要があります。\n", { color: WHITE, fontSize: 13 }), B("その新しい入口の一つが「空き家 × 遺品整理」です。", { color: YEL, fontSize: 20 })], 0.6, 4.9, 8.8, 1.4, { align: "center", valign: "middle", ls: 1.3 });
+    foot(s, "出典：（要記入）");
+  }
+  function realEstateSim() {
+    const s = content(S5, "補足｜不動産会社の収益シミュレーション");
+    msg(s, "遺品整理を「不動産案件の入口」にすると、本業の利益がこれだけ増えます", { size: 14 });
+    frame(s, 0.4, 1.6, 4.3, 4.65, "① 残置物撤去の内製化", NAVY, { hh: 0.5, hsize: 14 });
+    txt(s, "売買・仲介で発生する残置物撤去を外注している場合", 0.55, 2.2, 4.0, 0.5, { size: 10.5, ls: 1.2 });
+    rect(s, 0.6, 2.75, 3.9, 1.25, LBLUE);
+    txt(s, [B("月5件 × 30〜50万円 × 12ヶ月\n", { fontSize: 12, color: NAVY }), B("＝ 年間 1,800〜3,000万円", { fontSize: 17, color: RED })], 0.6, 2.75, 3.9, 1.25, { align: "center", valign: "middle", ls: 1.3 });
+    txt(s, "この外注費を、自社の粗利に転換できます。既存案件で仕事を確保できるため、立上げ時から現場経験を積めます。", 0.55, 4.15, 4.0, 1.2, { size: 10.5, ls: 1.3 });
+    txt(s, "※A社様の例：月間5件の残置物撤去案件", 0.55, 5.7, 4.0, 0.35, { size: 9, color: GRAY, margin: 0 });
+    frame(s, 5.0, 1.6, 4.6, 4.65, "② 遺品整理からつながる不動産案件", RED, { hh: 0.5, hsize: 14 });
+    txt(s, "遺品整理 年間120件 × 不動産相談 5〜10% ＝ 年間6〜12件", 5.15, 2.2, 4.3, 0.5, { size: 10.5, bold: true, ls: 1.2 });
+    const RK = [["S・A", "立地良・築浅", "買取再販", "200〜900万円", RED], ["B", "標準", "売買仲介", "300〜600万円", ORANGE], ["C", "立地悪・築古", "解体", "60〜300万円", MGRAY]];
+    RK.forEach((r, i) => {
+      const y = 2.8 + i * 0.75;
+      rect(s, 5.15, y, 0.8, 0.62, r[4]);
+      txt(s, r[0], 5.15, y, 0.8, 0.62, { size: 14, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
+      txt(s, r[1] + "\n→ " + r[2], 6.02, y, 1.7, 0.62, { size: 9.5, bold: true, valign: "middle", margin: 0 });
+      txt(s, r[3], 7.7, y, 1.8, 0.62, { size: 12.5, bold: true, color: r[4], align: "right", valign: "middle", margin: 0 });
+    });
+    rect(s, 5.15, 5.1, 4.3, 0.9, "FCE8E6");
+    txt(s, [B("年間粗利（シナジー分）\n", { fontSize: 10.5 }), B("約560万〜1,800万円", { fontSize: 19, color: RED })], 5.15, 5.1, 4.3, 0.9, { align: "center", valign: "middle" });
+    key(s, "外注費の内製化 ＋ 新たな不動産案件の獲得で、売上アップ・利益拡大を実現します。", { y: 6.4, size: 14 });
+    foot(s, MODEL_NOTE);
+  }
+  INDUSTRIES.forEach((d, i) => { industrySlide(d); if (i === 0) { realEstateChange(); realEstateSim(); } });
 
-// ---------- 出力 ----------
-(async () => {
+  // =====================================================================
+  // ご質問への回答
+  // =====================================================================
+  const S6 = "ご質問への回答";
+  pres.addSection({ title: S6 });
+  divider(S6, "ご質問への回答", "事後経営相談はここから。最初に「貴社のお話を伺います」（書き込み版）で前回の内容を確認する。");
+  {
+    const s = content(S6, "いただいたご質問", "【要カスタマイズ】セミナーのアンケートや前回の質問を記入し、該当ページで回答する。");
+    msg(s, "セミナー・前回の面談でいただいたご質問に、順にお答えします");
+    [["いただいたご質問", 0.4, 3.7], ["回答の要点", 4.2, 4.3], ["ページ", 8.6, 1.0]].forEach(([h, X, W]) => {
+      rect(s, X, 1.6, W, 0.45, NAVY);
+      txt(s, h, X, 1.6, W, 0.45, { size: 12, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
+    });
+    for (let i = 0; i < 6; i++) {
+      const y = 2.15 + i * 0.75;
+      icon(s, "question", 0.45, y + 0.17, 0.36, NAVY);
+      txt(s, "Q" + (i + 1), 0.85, y, 0.5, 0.7, { size: 13, bold: true, color: NAVY, valign: "middle", margin: 0 });
+      line(s, 0.4, y + 0.72, 9.2, 0, LINE, 0.75);
+    }
+  }
+  {
+    const s = content(S6, "収支計画（3年間）", "【要確認】1年目の営業利益：元資料の記載（106万円）と、経費の内訳の合計（586万円）が合わない。差額480万円の項目を確定させてから使う。");
+    msg(s, "3年間の数値計画（経費の内訳）");
+    const b = (t, c) => ({ text: t, options: { bold: true, color: c || DARK } });
+    table(s, [
+      ["項目", "1年目", "2年目", "3年目", "備考"],
+      [b("売上"), b("3,600万円"), b("5,400万円"), b("1億円"), "月10件／15件／28件"],
+      ["処分費", "1,080万円", "1,620万円", "3,000万円", "売上の30%"],
+      ["その他消耗品費", "100万円", "150万円", "200万円", "資材など"],
+      [b("粗利", NAVY), b("2,420万円", NAVY), b("3,630万円", NAVY), b("6,800万円", NAVY), "粗利率 67〜68%"],
+      ["アルバイト事務", "120万円", "120万円", "120万円", "事務1名"],
+      ["広告宣伝費", "484万円", "726万円", "1,360万円", "粗利の20%"],
+      ["その他事業経費", "150万円", "200万円", "250万円", ""],
+      ["人件費（専任営業）", "600万円", "1,200万円", "1,800万円", "1名／2名／3名"],
+      ["作業員アルバイト", "480万円", "480万円", "960万円", "2名／2名／4名"],
+      [b("営業利益", RED), b("106万円", RED), b("904万円", RED), b("2,310万円", RED), ""],
+      [b("営業利益率", RED), b("2.9%", RED), b("16.7%", RED), b("23.1%", RED), ""],
+    ], 0.4, 1.55, 6.6, [1.75, 1.15, 1.15, 1.15, 1.4], { size: 10, rowH: 0.38 });
+    frame(s, 7.2, 1.55, 2.4, 1.8, "初期投資", NAVY);
+    txt(s, [B("HP制作費\n", { fontSize: 10 }), B("約150万円\n", { fontSize: 16, color: RED }), B("古物商許可\n", { fontSize: 10 }), B("5〜8万円", { fontSize: 16, color: RED })], 7.25, 2.0, 2.3, 1.3, { align: "center", valign: "middle" });
+    arrowD(s, 8.15, 3.42, 0.5, 0.32, NAVY);
+    frame(s, 7.2, 3.8, 2.4, 1.85, "投資回収", RED);
+    txt(s, [B("2年目", { fontSize: 22, color: RED }), B("で回収\n", { fontSize: 12, color: RED }), B("2年目の営業利益904万円で回収見込み", { fontSize: 9.5 })], 7.25, 4.25, 2.3, 1.35, { align: "center", valign: "middle" });
+    txt(s, [B("【特徴】", { color: DARK }), B("初期投資費用が低く、社員1名からスタート可能", { color: RED }), B("であり、", { color: DARK }), B("20%以上の利益率", { color: RED }), B("を目指せるビジネスモデルです。", { color: DARK })], 0.4, 6.25, 9.2, 0.75, { size: 14, valign: "middle", margin: 0 });
+    foot(s, MODEL_NOTE);
+  }
+  {
+    const s = content(S6, "人員体制と見積・処分の仕組み");
+    msg(s, "トラック・倉庫・専門の目利きがなくても始められる3つの仕組み");
+    frame(s, 0.4, 1.6, 3.0, 4.75, "① 人員体制", NAVY);
+    [["1年目", 1, "営業＋現場作業"], ["2年目", 2, "営業＋現場管理"], ["3年目", 3, "案件管理＋現場監督"]].forEach((r, i) => {
+      const y = 2.2 + i * 1.0;
+      txt(s, r[0], 0.55, y, 0.75, 0.8, { size: 12, bold: true, color: NAVY, valign: "middle", margin: 0 });
+      for (let k = 0; k < r[1]; k++) icon(s, "user", 1.3 + k * 0.36, y + 0.08, 0.32, NAVY);
+      txt(s, "正社員" + r[1] + "名", 1.3, y + 0.45, 1.2, 0.3, { size: 9.5, bold: true, margin: 0 });
+      txt(s, r[2], 2.4, y + 0.05, 0.95, 0.75, { size: 9.5, color: GRAY, valign: "middle", margin: 0 });
+    });
+    rect(s, 0.55, 5.3, 2.7, 0.9, LBLUE);
+    txt(s, "作業は派遣・アルバイト中心。正社員は営業と管理に集中", 0.6, 5.3, 2.6, 0.9, { size: 10, bold: true, color: NAVY, valign: "middle" });
+    frame(s, 3.5, 1.6, 3.0, 4.75, "② 見積の仕組み", ORANGE);
+    [["box", "140サイズ10箱", "＝ 1立米"], ["truck", "2tトラック", "＝ 10〜12立米"], ["people", "作業量の目安", "1人1日 1.2立米"]].forEach((r, i) => {
+      icon(s, r[0], 3.7, 2.2 + i * 0.8, 0.55, ORANGE);
+      txt(s, [B(r[1] + "\n", { fontSize: 11 }), B(r[2], { fontSize: 15, color: ORANGE })], 4.35, 2.15 + i * 0.8, 2.1, 0.7, { valign: "middle" });
+    });
+    rect(s, 3.65, 4.65, 2.7, 1.55, LORANGE);
+    txt(s, [B("見積 ＝ 物量 × 立米単価\n＋ オプション − 買取額\n", { fontSize: 10.5 }), B("立米単価 1.2〜1.5万円", { fontSize: 11, color: ORANGE })], 3.7, 4.65, 2.6, 1.55, { align: "center", valign: "middle", ls: 1.3 });
+    frame(s, 6.6, 1.6, 3.0, 4.75, "③ 処分費を下げる仕組み", GREEN);
+    ["国内で買取・販売", "海外へ輸出リユース", "まとめ売り（福袋）", "自社で再利用", "最後に廃棄"].forEach((r, i) => {
+      rect(s, 6.8, 2.2 + i * 0.8, 2.6, 0.52, i === 4 ? MGRAY : GREEN, { round: true });
+      txt(s, r, 6.8, 2.2 + i * 0.8, 2.6, 0.52, { size: 11, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
+      if (i < 4) arrowD(s, 7.97, 2.74 + i * 0.8, 0.26, 0.24, "8FBF9F");
+    });
+    key(s, "社員1名＋外部スタッフで、未経験から始められます。", { y: 6.45, size: 16 });
+  }
+  {
+    const s = content(S6, "法令遵守と運営体制", "「100%合法」とは言わず、前提条件を守れば法令に沿って運営できると説明する。自治体ごとのルールは事前に確認する。");
+    msg(s, "三社間契約の前提条件と、本業のブランドを守る運営体制");
+    const L = [["law", "三社間契約で守ること", NAVY, ["お客様と許可業者が、収集運搬・処分の契約を直接結ぶ", "当社は仕分け・搬出までを担い、廃棄物を運搬しない", "廃棄物は現場で許可業者のパッカー車へ引き渡す", "自治体のルールを事前に確認する"]], ["shield", "本業のブランドを守る仕組み", GREEN, ["請負契約書・買取同意書を必ず交わす", "古物台帳で買取の記録を3年間保管", "損害賠償保険に加入する", "作業前の写真撮影・貴重品返却シートでトラブルを防ぐ"]]];
+    L.forEach((l, i) => {
+      const x = 0.4 + i * 4.7;
+      rect(s, x, 1.6, 4.5, 3.75, WHITE, { line: l[2], lw: 1.5 });
+      icon(s, l[0], x + 0.15, 1.72, 0.55, WHITE, l[2]);
+      txt(s, l[1], x + 0.8, 1.72, 3.6, 0.55, { size: 14, bold: true, color: l[2], valign: "middle", margin: 0 });
+      l[3].forEach((t, k) => {
+        icon(s, "ok", x + 0.2, 2.52 + k * 0.7, 0.3, l[2]);
+        txt(s, t, x + 0.6, 2.42 + k * 0.7, 3.8, 0.5, { size: 11, valign: "middle", margin: 0 });
+      });
+    });
+    rect(s, 0.4, 5.55, 9.2, 0.75, LBLUE, { round: true });
+    icon(s, "contract", 0.6, 5.67, 0.5, NAVY);
+    txt(s, "運用マニュアル・契約書のひな形（請負契約書／買取同意書／業務提携契約書）をご用意しています", 1.25, 5.55, 8.2, 0.75, { size: 11.5, bold: true, color: NAVY, valign: "middle" });
+    key(s, "法令に沿った運営体制を、最初から整えて始めます。", { y: 6.45, size: 16 });
+  }
+  {
+    const s = content(S6, "競合環境と参入時期", "【要カスタマイズ】商圏の競合状況（Googleマップ・HPで調査）を記入する。");
+    msg(s, "専門店がいない今、専門店として打ち出せば後発でも勝てます");
+    dashBox(s, 0.4, 1.6, 4.5, 3.6, "map", "貴社商圏の競合状況\n商圏内の遺品整理業者 ○社（うち専門店 ○社）\n不用品回収・便利屋 ○社");
+    txt(s, "勝つための3つの打ち手", 5.1, 1.6, 4.5, 0.4, { size: 14, bold: true, color: RED, margin: 0 });
+    [["store", "「遺品整理専門店」の屋号とHPで打ち出す"], ["link", "供養・買取・不動産相談までワンストップで対応"], ["shake", "不動産・士業・葬儀社との提携で、相見積もりのない紹介を得る"]].forEach((t, i) => {
+      const y = 2.1 + i * 1.03;
+      rect(s, 5.1, y, 4.5, 0.9, i % 2 ? WHITE : "FCE8E6", { line: "F2B8B4" });
+      icon(s, t[0], 5.25, y + 0.2, 0.5, WHITE, RED);
+      txt(s, t[1], 5.9, y, 3.6, 0.9, { size: 11.5, bold: true, valign: "middle", margin: 0 });
+    });
+    rect(s, 0.4, 5.4, 9.2, 0.95, NAVY);
+    icon(s, "clock", 0.6, 5.6, 0.55, YEL);
+    txt(s, [B("準備（提携先の開拓・HP制作・営業研修）に約6ヶ月", { color: YEL }), B("かかるため、\n広告単価が上がる前に、早めに着手することが重要です。", { color: WHITE })], 1.3, 5.4, 8.2, 0.95, { size: 12, valign: "middle" });
+    key(s, "専門店がいない今が、参入の時期です。", { y: 6.45, size: 16 });
+  }
+
+  // =====================================================================
+  // 貴社で進めるには
+  // =====================================================================
+  const S7 = "貴社で進めるには";
+  pres.addSection({ title: S7 });
+  divider(S7, "貴社で進めるには");
+  {
+    const s = content(S7, "貴社商圏の市場", "【要カスタマイズ】地域データは自治体の統計・住宅土地統計調査などから取得する。");
+    msg(s, "貴社の商圏で、遺品整理の市場規模を試算します");
+    const K = [["users", "商圏人口", "○○万人"], ["pray", "年間死亡者数", "○,○○○人"], ["home", "65歳以上の単身世帯", "○,○○○世帯"], ["key", "空き家数", "○,○○○戸"]];
+    K.forEach((k, i) => {
+      const x = 0.4 + i * 2.33;
+      rect(s, x, 1.6, 2.15, 1.5, LBLUE);
+      icon(s, k[0], x + 0.12, 1.72, 0.4, NAVY);
+      txt(s, k[1], x + 0.55, 1.68, 1.55, 0.48, { size: 10.5, bold: true, color: NAVY, valign: "middle", margin: 0 });
+      txt(s, k[2], x, 2.25, 2.15, 0.7, { size: 22, bold: true, color: RED, align: "center", valign: "middle", margin: 0 });
+    });
+    dashBox(s, 0.4, 3.3, 5.0, 3.0, "map", "商圏地図（対象エリアと競合の位置）");
+    frame(s, 5.6, 3.3, 4.0, 3.0, "市場規模の試算", NAVY);
+    txt(s, [B("参考：商圏人口20万人で 約8.4億円\n\n", { fontSize: 10.5, color: GRAY }), B("貴社商圏\n", { fontSize: 12 }), B("約○億円\n", { fontSize: 26, color: RED }), B("3年目の目標シェア 約○%", { fontSize: 11 })], 5.7, 3.8, 3.8, 2.4, { align: "center", valign: "middle" });
+  }
+  {
+    const s = content(S7, "貴社版の事業コンセプト", "【要カスタマイズ】ヒアリング内容から、売り先・売り物・売り方、強み、屋号案を記入する。");
+    msg(s, "売り先・売り物・売り方を絞り込み、貴社の強みを活かした専門店にします", { size: 14 });
+    const V = [["売り先", "誰に売るか", "例）親の家を相続する50〜60代、賃貸オーナー", 1.15, 1.65, NAVY], ["売り物", "何を売るか", "例）遺品整理の標準パック＋供養・買取", 3.15, 1.65, BLUE], ["売り方", "どう売るか", "例）現地確認・即決型、提携先からの紹介", 2.15, 3.3, GREEN]];
+    V.forEach((v) => s.addShape(pres.shapes.OVAL, { x: v[3], y: v[4], w: 2.6, h: 2.6, fill: { color: v[5], transparency: 25 }, line: { color: WHITE, width: 2 }, objectName: nm("venn") }));
+    txt(s, [B("売り先\n", { fontSize: 15 }), B("誰に売るか", { fontSize: 10 })], 1.3, 2.1, 1.5, 0.8, { color: WHITE, align: "center" });
+    txt(s, [B("売り物\n", { fontSize: 15 }), B("何を売るか", { fontSize: 10 })], 4.1, 2.1, 1.5, 0.8, { color: WHITE, align: "center" });
+    txt(s, [B("売り方\n", { fontSize: 15 }), B("どう売るか", { fontSize: 10 })], 2.7, 4.95, 1.5, 0.8, { color: WHITE, align: "center" });
+    txt(s, "遺品整理\n専門店", 2.8, 3.2, 1.3, 0.75, { size: 12, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
+    V.forEach((v, i) => {
+      const y = 1.6 + i * 1.18;
+      rect(s, 6.15, y, 3.45, 1.05, WHITE, { line: v[5], lw: 1.25 });
+      txt(s, v[0] + "｜貴社の場合", 6.25, y + 0.03, 3.3, 0.3, { size: 10.5, bold: true, color: v[5], margin: 0 });
+      txt(s, v[2], 6.25, y + 0.35, 3.3, 0.65, { size: 9.5, color: GRAY, ls: 1.2, margin: 0 });
+    });
+    rect(s, 6.15, 5.15, 3.45, 1.15, "FFFBEA", { line: GOLD });
+    txt(s, [B("屋号・コンセプト案\n", { fontSize: 10.5, color: GOLD }), B("例）「○○の遺品整理」\n想いをつなぐ、地域の片付け相談室", { fontSize: 9.5, color: GRAY })], 6.25, 5.15, 3.3, 1.15, { valign: "middle", ls: 1.2 });
+    rect(s, 0.4, 6.15, 5.55, 0.8, LGRAY);
+    txt(s, [B("貴社の強み：", { color: NAVY }), B("例）地域での施工実績・既存顧客数・資格・車両など", { color: GRAY })], 0.55, 6.15, 5.35, 0.8, { size: 10.5, valign: "middle" });
+  }
+  {
+    const s = content(S7, "貴社版の料金設計", "【要カスタマイズ】料金はパック料金で見せる（内訳をそのまま見せると不安・不信感につながる）。箱数・立米を併記し、見積の計算と一致させる。平均単価30万円になるのは、戸建2LDK以上が中心になるため。");
+    msg(s, "お客様には分かりやすいパック料金、社内は立米単価で原価を管理します", { size: 14 });
+    const PR = [["1K", "30,000", "段ボール20箱\n（約2立米）", "1〜2名／1〜3時間"], ["1LDK", "80,000", "段ボール50箱\n（約5立米）", "2〜3名／3〜6時間"], ["2LDK", "150,000", "段ボール100箱\n（約10立米）", "3〜4名／5〜8時間"], ["3LDK", "200,000", "段ボール150箱\n（約15立米）", "4〜6名／6〜9時間"], ["4LDK以上・戸建", "300,000", "段ボール200箱以上\n（約20立米〜）", "5名〜／1〜2日"]];
+    PR.forEach((p, i) => {
+      const x = 0.4 + i * 1.86, hot = i === 2;
+      rect(s, x, 1.65, 1.76, 2.95, WHITE, { line: hot ? RED : LINE, lw: hot ? 2 : 1, shadow: true });
+      rect(s, x, 1.65, 1.76, 0.6, hot ? RED : NAVY);
+      txt(s, p[0], x, 1.65, 1.76, 0.6, { size: 12, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
+      txt(s, [B(p[1], { fontSize: 18, color: hot ? RED : NAVY }), B("円〜", { fontSize: 10, color: hot ? RED : NAVY })], x, 2.35, 1.76, 0.6, { align: "center", valign: "middle", margin: 0 });
+      txt(s, p[2], x + 0.05, 3.0, 1.66, 0.75, { size: 9.5, align: "center", ls: 1.2, margin: 0 });
+      txt(s, p[3], x + 0.05, 3.8, 1.66, 0.6, { size: 9, color: GRAY, align: "center", ls: 1.2, margin: 0 });
+      if (hot) { rect(s, x + 0.28, 1.47, 1.2, 0.3, YEL, { round: true }); txt(s, "よくあるご依頼", x + 0.28, 1.47, 1.2, 0.3, { size: 8.5, bold: true, align: "center", valign: "middle", margin: 0 }); }
+    });
+    txt(s, [HL("仕分け・搬出・処分・簡易清掃・運搬まで含んだパック料金（追加料金なし）", { color: DARK })], 0.4, 4.7, 9.2, 0.35, { size: 11.5, align: "center", margin: 0 });
+    txt(s, "オプション（必要な場合のみ）", 0.4, 5.15, 3, 0.3, { size: 11, bold: true, color: NAVY, margin: 0 });
+    const O = [["pray", "供養", "15,000円〜"], ["broom", "特殊清掃", "30,000円〜"], ["home", "原状回復", "40,000円〜"], ["hammer", "解体", "100,000円〜"], ["building", "不動産売却", "ご相談"], ["key", "空き家管理", "5,000円〜/月"], ["gem", "買取", "お値引き"]];
+    O.forEach((o, i) => {
+      const x = 0.4 + i * 1.33;
+      rect(s, x, 5.5, 1.25, 1.35, LBLUE, { round: true });
+      icon(s, o[0], x + 0.43, 5.58, 0.38, NAVY);
+      txt(s, o[1], x, 5.98, 1.25, 0.35, { size: 10, bold: true, color: NAVY, align: "center", margin: 0 });
+      txt(s, o[2], x, 6.33, 1.25, 0.4, { size: 9.5, align: "center", margin: 0 });
+    });
+  }
+  {
+    const s = content(S7, "貴社版の数値計画", "【要カスタマイズ】1年目は準備期間（約6ヶ月）を含めた月ごとの立ち上がりで示す。兼任スタート案と専任採用案の2つを並べる。");
+    msg(s, "貴社の商圏と体制に合わせた3年間の計画");
+    s.addChart(pres.charts.BAR, [{ name: "月間契約件数（目安）", labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"], values: [0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10] }], {
+      x: 0.4, y: 1.55, w: 4.8, h: 3.6, barDir: "col", chartColors: [NAVY], showValue: true, dataLabelPosition: "outEnd", dataLabelFontSize: 9, dataLabelColor: DARK,
+      showTitle: true, title: "1年目の月間契約件数（例）", titleFontSize: 12, titleColor: NAVY, titleFontFace: "+mn-lt",
+      catAxisLabelFontSize: 9, valAxisLabelFontSize: 9, catAxisLabelColor: GRAY, valAxisLabelColor: GRAY, catAxisLabelFontFace: "+mn-lt", valAxisLabelFontFace: "+mn-lt", dataLabelFontFace: "+mn-lt",
+      valGridLine: { color: "E5E7EB", size: 0.5 }, catGridLine: { style: "none" }, showLegend: false, objectName: "ramp_chart",
+    });
+    rect(s, 0.6, 5.2, 2.0, 0.35, LGRAY); txt(s, "準備期（1〜6ヶ月目）", 0.6, 5.2, 2.0, 0.35, { size: 9, bold: true, color: GRAY, align: "center", valign: "middle", margin: 0 });
+    rect(s, 2.75, 5.2, 2.3, 0.35, LBLUE); txt(s, "営業開始（7ヶ月目〜）", 2.75, 5.2, 2.3, 0.35, { size: 9, bold: true, color: NAVY, align: "center", valign: "middle", margin: 0 });
+    table(s, [["", "兼任スタート案", "専任採用案"], ["1年目の体制", "既存営業1名が兼任", "専任営業1名を採用"], ["人件費", "本業と按分", "年600万円"], ["向いている会社", "片付け相談がすでにある", "早く立ち上げたい"], ["1年目売上", "○○万円", "○○万円"], ["3年目売上", "○○万円", "○○万円"]], 5.4, 1.6, 4.2, [1.3, 1.45, 1.45], { size: 10, rowH: 0.52, firstColFill: true });
+    rect(s, 5.4, 4.9, 4.2, 1.1, "FAFAFA", { line: "9AA5B8", dash: "dash" });
+    txt(s, "前提条件：商圏人口・平均単価・契約率・広告予算など", 5.5, 4.9, 4.0, 1.1, { size: 10, color: GRAY, valign: "middle" });
+    key(s, "準備期間を含めても、無理のない立ち上がりを計画します。", { y: 6.35, size: 16 });
+    foot(s, MODEL_NOTE);
+  }
+  {
+    const s = content(S7, "本業込みの利益", "【要カスタマイズ】仲介手数料は宅建業法の上限（売買価格400万円超：3%＋6万円、税別）で計算。発生率は貴社の実績や業種に合わせて調整する。");
+    msg(s, "遺品整理の利益に、本業への波及効果を加えて考えます");
+    rect(s, 0.4, 1.55, 9.2, 0.7, LBLUE, { round: true });
+    txt(s, [B("本業込みの利益 ＝ ", { color: NAVY }), B("遺品整理の粗利", { color: ORANGE }), B(" ＋ 不動産の発生率×", { color: NAVY }), B("仲介手数料", { color: BLUE }), B(" ＋ 工事の発生率×", { color: NAVY }), B("工事粗利", { color: GREEN })], 0.5, 1.55, 9.0, 0.7, { size: 13, align: "center", valign: "middle" });
+    s.addChart(pres.charts.BAR, [
+      { name: "遺品整理", labels: ["遺品整理のみ", "本業込み"], values: [180, 180] },
+      { name: "不動産売買", labels: ["遺品整理のみ", "本業込み"], values: [0, 132] },
+      { name: "解体工事", labels: ["遺品整理のみ", "本業込み"], values: [0, 45] },
+    ], {
+      x: 0.4, y: 2.45, w: 4.6, h: 3.8, barDir: "col", barGrouping: "stacked", chartColors: [ORANGE, BLUE, GREEN], showValue: true, dataLabelPosition: "ctr", dataLabelFontSize: 10, dataLabelColor: WHITE, dataLabelFontFace: "+mn-lt",
+      showTitle: true, title: "10件受託した場合の粗利（万円）", titleFontSize: 11, titleColor: NAVY, titleFontFace: "+mn-lt", catAxisLabelFontSize: 11, catAxisLabelColor: DARK, catAxisLabelFontFace: "+mn-lt",
+      valAxisHidden: true, valGridLine: { style: "none" }, catGridLine: { style: "none" }, showLegend: true, legendPos: "b", legendFontSize: 9, legendFontFace: "+mn-lt", objectName: "ltv_chart",
+    });
+    table(s, [["項目（10件）", "計算", "粗利"], ["遺品整理", "30万円×10件×粗利率60%", "180万円"], ["不動産売買（1件）", "2,000万円の仲介手数料（両手）", "132万円"], ["解体工事（1件）", "工事費150万円×粗利率30%", "45万円"], [{ text: "合計", options: { bold: true } }, "", { text: "357万円", options: { bold: true, color: RED } }]], 5.2, 2.5, 4.4, [1.3, 2.2, 0.9], { size: 9.5, rowH: 0.45 });
+    rect(s, 5.2, 4.95, 4.4, 1.25, "FCE8E6", { round: true });
+    txt(s, [B("1件あたりの粗利\n", { fontSize: 11 }), B("18万円 → ", { fontSize: 15, color: MGRAY }), B("約36万円", { fontSize: 24, color: RED })], 5.2, 4.95, 4.4, 1.25, { align: "center", valign: "middle" });
+    key(s, "本業まで含めると、遺品整理単体の約2倍の利益が残ります。", { y: 6.4, size: 16 });
+    foot(s, "※仲介手数料は宅建業法の上限（3%＋6万円、税別）で計算。モデル数値であり成果を保証するものではありません。");
+  }
+  {
+    const s = content(S7, "集客の進め方", "【要カスタマイズ】広告予算。立上げ直後はテスト運用で反響の出るキーワード・エリアを見極め、効果の高い媒体に絞って拡大する。");
+    msg(s, "4つのチャネルで、安定して反響をとります");
+    const CH = [["laptop", "WEB", "専門HP・SEO・MEO・広告", "今すぐ依頼したい人を集める", "約3万円／件", BLUE], ["paper", "チラシ", "戸建・B4・保存版", "検索していない人に認知してもらう", "約5万円／件", ORANGE], ["shake", "提携先の紹介", "不動産・士業・葬儀社など", "相見積もりのない紹介を得る", "成約時のみ手数料", PURPLE], ["users", "既存のお客様", "本業の顧客・会員", "本業のお客様に案内する", "ほぼ0円", GREEN]];
+    CH.forEach((c, i) => {
+      const x = 0.4 + i * 2.33;
+      rect(s, x, 1.6, 2.2, 2.9, WHITE, { line: c[5], lw: 1.5, round: true, r: 0.05 });
+      icon(s, c[0], x + 0.75, 1.75, 0.7, WHITE, c[5]);
+      txt(s, c[1], x, 2.52, 2.2, 0.4, { size: 14, bold: true, color: c[5], align: "center", margin: 0 });
+      txt(s, c[2], x + 0.1, 2.9, 2.0, 0.35, { size: 9, color: GRAY, align: "center", margin: 0 });
+      txt(s, c[3], x + 0.1, 3.25, 2.0, 0.6, { size: 10, bold: true, align: "center", ls: 1.2 });
+      rect(s, x + 0.15, 3.95, 1.9, 0.4, LGRAY, { round: true });
+      txt(s, c[4], x + 0.15, 3.95, 1.9, 0.4, { size: 10, bold: true, color: c[5], align: "center", valign: "middle", margin: 0 });
+    });
+    txt(s, "広告予算の考え方", 0.4, 4.7, 9.2, 0.35, { size: 13, bold: true, color: NAVY, margin: 0 });
+    chevron(s, 0.4, 5.1, 3.25, 0.95, BLUE, "テスト期（〜3ヶ月）\n月20万円で反響を検証", { first: true, size: 10.5 });
+    chevron(s, 3.45, 5.1, 3.3, 0.95, NAVY, "拡大期（4ヶ月目〜）\n粗利の15〜20%を目安に", { size: 10.5 });
+    chevron(s, 6.55, 5.1, 3.05, 0.95, GREEN, "安定期\n紹介・SEOで広告費を削減", { size: 10.5 });
+    key(s, "広告ですぐ反響をとり、紹介とSEOで広告費を下げていきます。", { y: 6.35, size: 16 });
+  }
+  {
+    const s = content(S7, "専門HPとチラシのつくり方");
+    msg(s, "一丁目一番地は「専門店の屋号とHP」。チラシは戸建に絞って打ち出します", { size: 14 });
+    frame(s, 0.4, 1.6, 4.5, 4.75, "反響がとれる専門HP", BLUE, { hh: 0.5, hsize: 14 });
+    rect(s, 1.85, 2.25, 1.6, 0.45, BLUE);
+    txt(s, "トップページ", 1.85, 2.25, 1.6, 0.45, { size: 10, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
+    line(s, 2.65, 2.7, 0, 0.2, BLUE, 1.25);
+    line(s, 0.94, 2.9, 3.33, 0, BLUE, 1.25);
+    ["料金", "作業の流れ", "作業事例", "お客様の声", "選ばれる理由"].forEach((t, i) => {
+      const x = 0.55 + i * 0.83;
+      line(s, x + 0.39, 2.9, 0, 0.15, BLUE, 1.25);
+      rect(s, x, 3.05, 0.78, 0.45, LBLUE);
+      txt(s, t, x, 3.05, 0.78, 0.45, { size: 8, bold: true, color: NAVY, align: "center", valign: "middle", margin: 0 });
+    });
+    txt(s, "＋ ブログ／会社概要／よくある質問／無料相談 の全10ページ", 0.55, 3.55, 4.2, 0.3, { size: 9, color: GRAY, margin: 0 });
+    ["8秒以内に「何屋か」「信頼できるか」を伝える", "料金はパック料金でわかりやすく", "事例・お客様の声・資格で信頼を強化", "電話・LINE・フォームの導線を全ページに"].forEach((t, i) => {
+      icon(s, "ok", 0.6, 4.02 + i * 0.55, 0.28, BLUE);
+      txt(s, t, 0.98, 3.95 + i * 0.55, 3.8, 0.42, { size: 10.5, valign: "middle", margin: 0 });
+    });
+    frame(s, 5.1, 1.6, 4.5, 4.75, "戸建向けのチラシ", ORANGE, { hh: 0.5, hsize: 14 });
+    [["B4サイズ", "埋もれない大きさ"], ["厚手の紙", "保存してもらえる"], ["戸建のみ", "単価の高い層に"]].forEach((t, i) => {
+      const x = 5.25 + i * 1.45;
+      rect(s, x, 2.25, 1.35, 0.95, LORANGE, { round: true });
+      txt(s, [B(t[0] + "\n", { fontSize: 12, color: ORANGE }), B(t[1], { fontSize: 9 })], x, 2.25, 1.35, 0.95, { align: "center", valign: "middle" });
+    });
+    txt(s, "紙面に入れる5つのポイント", 5.25, 3.35, 4.2, 0.35, { size: 11, bold: true, color: ORANGE, margin: 0 });
+    ["「遺品整理」を大きく打ち出す", "誰のための・何を解決するサービスかを明確に", "「保存版」を強調する", "料金プランと追加料金の考え方を明記", "実績・口コミ・資格・スタッフの顔を掲載"].forEach((t, i) => {
+      num(s, i + 1, 5.3, 3.8 + i * 0.48, 0.3, ORANGE);
+      txt(s, t, 5.7, 3.75 + i * 0.48, 3.8, 0.4, { size: 10.5, valign: "middle", margin: 0 });
+    });
+    key(s, "ターゲットは明確。その対象に対して、専門店として打ち出します。", { y: 6.45, size: 16 });
+  }
+  {
+    const s = content(S7, "アライアンス提携の進め方");
+    msg(s, "地域の相続・空き家案件が「最初に集まる会社」になることが目的です", { size: 14 });
+    s.addShape(pres.shapes.OVAL, { x: 0.4, y: 1.6, w: 4.6, h: 4.0, fill: { color: "FFF8E8" }, line: { type: "none" }, objectName: "net_bg" });
+    rect(s, 1.85, 3.2, 1.7, 0.8, NAVY, { round: true });
+    txt(s, "当社\n（遺品整理）", 1.85, 3.2, 1.7, 0.8, { size: 11, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
+    const N = [["building", "不動産会社", 2.05, 1.75], ["contract", "司法書士・税理士", 0.45, 2.5], ["pray", "葬儀社", 3.6, 2.5], ["hospital", "ケアマネ・包括", 0.45, 4.15], ["hammer", "解体・リフォーム", 3.6, 4.15], ["city", "役所", 2.05, 4.85]];
+    N.forEach(([k, t, x, y]) => {
+      rect(s, x, y, 1.35, 0.6, WHITE, { line: LINE, shadow: true, round: true });
+      icon(s, k, x + 0.07, y + 0.15, 0.3, NAVY);
+      txt(s, t, x + 0.4, y, 0.93, 0.6, { size: 8.5, bold: true, valign: "middle", margin: 0 });
+    });
+    txt(s, "開拓の優先順位：A 不動産・士業 → B 葬儀・解体・リフォーム → C 介護・金融機関", 0.4, 5.7, 4.6, 0.6, { size: 9.5, color: GRAY, ls: 1.2 });
+    frame(s, 5.2, 1.6, 4.4, 2.6, "初回訪問のゴールは「資料を置いてもらう」", NAVY, { hsize: 11.5 });
+    ["挨拶・自己紹介", "訪問の目的（営業ではないことを伝える）", "相手のメリットを伝える", "資料のお渡し", "今後のつながりをつくる"].forEach((t, i) => {
+      num(s, i + 1, 5.35, 2.15 + i * 0.4, 0.28, NAVY);
+      txt(s, t, 5.72, 2.1 + i * 0.4, 3.8, 0.36, { size: 10.5, valign: "middle", margin: 0 });
+    });
+    frame(s, 5.2, 4.35, 4.4, 1.95, "意識の切り替え", RED, { hsize: 12 });
+    [["仕事をください", "お客様のお役に立てます"], ["提携してください", "費用負担を軽減できます"], ["一番安くできます", "丁寧で誠実な対応を約束"]].forEach((r, i) => {
+      txt(s, "✕ " + r[0], 5.3, 4.85 + i * 0.47, 1.75, 0.4, { size: 9.5, color: MGRAY, valign: "middle", margin: 0 });
+      arrowR(s, 7.05, 4.97 + i * 0.47, 0.25, 0.17, RED);
+      txt(s, "○ " + r[1], 7.35, 4.85 + i * 0.47, 2.2, 0.4, { size: 9.5, bold: true, color: RED, valign: "middle", margin: 0 });
+    });
+    key(s, "提携先の信用を守ることが、最大の営業フックになります。", { y: 6.45, size: 16 });
+  }
+  {
+    const s = content(S7, "営業の進め方");
+    msg(s, "契約率80%を基準に、最初の電話対応と現地での即決で受注します", { size: 14 });
+    table(s, [["", "1年目", "2年目", "3年目"], ["営業人員", "1名", "2名", "3名"], ["月間集客件数", "12.5件", "18.75件", "35件"], ["月間契約件数", "10件", "15件", "28件"], ["一人当たり契約件数（月）", "10件", "7.5件", "約9.3件"]], 0.4, 1.6, 4.5, [1.95, 0.85, 0.85, 0.85], { size: 10.5, rowH: 0.46, firstColFill: true });
+    txt(s, "※契約率80%を基準に算出", 0.4, 3.95, 4.5, 0.3, { size: 9, color: GRAY, margin: 0 });
+    txt(s, "案件の規模で、営業方法を使い分けます", 5.1, 1.6, 4.5, 0.35, { size: 11.5, bold: true, color: NAVY, margin: 0 });
+    rect(s, 5.1, 2.0, 2.15, 2.2, LORANGE, { round: true });
+    txt(s, [B("30万円未満\n", { fontSize: 13, color: ORANGE }), B("オンライン完結\n\n", { fontSize: 11 }), B("電話→アンケート→写真→見積→電話で契約\n訪問を省いて安く・早く", { fontSize: 9.5, color: GRAY })], 5.15, 2.05, 2.05, 2.1, { align: "center", valign: "middle", ls: 1.15 });
+    rect(s, 7.45, 2.0, 2.15, 2.2, LBLUE, { round: true });
+    txt(s, [B("30万円以上\n", { fontSize: 13, color: NAVY }), B("現地確認＋即決\n\n", { fontSize: 11 }), B("電話→事前準備→現地確認→その場で見積→契約\n追加提案で単価UP", { fontSize: 9.5, color: GRAY })], 7.5, 2.05, 2.05, 2.1, { align: "center", valign: "middle", ls: 1.15 });
+    const K3 = [["clock", "スピード", "問い合わせ後\n5分以内に電話"], ["talk", "ヒアリング", "お金・時期・競合・\nプラン・キーマンを確認"], ["heart", "信頼と提案", "ご遺族に寄り添い、\n関連サービスも提案"]];
+    K3.forEach((k, i) => {
+      const x = 0.4 + i * 3.13;
+      rect(s, x, 4.45, 2.94, 1.75, WHITE, { line: ORANGE, lw: 1.25 });
+      icon(s, k[0], x + 0.15, 4.6, 0.6, WHITE, ORANGE);
+      txt(s, k[1], x + 0.85, 4.6, 2.0, 0.6, { size: 14, bold: true, color: ORANGE, valign: "middle", margin: 0 });
+      txt(s, k[2], x + 0.15, 5.3, 2.64, 0.8, { size: 10.5, ls: 1.2 });
+    });
+    key(s, "最初の電話対応が、契約率を決めます。", { y: 6.4, size: 16 });
+  }
+  {
+    const s = content(S7, "0次接客とクロージング");
+    msg(s, "お客様は「電話の印象」で、この会社に任せたいかを判断しています", { size: 14 });
+    icon(s, "phone", 0.45, 1.65, 0.75, WHITE, NAVY);
+    txt(s, "お客様が知りたいこと", 1.3, 1.65, 3.5, 0.75, { size: 13, bold: true, color: NAVY, valign: "middle", margin: 0 });
+    bubble(s, "この会社は\n信頼できる？", 0.45, 2.55, 1.45, 0.95);
+    bubble(s, "高くない？\n追加料金は？", 1.98, 2.55, 1.45, 0.95);
+    bubble(s, "対応は\n丁寧？", 3.51, 2.55, 1.45, 0.95);
+    frame(s, 0.4, 3.75, 4.6, 2.5, "電話で確認すること", NAVY, { hsize: 12 });
+    [["基本情報", "故人様との関係・キーマン・希望時期・予算・他社状況"], ["現場の状況", "間取り・階数・エレベーター・駐車場・物量・重量物"], ["個別事情", "捜索物・買取・供養や特殊清掃の希望・立会い"], ["整理後の予定", "売却・解体・リフォームの検討"]].forEach((r, i) => {
+      txt(s, r[0], 0.55, 4.25 + i * 0.48, 1.2, 0.42, { size: 10, bold: true, color: NAVY, valign: "middle", margin: 0 });
+      txt(s, r[1], 1.75, 4.25 + i * 0.48, 3.2, 0.42, { size: 9, valign: "middle", margin: 0 });
+    });
+    frame(s, 5.2, 1.65, 4.4, 4.6, "契約を後押しする3つのキーフレーズ", RED, { hsize: 12 });
+    [["共感", "「そのお気持ち、よく分かります。」"], ["安心", "「追加料金は一切ありません。すべてコミコミですので安心です。」"], ["希少性", "「ご希望の日程は埋まりやすいので、早めのご決断がおすすめです。」"]].forEach((r, i) => {
+      const y = 2.2 + i * 1.12;
+      num(s, i + 1, 5.35, y + 0.08, 0.4, RED);
+      txt(s, r[0], 5.85, y, 3.6, 0.45, { size: 13, bold: true, color: RED, valign: "middle", margin: 0 });
+      txt(s, r[1], 5.85, y + 0.45, 3.65, 0.6, { size: 10.5, ls: 1.2, margin: 0 });
+    });
+    rect(s, 5.35, 5.55, 4.1, 0.55, "FCE8E6");
+    txt(s, "契約は「ゴール」ではなく「スタート」", 5.35, 5.55, 4.1, 0.55, { size: 11.5, bold: true, color: RED, align: "center", valign: "middle", margin: 0 });
+    key(s, "契約率の8割は、最初の電話対応（0次接客）で決まります。", { y: 6.45, size: 16 });
+  }
+  {
+    const s = content(S7, "現場品質の仕組み");
+    msg(s, "誰が作業しても「頼んでよかった」と言われる品質を、ルールで標準化します", { size: 14 });
+    const R3 = [["list", "捨てる前に必ず確認", "現金・通帳・印鑑・権利書・写真・手紙は必ず確認する"], ["box", "迷ったら捨てない", "判断に迷う物は「確認保留ケース」へ。ご遺族と一緒に確認する"], ["search", "全品手作業で確認", "ポケット・封筒・引き出し・箱の中まで一つずつ確認する"]];
+    R3.forEach((r, i) => {
+      const x = 0.4 + i * 3.13;
+      rect(s, x, 1.6, 2.94, 2.3, WHITE, { line: RED, lw: 1.5 });
+      rect(s, x, 1.6, 2.94, 0.38, RED);
+      txt(s, "絶対遵守ルール " + (i + 1), x, 1.6, 2.94, 0.38, { size: 10.5, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
+      icon(s, r[0], x + 0.15, 2.12, 0.55, RED);
+      txt(s, r[1], x + 0.8, 2.08, 2.05, 0.62, { size: 13, bold: true, color: RED, valign: "middle", margin: 0 });
+      txt(s, r[2], x + 0.15, 2.85, 2.64, 0.95, { size: 10.5, ls: 1.25 });
+    });
+    txt(s, "作業の流れ", 0.4, 4.1, 3, 0.35, { size: 12, bold: true, color: NAVY, margin: 0 });
+    [["作業前", "近隣挨拶・養生・作業前の写真撮影"], ["作業中", "時計回りの仕分け・貴重品の記録と保管"], ["引き渡し", "全室をご一緒に確認・貴重品をお渡し"], ["完了報告", "写真付きの報告書にご署名"]].forEach((r, i) => {
+      chevron(s, 0.4 + i * 2.32, 4.5, 2.45, 0.55, NAVY, r[0], { first: i === 0, size: 11.5 });
+      txt(s, r[1], 0.45 + i * 2.32, 5.1, 2.15, 0.7, { size: 9.5, ls: 1.2, align: "center" });
+    });
+    rect(s, 0.4, 5.85, 9.2, 0.5, LGREEN);
+    txt(s, "現場マニュアル（60ページ以上）とチェックリストで、未経験のスタッフでも同じ品質に", 0.4, 5.85, 9.2, 0.5, { size: 11, bold: true, color: GREEN, align: "center", valign: "middle", margin: 0 });
+    key(s, "品質の高さが紹介を生み、広告費を下げます。", { y: 6.45, size: 16 });
+  }
+
+  // =====================================================================
+  // 成功事例
+  // =====================================================================
+  const S8 = "成功事例";
+  pres.addSection({ title: S8 });
+  divider(S8, "成功事例企業が続出！", "事例企業名・数値は掲載許可を確認してから使う。");
+  function caseSlide(name, area, n1, n2, l1, l2, detail, point, notes) {
+    const s = content(S8, "成功事例紹介", notes);
+    txt(s, `${name}（${area}）`, 0.4, 1.0, 9.2, 0.5, { size: 17, bold: true, color: NAVY, valign: "middle", margin: 0 });
+    photo(s, 0.4, 1.6, 5.2, 3.0, "HPのファーストビュー画像");
+    txt(s, "立上げ2年目で", 5.85, 1.65, 3.7, 0.4, { size: 13, bold: true, margin: 0 });
+    [[l1, n1], [l2, n2]].forEach((r, i) => {
+      rect(s, 5.85, 2.15 + i * 1.2, 3.75, 1.05, "FCE8E6");
+      txt(s, r[0], 5.95, 2.18 + i * 1.2, 3.5, 0.35, { size: 11, bold: true, color: GRAY, margin: 0 });
+      txt(s, r[1], 5.95, 2.5 + i * 1.2, 3.5, 0.65, { size: 28, bold: true, color: RED, valign: "middle", margin: 0 });
+    });
+    txt(s, "を実現！", 5.85, 4.55, 3.7, 0.35, { size: 13, bold: true, margin: 0 });
+    line(s, 0.4, 5.05, 9.2, 0, LINE, 1);
+    txt(s, detail, 0.4, 5.2, 5.6, 1.1, { size: 12, ls: 1.35 });
+    rect(s, 6.2, 5.2, 3.4, 1.1, LBLUE, { round: true });
+    icon(s, "bulb", 6.3, 5.45, 0.5, NAVY);
+    txt(s, point, 6.85, 5.2, 2.7, 1.1, { size: 10.5, bold: true, color: NAVY, valign: "middle" });
+  }
+  caseSlide("株式会社 蒼炎様", "東京都多摩市", "8,000万円", "3,000万円", "遺品整理事業の売上", "営業利益", "参入2年で初期投資を回収し、不用品買取・空き家買取など事業の裾野を拡大しながら成長中。\n販促費 月50万円／反響 月40件", "多摩エリアに特化した専門店の屋号・HPとWEB集客", "【要確認】掲載許可。HP画像を差し替える。");
+  caseSlide("Mevius Moving Works様", "大阪府大阪市", "6,000万円", "30%超", "遺品整理事業の売上", "営業利益率", "不動産会社からの紹介を中心に集客し、成約率80%超を実現。引越し事業と連携し、遺品整理事業を強化。", "提携先からの紹介と、本業（引越し）との連携", "【要確認】掲載許可。HP画像を差し替える。");
+  {
+    const s = content(S8, "成功企業の共通点", "同業種の事例がある場合は、このページの前に追加する。");
+    msg(s, "成功している企業は、共通して4つのことを実践しています");
+    const C = [["store", "専門店として打ち出す", "多摩エリア特化の専門店", "遺品整理の専門ブランド", "貴社版の事業コンセプト"], ["shake", "紹介の仕組み", "事業の裾野を広げ紹介を獲得", "不動産会社からの紹介が中心", "提携先からの紹介"], ["clock", "スピード対応", "反響月40件に素早く対応", "成約率80%超", "5分以内の電話・現地即決"], ["link", "本業との連携", "買取・空き家買取へ拡大", "引越し事業と連携", "本業込みの利益"]];
+    [["蒼炎様", 3.15], ["Mevius様", 5.3], ["貴社での進め方", 7.45]].forEach(([h, X], j) => {
+      rect(s, X, 1.6, 2.1, 0.45, j === 2 ? RED : NAVY);
+      txt(s, h, X, 1.6, 2.1, 0.45, { size: 11.5, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
+    });
+    C.forEach((c, i) => {
+      const y = 2.15 + i * 1.0;
+      rect(s, 0.4, y, 2.65, 0.9, LBLUE);
+      icon(s, c[0], 0.5, y + 0.2, 0.5, NAVY);
+      txt(s, c[1], 1.1, y, 1.9, 0.9, { size: 11.5, bold: true, color: NAVY, valign: "middle", margin: 0 });
+      [c[2], c[3], c[4]].forEach((t, j) => {
+        const X = [3.15, 5.3, 7.45][j];
+        rect(s, X, y, 2.1, 0.9, j === 2 ? "FCE8E6" : (i % 2 ? WHITE : LGRAY));
+        txt(s, t, X + 0.08, y, 1.95, 0.9, { size: 10, bold: j === 2, color: j === 2 ? RED : DARK, align: "center", valign: "middle", margin: 0 });
+      });
+    });
+    key(s, "成功の型は、貴社でも再現できます。", { y: 6.35, size: 17 });
+  }
+
+  // =====================================================================
+  // 船井総研がご提供できること
+  // =====================================================================
+  const S9 = "船井総研がご提供できること";
+  pres.addSection({ title: S9 });
+  {
+    const s = pres.addSlide({ masterName: "BLANK", sectionTitle: S9 });
+    rect(s, 5.4, 0, 4.6, 7.5, NAVY);
+    s.addShape(pres.shapes.OVAL, { x: 6.2, y: 4.8, w: 6, h: 4, fill: { color: BLUE }, line: { type: "none" }, objectName: "div_wave" });
+    txt(s, "船井総研が\nご提供できること", 0.4, 2.9, 5.0, 1.4, { size: 30, bold: true, color: NAVY, align: "center", valign: "middle" });
+    txt(s, "ともに、地域に必要とされる遺品整理事業を。", 5.6, 3.3, 4.2, 0.8, { size: 15, bold: true, color: WHITE, align: "center", valign: "middle" });
+    s.addNotes("事後経営相談の最後に使う。");
+  }
+  {
+    const s = content(S9, "3つの支援サービス");
+    msg(s, "貴社の課題に合わせて、3つのサービスでトータルにご支援します");
+    const SV = [["laptop", "01", "HPディレクション支援", ["商圏の競合調査", "強みの整理と打ち出し", "コンセプト設計", "キャッチコピーのご提案"], "※デザイン制作はご希望のHP制作会社へ依頼", NAVY], ["list", "02", "ツール＆マニュアル導入支援", ["事業概要マニュアル", "営業マニュアル", "現場マニュアル（60ページ以上）", "集客マニュアル（60ページ以上）", "見積システム・契約書 ほか"], "", "1F4E3D"], ["chart", "03", "月次コンサルティング", ["事業戦略（3ヵ年計画・財務分析）", "商品設計", "集客戦略（HP・チラシ・広告）", "営業戦略（ツール・研修）", "採用戦略"], "", "8A3B12"]];
+    SV.forEach((v, i) => {
+      const x = 0.4 + i * 3.13;
+      rect(s, x, 1.6, 2.94, 4.7, WHITE, { line: v[5], lw: 1.5 });
+      rect(s, x, 1.6, 2.94, 1.2, v[5]);
+      txt(s, v[1], x + 0.12, 1.6, 0.8, 0.7, { size: 26, color: WHITE, valign: "middle", margin: 0 });
+      icon(s, v[0], x + 2.25, 1.75, 0.5, WHITE);
+      txt(s, v[2], x + 0.12, 2.25, 2.7, 0.5, { size: 13, bold: true, color: WHITE, valign: "middle", margin: 0 });
+      v[3].forEach((t, k) => {
+        s.addImage({ data: IC("ok", v[5] === NAVY ? NAVY : (i === 1 ? GREEN : BROWN)), x: x + 0.15, y: 3.06 + k * 0.5, w: 0.26, h: 0.26, objectName: nm("ok") });
+        txt(s, t, x + 0.5, 3.0 + k * 0.5, 2.38, 0.38, { size: 10.5, valign: "middle", margin: 0 });
+      });
+      if (v[4]) txt(s, v[4], x + 0.15, 5.55, 2.65, 0.6, { size: 9, color: GRAY, ls: 1.2 });
+    });
+    key(s, "事業計画から商品設計・集客・営業・現場まで、一気通貫でご支援します。", { y: 6.45, size: 15 });
+  }
+  {
+    const s = content(S9, "ご提供するツール（一部抜粋）");
+    msg(s, "商品設計・集客・営業・現場作業まで、明日から使えるツールを貴社仕様でご提供します", { size: 13 });
+    const F = [["pdf", RED, "A4エンド向け紹介資料"], ["doc", BLUE, "WEBサイト制作ディレクション資料"], ["ppt", ORANGE, "アライアンス提案書"], ["pdf", RED, "テンプレートチラシ"], ["xls", GREEN, "古物台帳（入力版）"], ["xls", GREEN, "現場準備物マスターリスト"], ["ppt", ORANGE, "口コミ収集POP"], ["pdf", RED, "遺品整理後アプローチブック"], ["ppt", ORANGE, "現場研修資料"], ["doc", BLUE, "業務提携契約書（汎用版）"], ["doc", BLUE, "遺品整理請負契約書"], ["doc", BLUE, "遺品買取同意書"], ["xls", GREEN, "提案書明細（7タブ連動）"], ["img", PURPLE, "見積書（140段ボール基準）"], ["xls", GREEN, "利益管理・見積システム"], ["video", RED, "会社信頼向上動画"], ["ppt", ORANGE, "業者提携用資料"], ["xls", GREEN, "アライアンス管理表"]];
+    F.forEach((f, i) => {
+      const x = 0.4 + (i % 3) * 3.1, y = 1.55 + Math.floor(i / 3) * 0.78;
+      rect(s, x, y, 2.95, 0.66, WHITE, { line: LINE, shadow: true });
+      s.addImage({ data: IC(f[0], f[1]), x: x + 0.12, y: y + 0.12, w: 0.42, h: 0.42, objectName: nm("ficon") });
+      txt(s, f[2], x + 0.62, y, 2.28, 0.66, { size: 10, bold: true, valign: "middle", margin: 0 });
+    });
+    key(s, "マニュアル4種＋ツール類を、貴社の仕様に合わせて作成・納品します。", { y: 6.35, size: 15 });
+  }
+  {
+    const s = content(S9, "月次支援の進め方");
+    msg(s, "月1回の打ち合わせ（約4時間）と日常のサポートで、30日間の実行を最大化します", { size: 13 });
+    txt(s, "1日の打ち合わせの例", 0.4, 1.55, 5.5, 0.35, { size: 13, bold: true, color: NAVY, margin: 0 });
+    const TL = [["13:00", "事業全体の数値確認", "事業数値・営業KPIの進捗確認"], ["13:30", "営業", "進捗・追客案件・見込み案件の確認、営業ツールの修正"], ["14:40", "集客", "WEB・HPの改善提案、集客スケジュール、販促強化策"], ["16:30", "採用", "採用の進捗・人員体制の確認"]];
+    line(s, 1.25, 2.1, 0, 3.9, NAVY, 3);
+    TL.forEach((t, i) => {
+      const y = 2.0 + i * 1.0;
+      oval(s, 1.13, y + 0.08, 0.24, 0.24, i % 2 ? BLUE : NAVY);
+      txt(s, t[0], 0.4, y, 0.7, 0.4, { size: 12, bold: true, color: RED, valign: "middle", margin: 0 });
+      txt(s, t[1], 1.55, y, 4.2, 0.4, { size: 13, bold: true, color: NAVY, valign: "middle", margin: 0 });
+      txt(s, t[2], 1.55, y + 0.4, 4.3, 0.5, { size: 10, color: GRAY, margin: 0 });
+    });
+    txt(s, "17:00 終了", 0.4, 6.0, 1.5, 0.35, { size: 10, bold: true, color: GRAY, margin: 0 });
+    frame(s, 6.2, 1.6, 3.4, 4.75, "日常の実行管理サポート", NAVY);
+    [["line", "LINEサポート"], ["phone", "TELサポート（9:00〜20:00）"], ["mail", "メールサポート"], ["talk", "ZOHO Cliqサポート"], ["laptop", "オンライン打合せ"], ["link", "ツール共有（クラウド）"]].forEach((r, i) => {
+      icon(s, r[0], 6.4, 2.2 + i * 0.62, 0.36, NAVY);
+      txt(s, r[1], 6.85, 2.17 + i * 0.62, 2.7, 0.42, { size: 10.5, bold: true, valign: "middle", margin: 0 });
+    });
+    txt(s, "進捗確認・課題相談にいつでも対応します", 6.3, 5.85, 3.2, 0.4, { size: 9.5, color: GRAY, align: "center", margin: 0 });
+    key(s, "30日間で、実行を最大化させます。", { y: 6.45, size: 17 });
+  }
+  {
+    const s = content(S9, "6ヶ月の立ち上げスケジュール", "【要カスタマイズ】開始月を実際の月名に差し替える。各項目で貴社にお願いすること（担当者の決定、協力業者との面談、写真素材の準備など）も伝える。");
+    msg(s, "約6ヶ月で、集客・営業・現場の仕組みを立ち上げます");
+    const X0 = 2.2, MW = 1.22, Y0 = 1.6;
+    rect(s, 0.4, Y0, 9.2, 0.48, NAVY);
+    txt(s, "項目", 0.4, Y0, 1.8, 0.48, { size: 11, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
+    for (let m = 0; m < 6; m++) txt(s, `${m + 1}ヶ月目`, X0 + m * MW, Y0, MW, 0.48, { size: 11, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
+    const G = [["業者探し", 0, 1.5, "協力業者探し・原価確認", "5B9BD5"], ["商品設計", 0, 1.5, "基本パック・オプション設計", "70AD47"], ["ブランド設計", 0, 1.5, "屋号・ロゴ・キャッチコピー", "4472C4"], ["HP制作", 0.5, 2.0, "TOP公開→全ページ公開", "ED7D31"], ["営業体制", 1.7, 4.3, "営業ツール制作・営業研修", "D4A017"], ["集客施策", 1.7, 4.3, "チラシ・WEB広告・SEO・MEO", "44546A"], ["提携", 1.2, 4.8, "リスト・資料作成→提携営業", "E0605D"]];
+    G.forEach((g, i) => {
+      const y = Y0 + 0.52 + i * 0.56;
+      rect(s, 0.4, y, 9.2, 0.52, i % 2 ? WHITE : LGRAY);
+      txt(s, g[0], 0.5, y, 1.7, 0.52, { size: 11, bold: true, color: NAVY, valign: "middle", margin: 0 });
+    });
+    for (let m = 1; m < 6; m++) line(s, X0 + m * MW, Y0 + 0.5, 0, 3.95, "D5DAE2", 0.75, { dash: "dash" });
+    G.forEach((g, i) => {
+      const y = Y0 + 0.52 + i * 0.56;
+      rect(s, X0 + g[1] * MW, y + 0.08, g[2] * MW, 0.36, g[4], { round: true, r: 0.12 });
+      txt(s, g[3], X0 + g[1] * MW, y + 0.08, g[2] * MW, 0.36, { size: 9.5, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
+    });
+    rect(s, X0 + 2.0 * MW, Y0 + 4.5, 4.0 * MW, 0.4, "FCE8E6", { round: true });
+    txt(s, "営業開始（反響獲得・現地確認・受注）", X0 + 2.0 * MW, Y0 + 4.5, 4.0 * MW, 0.4, { size: 10.5, bold: true, color: RED, align: "center", valign: "middle", margin: 0 });
+    key(s, "○月スタートで、○月に営業開始を目指します。", { y: 6.45, size: 16 });
+  }
+  {
+    const s = content(S9, "支援プランと費用", "【要確認】ツール＆マニュアル単体の価格（100万円か150万円か）、研究会の年会費。ここでは最新の企画書（96p）の価格を記載。");
+    msg(s, "貴社の状況に合わせて、3つのプランからお選びいただけます（金額はすべて税抜）", { size: 15 });
+    const PL = [["プラン1", "HP制作ディレクションのみ", [["商品設計＋HP制作ディレクション", "70万円"]], "※HP制作会社へのデザイン制作費は別途", NAVY], ["プラン2", "マニュアル・オリジナルツールのみ", [["マニュアル・オリジナルツール導入支援", "150万円"]], "", GREEN], ["プラン3", "フルサポート", [["HP制作ディレクション", "70万円"], ["マニュアル・ツール導入支援\n（プラン2より50万円お値引き）", "100万円"], ["業績アップ月次支援", "20万円／月"]], "※月次支援はオンライン＋必要に応じてご訪問", RED]];
+    PL.forEach((p, i) => {
+      const x = 0.4 + i * 3.13, hot = i === 2;
+      rect(s, x, 1.65, 2.94, 4.5, WHITE, { line: p[4], lw: hot ? 2.5 : 1.25, shadow: hot });
+      rect(s, x, 1.65, 2.94, 0.95, p[4]);
+      txt(s, [B(p[0] + "\n", { fontSize: 11 }), B(p[1], { fontSize: 12.5 })], x, 1.65, 2.94, 0.95, { color: WHITE, align: "center", valign: "middle" });
+      if (hot) { rect(s, x + 0.9, 1.47, 1.15, 0.32, YEL, { round: true }); txt(s, "おすすめ", x + 0.9, 1.47, 1.15, 0.32, { size: 10, bold: true, align: "center", valign: "middle", margin: 0 }); }
+      p[2].forEach((r, k) => {
+        const y = 2.75 + k * 0.92;
+        txt(s, r[0], x + 0.15, y, 2.64, 0.42, { size: 9, color: GRAY, align: "center", valign: "middle", margin: 0 });
+        txt(s, r[1], x + 0.15, y + 0.4, 2.64, 0.45, { size: 19, bold: true, color: p[4], align: "center", valign: "middle", margin: 0 });
+      });
+      if (p[3]) txt(s, p[3], x + 0.1, 5.6, 2.74, 0.5, { size: 8.5, color: GRAY, align: "center", ls: 1.15 });
+    });
+    txt(s, "・コンサルティングは月次支援と研究会の両方を含むサービスです　・PPC運用代行は広告運用費の20%の手数料が発生します", 0.4, 6.2, 9.2, 0.3, { size: 8.5, color: GRAY, margin: 0 });
+    key(s, "おすすめは、立上げから定着まで伴走する「フルサポート」です。", { y: 6.5, size: 15 });
+  }
+  {
+    const s = content(S9, "投資総額と回収の見通し", "【要カスタマイズ】初期投資（HP・許可）だけでなく、支援費用も含めた総額で示す。後から「聞いていた金額と違う」とならないようにする。");
+    msg(s, "支援費用を含めた投資総額と、回収の見通しをお示しします");
+    table(s, [["初年度の投資（プラン3の場合の例）", "金額（税抜）"], ["HP制作ディレクション", "70万円"], ["マニュアル・ツール導入支援", "100万円"], ["月次支援（20万円×12ヶ月）", "240万円"], ["HP制作費（制作会社へ）", "○○万円"], ["研究会 年会費", "○○万円"], ["古物商許可の取得", "約2〜8万円"], [{ text: "合計", options: { bold: true } }, { text: "○○○万円", options: { bold: true, color: RED } }]], 0.4, 1.6, 4.9, [3.3, 1.6], { size: 11, align: "right", rowH: 0.52 });
+    frame(s, 5.55, 1.6, 4.05, 2.15, "回収の見通し", NAVY);
+    txt(s, [B("遺品整理の営業利益\n", { fontSize: 10.5, color: GRAY }), B("1年目 ○○万円／2年目 ○○万円\n", { fontSize: 13 }), B("本業への波及利益\n", { fontSize: 10.5, color: GRAY }), B("年 ○○万円", { fontSize: 13 })], 5.7, 2.05, 3.8, 1.65, { valign: "middle", ls: 1.2 });
+    arrowD(s, 7.3, 3.82, 0.55, 0.35, RED);
+    rect(s, 5.55, 4.25, 4.05, 1.85, RED, { round: true });
+    txt(s, [B("○年目", { fontSize: 30 }), B("に投資総額を回収\n", { fontSize: 14 }), B("（本業の利益を含めると ○ヶ月）", { fontSize: 11 })], 5.55, 4.25, 4.05, 1.85, { color: WHITE, align: "center", valign: "middle" });
+    key(s, "支援費用を含めても、○年目に回収できる計画です。", { y: 6.4, size: 16 });
+    foot(s, MODEL_NOTE);
+  }
+  {
+    const s = content(S9, "コンサルティングに伴う契約概要", "【要確認】最新の契約条件に合わせて更新する。");
+    const items = [
+      ["契約期間", "月次支援は原則1年契約です（調査期間を除く）。"],
+      ["費用", "月次支援フィーとは別に、交通費を毎月固定額でご請求します。2年目以降のフィーはコンサルタントの役職により変動する場合があります。"],
+      ["研究会", "月次支援のご契約には研究会へのご入会が必要です。月次支援は「クラウドサイン」、研究会は「船井総研マイページ」でのお手続きです。"],
+      ["お支払い", "毎月のご支援終了後に請求書を送付し、銀行振込となります。"],
+      ["別途費用", "ご提案した施策に別途費用がかかる場合があります（購入費・印刷費・サイト制作費など）。リスティング広告の運用手数料は広告費の20%〜です。"],
+      ["成果について", "一定の成果を保証するものではありません。成果がないことを理由とした返金は行いません。数値シミュレーションや事例は一例です。"],
+      ["その他", "個人情報を含む資料は原則お預かりしません。制作ツールの著作権は弊社に帰属します。営業時間は平日9:30〜18:00です。"],
+    ];
+    items.forEach((it, i) => {
+      const y = 1.05 + i * 0.83, hot = i === 5;
+      rect(s, 0.4, y, 1.8, 0.72, hot ? "FCE8E6" : LBLUE);
+      txt(s, it[0], 0.4, y, 1.8, 0.72, { size: 11.5, bold: true, color: hot ? RED : NAVY, align: "center", valign: "middle", margin: 0 });
+      txt(s, it[1], 2.35, y, 7.25, 0.72, { size: 10, color: hot ? RED : DARK, bold: hot, valign: "middle", ls: 1.2 });
+      line(s, 2.35, y + 0.77, 7.25, 0, LINE, 0.5);
+    });
+  }
+
   await pres.writeFile({ fileName: OUT });
   const { applyTheme } = require(process.env.PPTX_SKILL + "/scripts/apply_theme.js");
   await applyTheme(OUT, THEME);
   console.log("written:", OUT);
-})();
+}
+main().catch((e) => { console.error(e); process.exit(1); });

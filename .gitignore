@@ -17,3 +17,6 @@ output/
 .DS_Store
 Thumbs.db
 .vscode/
+
+# 企画書（PowerPoint）はGitで管理する
+!proposals/*.pptx

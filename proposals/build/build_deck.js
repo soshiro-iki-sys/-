@@ -230,27 +230,30 @@ async function main() {
     txt(s, "東京本社　八重洲セントラルタワー 35階\n東京都中央区八重洲二丁目2番1号", 6.3, 6.4, 3.3, 0.55, { size: 9, color: GRAY, margin: 0 });
   }
   {
-    const s = content(S0, "遺品整理事業 専門コンサルタント", "【要カスタマイズ】担当コンサルタントの写真・経歴・ミッションを差し替える。");
-    photo(s, 0.4, 1.05, 2.6, 3.1, "担当コンサルタント写真");
-    txt(s, [B("専門工事支援部\n", { fontSize: 11, color: GRAY }), B("○○ ○○\n", { fontSize: 22, color: NAVY }), B("遺品整理士 など保有資格", { fontSize: 11, color: GRAY })], 3.2, 1.05, 3.5, 1.2, { ls: 1.2 });
-    txt(s, "【経歴】\n新卒で船井総合研究所に入社。遺品整理・リフォーム業界を専門に、新規事業の立上げから既存事業の活性化まで、業績アップのご支援に従事。", 3.2, 2.3, 6.4, 1.0, { size: 11, ls: 1.3 });
-    rect(s, 3.2, 3.35, 6.4, 0.8, LBLUE);
-    txt(s, [B("ミッション　", { color: NAVY }), B("遺品整理を『片付け』から、安心できる住まいと暮らしの『再編集』へ", { color: DARK })], 3.35, 3.35, 6.2, 0.8, { size: 12, valign: "middle" });
-    txt(s, "遺品整理事業の専門チーム（専門工事支援部）", 0.4, 4.4, 9, 0.4, { size: 14, bold: true, color: NAVY, margin: 0 });
+    const s = content(S0, "会社紹介", "【要カスタマイズ】担当コンサルタントの写真・経歴・ミッションを差し替える。");
+    s._pageTitle = "担当コンサルタント";
+    msg(s, "遺品整理事業の専門チームが、貴社の立ち上げをご支援します");
+    photo(s, 0.4, 1.7, 2.6, 2.6, "担当コンサルタント写真");
+    txt(s, [B("専門工事支援部\n", { fontSize: 11, color: GRAY }), B("○○ ○○\n", { fontSize: 22, color: NAVY }), B("遺品整理士 など保有資格", { fontSize: 11, color: GRAY })], 3.2, 1.7, 3.5, 1.05, { ls: 1.2 });
+    txt(s, "【経歴】\n新卒で船井総合研究所に入社。遺品整理・リフォーム業界を専門に、新規事業の立上げから既存事業の活性化まで、業績アップのご支援に従事。", 3.2, 2.8, 6.4, 0.7, { size: 11, ls: 1.3 });
+    rect(s, 3.2, 3.55, 6.4, 0.75, LBLUE);
+    txt(s, [B("ミッション　", { color: NAVY }), B("遺品整理を『片付け』から、安心できる住まいと暮らしの『再編集』へ", { color: DARK })], 3.35, 3.55, 6.2, 0.75, { size: 12, valign: "middle" });
+    txt(s, "遺品整理事業の専門チーム（専門工事支援部）", 0.4, 4.55, 9, 0.4, { size: 14, bold: true, color: NAVY, margin: 0 });
     const M = [["阪口 和輝", "チームリーダー\n古民家鑑定士"], ["堂野 宗一郎", "コンサルタント\n遺品整理士"], ["廣瀬 聡太朗", "コンサルタント"], ["伊木 颯志朗", "コンサルタント"]];
     M.forEach((m, i) => {
       const x = 0.4 + i * 2.33;
-      oval(s, x, 4.95, 0.95, 0.95, "E8EBF0", { line: "C2C8D2" });
-      icon(s, "user", x + 0.25, 5.18, 0.45, MGRAY);
-      txt(s, m[0], x + 1.05, 4.95, 1.25, 0.38, { size: 12, bold: true, valign: "middle", margin: 0 });
-      txt(s, m[1], x + 1.05, 5.33, 1.25, 0.65, { size: 9, color: GRAY, margin: 0 });
+      oval(s, x, 5.1, 0.95, 0.95, "E8EBF0", { line: "C2C8D2" });
+      icon(s, "user", x + 0.25, 5.33, 0.45, MGRAY);
+      txt(s, m[0], x + 1.05, 5.1, 1.25, 0.38, { size: 12, bold: true, valign: "middle", margin: 0 });
+      txt(s, m[1], x + 1.05, 5.48, 1.25, 0.65, { size: 9, color: GRAY, margin: 0 });
     });
   }
   {
     const s = content(S0, "貴社のお話を伺います", "【使い方】事前経営相談ではこのページで伺い、手元でメモする。事後経営相談では伺った内容を書き込んだ版に差し替え、最初に確認する。他社名・外注先名は書かない。");
+    msg(s, "まずは、貴社の状況とお考えをお聞かせください");
     const H = [["search", "セミナー・資料DLのきっかけ", "お申し込み・ダウンロードに至った理由"], ["building", "貴社の現状", "事業規模・売上構成、人員、許認可、車両・倉庫"], ["warn", "課題", "本業の課題、片付け・残置物の相談状況"], ["question", "知りたいこと・疑問点", "セミナーで知りたいこと／資料で気になった点"], ["target", "遺品整理事業の位置づけ", "会社の中でどう考えているか"]];
     H.forEach((h, i) => {
-      const y = 1.1 + i * 1.18;
+      const y = 1.7 + i * 1.05;
       icon(s, h[0], 0.45, y + 0.12, 0.62, WHITE, NAVY);
       txt(s, h[1], 1.25, y + 0.05, 2.7, 0.42, { size: 13, bold: true, color: NAVY, valign: "middle", margin: 0 });
       txt(s, h[2], 1.25, y + 0.47, 2.7, 0.5, { size: 9.5, color: GRAY, margin: 0 });
@@ -769,7 +772,7 @@ async function main() {
   }
   function realEstateChange() {
     const s = content(S5, "補足｜不動産会社にとっての環境変化", "【要確認】法改正の出典（法務省の通達等）を確認し、出典欄に記載する。");
-    txt(s, [B("不動産情報を「風上」で掴む方法の一つが、", { color: DARK, fontSize: 17 }), B("使えなくなります。", { color: RED, fontSize: 22 })], 0.4, 1.0, 9.2, 0.6, { align: "center", valign: "middle", margin: 0 });
+    msg(s, "不動産情報を「風上」で掴む方法の一つが、使えなくなります");
     line(s, 0.7, 2.25, 8.6, 0, LINE, 4);
     [["これまで", 1.1, MGRAY], ["2026年10月〜", 4.4, RED], ["これから", 7.7, NAVY]].forEach(([t, x, c]) => {
       oval(s, x + 0.5, 2.07, 0.36, 0.36, c);
@@ -1550,10 +1553,11 @@ async function main() {
   // =====================================================================
   const S8 = "成功事例";
   pres.addSection({ title: S8 });
-  divider(S8, "成功事例企業が続出！", "事例企業名・数値は掲載許可を確認してから使う。");
+  divider(S8, "成功事例のご紹介", "事例企業名・数値は掲載許可を確認してから使う。");
   function caseSlide(name, area, n1, n2, l1, l2, detail, point, notes) {
     const s = content(S8, "成功事例紹介", notes);
-    txt(s, `${name}（${area}）`, 0.4, 0.95, 9.2, 0.5, { size: 18, bold: true, color: NAVY, align: "center", valign: "middle", margin: 0 });
+    s._pageTitle = name;
+    msg(s, `${area}／遺品整理専門店の立上げ事例`);
     photo(s, 0.4, 1.6, 5.2, 3.0, "HPのファーストビュー画像");
     txt(s, "立上げ2年目で", 5.85, 1.65, 3.7, 0.4, { size: 13, bold: true, margin: 0 });
     [[l1, n1], [l2, n2]].forEach((r, i) => {
@@ -1719,6 +1723,7 @@ async function main() {
   }
   {
     const s = content(S9, "コンサルティングに伴う契約概要", "【要確認】最新の契約条件に合わせて更新する。");
+    msg(s, "ご契約にあたっての主な条件です");
     const items = [
       ["契約期間", "月次支援は原則1年契約です（調査期間を除く）。"],
       ["費用", "月次支援フィーとは別に、交通費を毎月固定額でご請求します。2年目以降のフィーはコンサルタントの役職により変動する場合があります。"],
@@ -1729,11 +1734,11 @@ async function main() {
       ["その他", "個人情報を含む資料は原則お預かりしません。制作ツールの著作権は弊社に帰属します。営業時間は平日9:30〜18:00です。"],
     ];
     items.forEach((it, i) => {
-      const y = 1.05 + i * 0.83, hot = i === 5;
-      rect(s, 0.4, y, 1.8, 0.72, hot ? "FCE8E6" : LBLUE);
-      txt(s, it[0], 0.4, y, 1.8, 0.72, { size: 11.5, bold: true, color: hot ? RED : NAVY, align: "center", valign: "middle", margin: 0 });
-      txt(s, it[1], 2.35, y, 7.25, 0.72, { size: 10, color: hot ? RED : DARK, bold: hot, valign: "middle", ls: 1.2 });
-      line(s, 2.35, y + 0.77, 7.25, 0, LINE, 0.5);
+      const y = 1.7 + i * 0.74, hot = i === 5;
+      rect(s, 0.4, y, 1.8, 0.64, hot ? "FCE8E6" : LBLUE);
+      txt(s, it[0], 0.4, y, 1.8, 0.64, { size: 11.5, bold: true, color: hot ? RED : NAVY, align: "center", valign: "middle", margin: 0 });
+      txt(s, it[1], 2.35, y, 7.25, 0.64, { size: 10, color: hot ? RED : DARK, bold: hot, valign: "middle", ls: 1.2 });
+      line(s, 2.35, y + 0.69, 7.25, 0, LINE, 0.5);
     });
   }
 

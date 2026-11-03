@@ -737,28 +737,63 @@ async function main() {
   }
   {
     const s = content(S6, "収支計画（3年間）", "【要確認】1年目の営業利益：元資料の記載（106万円）と、経費の内訳の合計（586万円）が合わない。差額480万円の項目を確定させてから使う。");
-    msg(s, "3年間の数値計画（経費の内訳）");
-    const b = (t, c) => ({ text: t, options: { bold: true, color: c || DARK } });
-    table(s, [
-      ["項目", "1年目", "2年目", "3年目", "備考"],
-      [b("売上"), b("3,600万円"), b("5,400万円"), b("1億円"), "月10件／15件／28件"],
-      ["処分費", "1,080万円", "1,620万円", "3,000万円", "売上の30%"],
-      ["その他消耗品費", "100万円", "150万円", "200万円", "資材など"],
-      [b("粗利", NAVY), b("2,420万円", NAVY), b("3,630万円", NAVY), b("6,800万円", NAVY), "粗利率 67〜68%"],
-      ["アルバイト事務", "120万円", "120万円", "120万円", "事務1名"],
-      ["広告宣伝費", "484万円", "726万円", "1,360万円", "粗利の20%"],
-      ["その他事業経費", "150万円", "200万円", "250万円", ""],
-      ["人件費（専任営業）", "600万円", "1,200万円", "1,800万円", "1名／2名／3名"],
-      ["作業員アルバイト", "480万円", "480万円", "960万円", "2名／2名／4名"],
-      [b("営業利益", RED), b("106万円", RED), b("904万円", RED), b("2,310万円", RED), ""],
-      [b("営業利益率", RED), b("2.9%", RED), b("16.7%", RED), b("23.1%", RED), ""],
-    ], 0.4, 1.55, 6.6, [1.75, 1.15, 1.15, 1.15, 1.4], { size: 10, rowH: 0.38 });
-    frame(s, 7.2, 1.55, 2.4, 1.8, "初期投資", NAVY);
-    txt(s, [B("HP制作費\n", { fontSize: 10 }), B("約150万円\n", { fontSize: 16, color: RED }), B("古物商許可\n", { fontSize: 10 }), B("5〜8万円", { fontSize: 16, color: RED })], 7.25, 2.0, 2.3, 1.3, { align: "center", valign: "middle" });
-    arrowD(s, 8.15, 3.42, 0.5, 0.32, NAVY);
-    frame(s, 7.2, 3.8, 2.4, 1.85, "投資回収", RED);
-    txt(s, [B("2年目", { fontSize: 22, color: RED }), B("で回収\n", { fontSize: 12, color: RED }), B("2年目の営業利益904万円で回収見込み", { fontSize: 9.5 })], 7.25, 4.25, 2.3, 1.35, { align: "center", valign: "middle" });
-    txt(s, [B("【特徴】", { color: DARK }), B("初期投資費用が低く、社員1名からスタート可能", { color: RED }), B("であり、", { color: DARK }), B("20%以上の利益率", { color: RED }), B("を目指せるビジネスモデルです。", { color: DARK })], 0.4, 6.25, 9.2, 0.75, { size: 14, valign: "middle", margin: 0 });
+    // 見出し
+    txt(s, [B("数値計画", { fontSize: 26, color: NAVY }), B("（3年間）", { fontSize: 15, color: NAVY })], 0.4, 0.98, 3.0, 0.62, { valign: "middle", margin: 0 });
+    line(s, 3.05, 1.06, 0, 0.48, MGRAY, 1);
+    txt(s, [B("3年目には売上1億円を達成し、営業利益率", { color: DARK }), B("23.1%", { color: GOLD }), B("の高収益体制へ\n安定した成長と収益性の向上を実現します。", { color: DARK })], 3.15, 0.98, 4.2, 0.62, { size: 9.5, valign: "middle", margin: 0 });
+    // 右上バッジ
+    s.addShape(pres.shapes.PARALLELOGRAM, { x: 7.35, y: 0.9, w: 2.65, h: 0.75, fill: { color: NAVY }, line: { type: "none" }, objectName: "badge" });
+    icon(s, "chart", 7.65, 1.03, 0.48, GOLD);
+    txt(s, [B("3年目 売上 ", { color: WHITE, fontSize: 10 }), B("1億円\n", { color: GOLD, fontSize: 15 }), B("営業利益率 ", { color: WHITE, fontSize: 10 }), B("23.1%", { color: GOLD, fontSize: 15 })], 8.2, 0.9, 1.75, 0.75, { valign: "middle", margin: 0, ls: 1.0 });
+    // 表
+    const Y1 = NAVY, Y2 = "B8892B", Y3 = "2F4A80", GR = "E9EFF7", OP = "E6EDE4";
+    const c = (t, o = {}) => ({ text: t, options: o });
+    const bd = { type: "solid", pt: 0.75, color: "D3D9E2" };
+    const base = (o) => Object.assign({ fontFace: FONT, fontSize: 9, color: DARK, valign: "middle", align: "left", margin: [2, 4, 2, 4], border: bd, fill: { color: WHITE } }, o);
+    const H = (t, fill, cs) => c(t, base({ bold: true, color: WHITE, fontSize: 11, align: "center", fill: { color: fill }, colspan: cs }));
+    const row = (label, vals, o = {}) => [c(label, base(Object.assign({ bold: !!o.bold }, o.lab || {}))), ...vals.flatMap((v) => [c(v[0], base(Object.assign({ bold: !!o.bold }, o.cell || {}))), c(v[1] || "", base(Object.assign({ fontSize: 7.5, margin: [2, 2, 2, 3] }, o.cell || {})))])];
+    const grp = (t, rs) => c(t, base({ bold: true, fontSize: 11, color: WHITE, align: "center", fill: { color: NAVY }, rowspan: rs }));
+    const rows = [
+      [H("項目", NAVY, 2), H("1年目", Y1, 2), H("2年目", Y2, 2), H("3年目", Y3, 2)],
+      [c("売上", base({ bold: true, fontSize: 12, align: "center", fill: { color: "F4F6FA" }, colspan: 2 })), ...["¥36,000,000", "¥54,000,000", "¥100,000,000"].map((v) => c(v, base({ bold: true, fontSize: 13, align: "center", fill: { color: "F4F6FA" }, colspan: 2 })))],
+      [grp("原価", 3), ...row("処分費", [["¥10,800,000", "30%"], ["¥16,200,000", "30%"], ["¥30,000,000", "30%"]])],
+      row("その他消耗品費", [["¥1,000,000", "資材等"], ["¥1,500,000", "件数増加分"], ["¥2,000,000", "件数増加分"]]),
+      row("粗利", [["¥24,200,000", "67%"], ["¥36,300,000", "67%"], ["¥68,000,000", "68%"]], { bold: true, lab: { fill: { color: GR }, color: NAVY }, cell: { fill: { color: GR } } }),
+      [grp("経費", 5), ...row("アルバイト事務", [["¥1,200,000", "事務1名"], ["¥1,200,000", "事務1名"], ["¥1,200,000", "事務1名"]])],
+      row("広告宣伝費", [["¥4,840,000", "粗利の20%"], ["¥7,260,000", "粗利の20%"], ["¥13,600,000", "粗利の20%"]]),
+      row("その他事業経費", [["¥1,500,000"], ["¥2,000,000"], ["¥2,500,000"]]),
+      row("人件費", [["¥6,000,000", "専任1名"], ["¥12,000,000", "専任2名"], ["¥18,000,000", "専任3名"]]),
+      row("作業員アルバイト", [["¥4,800,000", "2名"], ["¥4,800,000", "2名"], ["¥9,600,000", "4名"]]),
+      [c("営業利益", base({ bold: true, fontSize: 11, align: "center", fill: { color: OP }, colspan: 2 })), ...["¥1,060,000", "¥9,040,000", "¥23,100,000"].flatMap((v) => [c(v, base({ bold: true, fontSize: 10, fill: { color: OP } })), c("", base({ fill: { color: OP } }))])],
+      [c("営業利益率", base({ bold: true, fontSize: 11, align: "center", fill: { color: OP }, colspan: 2 })), ...["2.94%", "16.74%", "23.10%"].flatMap((v) => [c(v, base({ bold: true, fontSize: 10, fill: { color: OP } })), c("", base({ fill: { color: OP } }))])],
+    ];
+    const TX = 0.35, TY = 1.75, RH = 0.36;
+    const colW = [0.45, 1.2, 1.0, 0.8, 1.0, 0.8, 1.0, 0.8];
+    s.addTable(rows, { x: TX, y: TY, w: colW.reduce((a, b) => a + b, 0), colW, rowH: [0.38, 0.44, RH, RH, RH, RH, RH, RH, RH, RH, 0.38, 0.38], autoPage: false, objectName: "pl_table" });
+    // 強調の赤枠（人件費 1年目／営業利益率）
+    const rowY = (i) => TY + 0.38 + 0.44 + (i - 2) * RH;
+    const redFrame = (x, y, w, h) => s.addShape(pres.shapes.RECTANGLE, { x, y, w, h, fill: { color: WHITE, transparency: 100 }, line: { color: RED, width: 2.25 }, objectName: nm("redframe") });
+    redFrame(TX + 0.45, rowY(8), 1.2 + 1.0 + 0.8, RH);
+    redFrame(TX, rowY(11) + (0.38 - RH), 7.05, 0.38);
+    // 右：初期投資・投資回収
+    const PX = 7.55, PW = 2.1;
+    rect(s, PX, 1.75, PW, 2.25, WHITE, { line: NAVY, lw: 1.25, shadow: true });
+    rect(s, PX, 1.75, PW, 0.45, NAVY);
+    txt(s, "初期投資", PX, 1.75, PW, 0.45, { size: 14, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
+    icon(s, "laptop", PX + 0.12, 2.38, 0.5, NAVY);
+    txt(s, [B("HP制作費\n", { fontSize: 9.5 }), B("150", { fontSize: 16, color: RED }), B("万円", { fontSize: 10, color: RED })], PX + 0.68, 2.3, PW - 0.72, 0.65, { valign: "middle", margin: 0 });
+    line(s, PX + 0.12, 3.03, PW - 0.24, 0, LINE, 0.75);
+    icon(s, "list", PX + 0.15, 3.18, 0.45, NAVY);
+    txt(s, [B("古物商許可取得費用\n", { fontSize: 9.5 }), B("5〜8", { fontSize: 18, color: RED }), B("万円", { fontSize: 10, color: RED })], PX + 0.68, 3.08, PW - 0.72, 0.85, { valign: "middle", margin: 0 });
+    s.addShape(pres.shapes.ISOSCELES_TRIANGLE, { x: PX + PW / 2 - 0.3, y: 4.1, w: 0.6, h: 0.25, rotate: 180, fill: { color: NAVY }, line: { type: "none" }, objectName: "tri_pl" });
+    rect(s, PX, 4.45, PW, 1.95, WHITE, { line: NAVY, lw: 1.25, shadow: true });
+    rect(s, PX, 4.45, PW, 0.45, NAVY);
+    txt(s, "投資回収", PX, 4.45, PW, 0.45, { size: 14, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
+    txt(s, [B("2年目", { fontSize: 22, color: RED }), B("で回収", { fontSize: 12, color: RED })], PX + 0.1, 4.98, 1.5, 0.6, { valign: "middle", margin: 0 });
+    icon(s, "target", PX + 1.62, 5.05, 0.4, NAVY);
+    txt(s, [B("2年目の営業利益 ", { fontSize: 9 }), B("904万円", { fontSize: 10, color: RED }), B("により、初期投資を回収見込み。", { fontSize: 9 })], PX + 0.1, 5.65, PW - 0.2, 0.7, { ls: 1.2, margin: 0 });
+    // 特徴
+    txt(s, [B("【特徴】", { color: DARK }), B("初期投資費用が低く、社員1名からスタート可能", { color: RED }), B("であり、", { color: DARK }), B("20%以上の利益率", { color: RED }), B("を目指せるビジネスモデルである。", { color: DARK })], 0.35, 6.4, 9.3, 0.6, { size: 11.5, valign: "middle", margin: 0, ls: 1.1 });
     foot(s, MODEL_NOTE);
   }
   {

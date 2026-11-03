@@ -46,7 +46,7 @@ async function main() {
     paper: "FaNewspaper", user: "FaUserTie", bulb: "FaLightbulb", ok: "FaCheckCircle", laptop: "FaLaptop", horn: "FaBullhorn", friends: "FaUserFriends",
     talk: "FaComments", cal: "FaCalendarAlt", pdf: "FaFilePdf", xls: "FaFileExcel", ppt: "FaFilePowerpoint", doc: "FaFileWord", video: "FaFileVideo",
     img: "FaFileImage", line: "FaLine", mail: "FaEnvelope", coins: "FaCoins", key: "FaKey", hospital: "FaClinicMedical", city: "FaCity",
-    link: "FaLink", award: "FaAward", target: "FaBullseye", wrench: "FaWrench", question: "FaQuestionCircle", rocket: "FaRocket", people: "FaPeopleCarry", photo: "FaImages", bag: "FaShoppingBag", ring: "FaRing", couch: "FaCouch", tv: "FaTv", palette: "FaPalette", guitar: "FaGuitar", camera: "FaCamera", robot: "FaRobot",
+    link: "FaLink", award: "FaAward", target: "FaBullseye", wrench: "FaWrench", question: "FaQuestionCircle", rocket: "FaRocket", people: "FaPeopleCarry", photo: "FaImages", bag: "FaShoppingBag", ring: "FaRing", couch: "FaCouch", tv: "FaTv", palette: "FaPalette", guitar: "FaGuitar", camera: "FaCamera", robot: "FaRobot", thumbs: "FaThumbsUp", file: "FaFileAlt", book: "FaBookOpen",
   };
   const COLORS = [WHITE, NAVY, BLUE, RED, GREEN, ORANGE, PURPLE, BROWN, GOLD, MGRAY, YEL];
   const pairs = [];
@@ -1218,31 +1218,180 @@ async function main() {
     });
     key(s, "ターゲットは明確。その対象に対して、専門店として打ち出します。", { y: 6.45, size: 16 });
   }
+  // ---- アライアンス提携 ①：とは ----
   {
-    const s = content(S7, "アライアンス提携の進め方");
-    msg(s, "地域の相続・空き家案件が「最初に集まる会社」になることが目的です", { size: 14 });
-    s.addShape(pres.shapes.OVAL, { x: 0.4, y: 1.6, w: 4.6, h: 4.0, fill: { color: "FFF8E8" }, line: { type: "none" }, objectName: "net_bg" });
-    rect(s, 1.85, 3.2, 1.7, 0.8, NAVY, { round: true });
-    txt(s, "当社\n（遺品整理）", 1.85, 3.2, 1.7, 0.8, { size: 11, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
-    const N = [["building", "不動産会社", 2.05, 1.75], ["contract", "司法書士・税理士", 0.45, 2.5], ["pray", "葬儀社", 3.6, 2.5], ["hospital", "ケアマネ・包括", 0.45, 4.15], ["hammer", "解体・リフォーム", 3.6, 4.15], ["city", "役所", 2.05, 4.85]];
-    N.forEach(([k, t, x, y]) => {
-      rect(s, x, y, 1.35, 0.6, WHITE, { line: LINE, shadow: true, round: true });
-      icon(s, k, x + 0.07, y + 0.15, 0.3, NAVY);
-      txt(s, t, x + 0.4, y, 0.93, 0.6, { size: 8.5, bold: true, valign: "middle", margin: 0 });
+    const s = content(S7, "アライアンス提携とは", "【話し方】①アライアンス提携＝地域の専門企業・団体と信頼関係を築き、お客様を紹介し合う仕組み→②提携先の例（不動産・士業・葬儀社・ケアマネ・解体・リフォーム・役所など）→③目的は紹介獲得ではなく、地域の相続・空き家案件が最初に集まる「案件ハブ」になること→④期待できる効果4つ。");
+    msg(s, "地域の専門企業・団体と信頼関係を築き、お客様を紹介し合うことで、継続的に高単価・相続関連案件を獲得する仕組み");
+    // 左：ポイント・具体的に・意味合い
+    const LB = [
+      ["bulb", "ポイント", [B("地域の相続・空き家案件の発生源を押さえ、"), B("継続的に高単価案件を獲得する", { color: RED }), B("仕組みです。")], 0.95],
+      ["list", "具体的にすること", [B("不動産会社・司法書士・行政書士・税理士・葬儀社・ケアマネジャー・地域包括支援センター・解体会社・リフォーム会社・ガス会社・役所 などと提携する。")], 1.2],
+      ["user", "意味合い", [B("単なる紹介獲得ではなく、地域の相続・空き家案件が最初に集まる会社"), B("（地域の案件ハブ）", { color: RED }), B("になることが目的です。")], 1.05],
+    ];
+    let y = 1.72;
+    LB.forEach(([k, t, body, h]) => {
+      rect(s, 0.3, y + 0.17, 4.0, h, WHITE, { line: NAVY, round: true, r: 0.05 });
+      icon(s, k, 0.32, y, 0.42, WHITE, NAVY);
+      rect(s, 0.65, y + 0.04, 1.55, 0.32, NAVY, { round: true, r: 0.15 });
+      txt(s, t, 0.65, y + 0.04, 1.55, 0.32, { size: 10, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
+      txt(s, body, 0.45, y + 0.45, 3.75, h - 0.33, { size: 9, valign: "middle", margin: 0, ls: 1.2 });
+      y += h + 0.35;
     });
-    txt(s, "開拓の優先順位：A 不動産・士業 → B 葬儀・解体・リフォーム → C 介護・金融機関", 0.4, 5.7, 4.6, 0.6, { size: 9.5, color: GRAY, ls: 1.2 });
-    frame(s, 5.2, 1.6, 4.4, 2.6, "初回訪問のゴールは「資料を置いてもらう」", NAVY, { hsize: 11.5 });
-    ["挨拶・自己紹介", "訪問の目的（営業ではないことを伝える）", "相手のメリットを伝える", "資料のお渡し", "今後のつながりをつくる"].forEach((t, i) => {
-      num(s, i + 1, 5.35, 2.15 + i * 0.4, 0.28, NAVY);
-      txt(s, t, 5.72, 2.1 + i * 0.4, 3.8, 0.36, { size: 10.5, valign: "middle", margin: 0 });
+    // 右：ネットワーク
+    rect(s, 4.85, 1.72, 4.6, 0.3, NAVY, { round: true, r: 0.12 });
+    txt(s, "地域の相続・空き家ネットワークの中心となる", 4.85, 1.72, 4.6, 0.3, { size: 10, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
+    s.addShape(pres.shapes.OVAL, { x: 4.6, y: 2.1, w: 5.1, h: 3.55, fill: { color: "FFF8E8" }, line: { type: "none" }, objectName: "net_bg" });
+    const CX = 7.15, CY = 3.88;
+    const P = [["building", "不動産会社", 0, -1.45], ["user", "司法書士\n行政書士", -1.75, -0.95], ["pray", "葬儀社", 1.75, -0.95], ["list", "税理士", -2.0, 0], ["hammer", "解体会社", 2.0, 0], ["hospital", "ケアマネジャー\n包括支援センター", -1.75, 0.95], ["wrench", "リフォーム会社", 1.75, 0.95], ["city", "役所", 0, 1.45]];
+    P.forEach(([k, t, dx, dy]) => {
+      const len = Math.hypot(dx, dy), ux = dx / len, uy = dy / len;
+      const x1 = CX + ux * 0.72, y1 = CY + uy * 0.72, x2 = CX + dx - ux * (Math.abs(dy) > 1.2 ? 0.28 : 0.7), y2 = CY + dy - uy * 0.3;
+      s.addShape(pres.shapes.LINE, { x: Math.min(x1, x2), y: Math.min(y1, y2), w: Math.abs(x2 - x1) || 0.001, h: Math.abs(y2 - y1) || 0.001, flipV: (x2 - x1) * (y2 - y1) < 0, line: { color: NAVY, width: 1.75, beginArrowType: "triangle", endArrowType: "triangle" }, objectName: nm("net") });
+      const bw = 1.3, bh = 0.5;
+      rect(s, CX + dx - bw / 2, CY + dy - bh / 2, bw, bh, WHITE, { line: LINE, shadow: true, round: true, r: 0.08 });
+      icon(s, k, CX + dx - bw / 2 + 0.07, CY + dy - 0.15, 0.3, NAVY);
+      txt(s, t, CX + dx - bw / 2 + 0.4, CY + dy - bh / 2, bw - 0.42, bh, { size: t.length > 10 ? 6.5 : 8.5, bold: true, valign: "middle", margin: 0, ls: 1.0 });
     });
-    frame(s, 5.2, 4.35, 4.4, 1.95, "意識の切り替え", RED, { hsize: 12 });
-    [["仕事をください", "お客様のお役に立てます"], ["提携してください", "費用負担を軽減できます"], ["一番安くできます", "丁寧で誠実な対応を約束"]].forEach((r, i) => {
-      txt(s, "✕ " + r[0], 5.3, 4.85 + i * 0.47, 1.75, 0.4, { size: 9.5, color: MGRAY, valign: "middle", margin: 0 });
-      arrowR(s, 7.05, 4.97 + i * 0.47, 0.25, 0.17, RED);
-      txt(s, "○ " + r[1], 7.35, 4.85 + i * 0.47, 2.2, 0.4, { size: 9.5, bold: true, color: RED, valign: "middle", margin: 0 });
+    oval(s, CX - 0.7, CY - 0.7, 1.4, 1.4, NAVY);
+    icon(s, "home", CX - 0.2, CY - 0.55, 0.4, WHITE);
+    txt(s, "当社\n（遺品整理業）", CX - 0.7, CY - 0.1, 1.4, 0.6, { size: 10, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0, ls: 1.05 });
+    txt(s, "相互紹介\n（相互送客）", CX + 0.15, CY - 1.15, 1.0, 0.4, { size: 8, bold: true, color: ORANGE, valign: "middle", margin: 0, ls: 1.0 });
+    // 下：期待できる効果
+    rect(s, 0.3, 5.82, 9.4, 1.2, WHITE, { line: NAVY, round: true, r: 0.05 });
+    rect(s, 0.3, 5.82, 1.2, 1.2, NAVY, { round: true, r: 0.05 });
+    txt(s, "期待できる\n効果", 0.3, 5.82, 1.2, 1.2, { size: 12, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0, ls: 1.1 });
+    [["users", "高単価案件の獲得", "戸建て一棟や相続案件などの高単価案件が増える", RED], ["shake", "相見積もりを回避", "信頼紹介のため、成約率が高くなる", GREEN], ["chart", "案件の継続的な流入", "紹介が紹介を呼び、安定的に案件が集まる", ORANGE], ["recycle", "相互送客で関係強化", "紹介し合うことで長期的なパートナーに", PURPLE]].forEach(([k, t, d, col], i) => {
+      const x = 1.6 + i * 2.03;
+      icon(s, k, x, 6.0, 0.42, col);
+      txt(s, t, x + 0.47, 5.9, 1.5, 0.45, { size: 9.5, bold: true, color: col, valign: "middle", margin: 0, ls: 1.0 });
+      txt(s, d, x, 6.42, 1.9, 0.55, { size: 8, valign: "top", margin: 0, ls: 1.15 });
+      if (i < 3) line(s, x + 1.95, 5.95, 0, 0.95, LINE, 0.75, { dash: "dash" });
     });
-    key(s, "提携先の信用を守ることが、最大の営業フックになります。", { y: 6.45, size: 16 });
+  }
+  // ---- アライアンス提携 ②：基本スタンス ----
+  {
+    const s = content(S7, "アライアンス提携の基本スタンス", "【話し方】①最優先は仕事の獲得ではなく、提携先の信用を守ること→②紹介元が恐れているのは「変な業者を紹介して信用を失うこと」→③自社の利益より相手（お客様）の利益を優先→④言い方を変える（NG→OK）→⑤私たちの約束4つ。");
+    msg(s, "最優先事項は「仕事の獲得」ではなく、提携先の信用を守り、そのお客様に価値を提供すること");
+    // 基本スタンス
+    rect(s, 0.3, 1.82, 4.6, 2.2, "FFF8E8", { line: GOLD, round: true, r: 0.05 });
+    rect(s, 0.4, 1.7, 1.4, 0.28, NAVY, { round: true, r: 0.12 });
+    txt(s, "基本スタンス", 0.4, 1.7, 1.4, 0.28, { size: 9.5, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
+    icon(s, "shield", 0.55, 2.3, 1.0, RED);
+    txt(s, [B("提携先の信用を守ることが、\n", { color: NAVY }), B("最大の営業フック", { color: RED }), B("になる。", { color: NAVY })], 1.75, 2.05, 3.05, 0.6, { size: 12, valign: "middle", margin: 0, ls: 1.1 });
+    ["丁寧・誠実・迅速な対応を徹底する", "約束したことは必ず守る", "トラブルを未然に防ぎ、安心して任せてもらえる会社になる"].forEach((t, i) => {
+      icon(s, "ok", 1.75, 2.78 + i * 0.38, 0.22, NAVY);
+      txt(s, t, 2.03, 2.72 + i * 0.38, 2.8, 0.36, { size: 8.5, bold: true, valign: "middle", margin: 0 });
+    });
+    // 意識の切り替え
+    rect(s, 0.3, 4.25, 4.6, 2.0, WHITE, { line: NAVY, round: true, r: 0.05 });
+    rect(s, 0.4, 4.13, 1.4, 0.28, NAVY, { round: true, r: 0.12 });
+    txt(s, "意識の切り替え", 0.4, 4.13, 1.4, 0.28, { size: 9.5, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
+    txt(s, "やってはいけない（NG）", 0.4, 4.45, 2.0, 0.26, { size: 9, bold: true, color: RED, align: "center", valign: "middle", margin: 0 });
+    txt(s, "意識すべきこと（OK）", 2.65, 4.45, 2.15, 0.26, { size: 9, bold: true, color: NAVY, align: "center", valign: "middle", margin: 0 });
+    [["仕事をください", "お客様のお役に立てます"], ["提携してください", "費用負担を軽減できます"], ["案件ありますか？", "安心して任せられます"], ["一番安くできます", "丁寧で誠実な対応をお約束します"]].forEach((r, i) => {
+      const yy = 4.78 + i * 0.35;
+      txt(s, "✕ " + r[0], 0.5, yy, 1.9, 0.32, { size: 9, color: GRAY, valign: "middle", margin: 0 });
+      arrowR(s, 2.37, yy + 0.09, 0.22, 0.15, MGRAY);
+      txt(s, "○ " + r[1], 2.68, yy, 2.15, 0.32, { size: 9, bold: true, color: NAVY, valign: "middle", margin: 0 });
+    });
+    // 右：恐れ・相手の利益・約束
+    rect(s, 5.1, 1.72, 4.6, 1.35, "FCE8E6", { line: "F2B8B4", round: true, r: 0.05 });
+    txt(s, "紹介元が最も恐れていること", 5.22, 1.76, 3.5, 0.3, { size: 11, bold: true, color: RED, valign: "middle", margin: 0 });
+    txt(s, "「変な業者を紹介してしまい、自社の信用を失うこと」", 5.22, 2.08, 4.4, 0.28, { size: 9.5, bold: true, valign: "middle", margin: 0 });
+    txt(s, "・手抜き作業　・追加請求　・マナーの悪さ\n・クレーム対応に巻き込まれる　など", 5.22, 2.38, 3.6, 0.6, { size: 8.5, valign: "middle", margin: 0, ls: 1.2 });
+    icon(s, "warn", 8.95, 2.35, 0.55, RED);
+    rect(s, 5.1, 3.2, 4.6, 1.35, LGREEN, { line: "B9D8C4", round: true, r: 0.05 });
+    txt(s, "自社の利益よりも、相手の利益（お客様のメリット）を優先する", 5.22, 3.24, 4.4, 0.3, { size: 9.5, bold: true, color: GREEN, valign: "middle", margin: 0 });
+    txt(s, "・お客様の費用負担を軽減できる\n・手間や不安を解消できる\n・安心して任せられるプロの対応を提供する", 5.22, 3.58, 3.0, 0.9, { size: 8.5, valign: "middle", margin: 0, ls: 1.25 });
+    icon(s, "users", 8.35, 3.75, 0.5, GREEN); icon(s, "heart", 8.95, 3.75, 0.5, GREEN);
+    rect(s, 5.1, 4.68, 4.6, 1.57, LBLUE, { line: "A9BEDD", round: true, r: 0.05 });
+    rect(s, 5.2, 4.6, 1.3, 0.28, NAVY, { round: true, r: 0.12 });
+    txt(s, "私たちの約束", 5.2, 4.6, 1.3, 0.28, { size: 9.5, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
+    icon(s, "check", 5.25, 5.1, 0.7, NAVY);
+    ["迅速なレスポンスとスケジュール調整", "見積り内容の透明性と明確な説明", "作業品質の徹底（丁寧な仕分け・貴重品捜索）", "作業後の報告とアフターフォローの徹底"].forEach((t, i) => {
+      txt(s, "● " + t, 6.1, 4.97 + i * 0.3, 3.55, 0.28, { size: 8.5, bold: true, valign: "middle", margin: 0 });
+    });
+    // 下
+    rect(s, 0.3, 6.38, 9.4, 0.65, WHITE, { line: NAVY, lw: 1.25, round: true, r: 0.08 });
+    icon(s, "users", 0.5, 6.48, 0.45, NAVY);
+    txt(s, [B("アライアンス営業は「信頼の積み重ね」がすべて。\n", { fontSize: 13, color: NAVY }), B("提携先・そのお客様にとって", { fontSize: 9 }), B("「なくてはならない存在」", { fontSize: 9, color: RED }), B("になることが、継続的な紹介につながります。", { fontSize: 9 })], 1.1, 6.38, 8.5, 0.65, { align: "center", valign: "middle", margin: 0, ls: 1.1 });
+  }
+  // ---- アライアンス提携 ③：初回訪問 ----
+  {
+    const s = content(S7, "初回訪問の進め方", "【話し方】①初回訪問の目的は「ご挨拶と情報提供」。売り込まない→②5ステップのトークを紹介→③トークのポイント4つ→④ゴールは資料を置かせてもらい、困った時に思い出してもらうこと。");
+    msg(s, "初回訪問の目的は「ご挨拶と情報提供」。相手に安心感を与え、資料を置かせてもらうことがゴール");
+    rect(s, 0.3, 1.72, 5.3, 5.3, WHITE, { line: NAVY, round: true, r: 0.04 });
+    rect(s, 0.3, 1.72, 3.2, 0.32, NAVY, { round: true, r: 0.04 });
+    txt(s, "基本トークの流れ（5ステップ）", 0.3, 1.72, 3.2, 0.32, { size: 10.5, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
+    [["user", "挨拶・自己紹介", "「はじめまして、○○（会社名）の□□と申します。本日はお時間をいただき、ありがとうございます。」"], ["target", "訪問の目的を伝える", "「本日は営業のご案内ではなく、御社のお役に立てるかもしれない情報をお届けに伺いました。」"], ["thumbs", "相手のメリットを伝える", "「遺品整理や生前整理でお困りのお客様がいらっしゃった際に、御社のお役に立てると思っております。」"], ["file", "資料のお渡し", "「サービス内容や事例をまとめた資料です。ご参考になれば幸いです。」"], ["shake", "今後のつながりをつくる", "「何かお困りのお客様がいらっしゃいましたら、いつでもご相談ください。今後ともよろしくお願いいたします。」"]].forEach(([k, t, q], i) => {
+      const y = 2.15 + i * 0.97;
+      num(s, i + 1, 0.42, y + 0.18, 0.42, NAVY);
+      rect(s, 0.95, y + 0.08, 1.75, 0.62, LBLUE, { round: true, r: 0.08 });
+      icon(s, k, 1.03, y + 0.24, 0.3, NAVY);
+      txt(s, t, 1.38, y + 0.08, 1.3, 0.62, { size: 9.5, bold: true, color: NAVY, valign: "middle", margin: 0, ls: 1.05 });
+      s.addShape(pres.shapes.ROUNDED_RECTANGULAR_CALLOUT, { x: 2.85, y: y + 0.02, w: 2.65, h: 0.75, fill: { color: WHITE }, line: { color: LINE, width: 1 }, objectName: nm("q") });
+      txt(s, q, 2.92, y + 0.04, 2.52, 0.7, { size: 7.5, valign: "middle", margin: 0, ls: 1.1 });
+      if (i < 4) arrowD(s, 0.53, y + 0.66, 0.2, 0.22, MGRAY);
+    });
+    // トークのポイント
+    rect(s, 5.8, 1.72, 3.9, 3.0, WHITE, { line: NAVY, round: true, r: 0.04 });
+    rect(s, 5.8, 1.72, 2.2, 0.32, NAVY, { round: true, r: 0.04 });
+    txt(s, "トークのポイント", 5.8, 1.72, 2.2, 0.32, { size: 10.5, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
+    [["heart", "売り込まない", "まずは「信頼関係の土台づくり」を最優先に", RED], ["user", "相手の立場で話す", "「御社のお役に立つかもしれない」というスタンスで", NAVY], ["book", "資料を置くことを\nゴールにする", "必要な時に思い出してもらえるよう資料を置いてもらう", GREEN], ["shake", "次回のきっかけを\nつくる", "「困った時の相談先」として記憶に残す", ORANGE]].forEach(([k, t, d, col], i) => {
+      const y = 2.12 + i * 0.64;
+      icon(s, k, 5.9, y + 0.07, 0.45, WHITE, col);
+      txt(s, t, 6.42, y, 1.4, 0.58, { size: 9.5, bold: true, color: col, valign: "middle", margin: 0, ls: 1.0 });
+      line(s, 7.85, y + 0.08, 0, 0.45, LINE, 0.75);
+      txt(s, d, 7.95, y, 1.7, 0.58, { size: 8, valign: "middle", margin: 0, ls: 1.1 });
+      if (i < 3) line(s, 5.9, y + 0.62, 3.7, 0, LINE, 0.5);
+    });
+    // 初回訪問のゴール
+    rect(s, 5.8, 4.9, 3.9, 2.12, WHITE, { line: NAVY, round: true, r: 0.04 });
+    rect(s, 5.8, 4.9, 3.9, 0.32, NAVY, { round: true, r: 0.04 });
+    txt(s, "初回訪問のゴール", 5.8, 4.9, 3.9, 0.32, { size: 10.5, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
+    [["file", "資料を置かせて\nもらう", "必要な時に思い出して\nもらえる状態に"], ["shake", "安心感を\n持ってもらう", "信頼できる会社という\n印象を持ってもらう"], ["users", "相談できる関係の\n第一歩", "困った時に思い出して\nもらえる存在に"]].forEach(([k, t, d], i) => {
+      const x = 5.88 + i * 1.28;
+      icon(s, k, x + 0.34, 5.3, 0.5, NAVY, LBLUE);
+      txt(s, t, x, 5.85, 1.18, 0.42, { size: 8.5, bold: true, color: NAVY, align: "center", valign: "middle", margin: 0, ls: 1.0 });
+      txt(s, d, x, 6.3, 1.18, 0.6, { size: 7, align: "center", valign: "top", margin: 0, ls: 1.1 });
+      if (i < 2) arrowR(s, x + 1.13, 5.47, 0.2, 0.16, MGRAY);
+    });
+  }
+  // ---- アライアンス提携 ④：契約のタイミング ----
+  {
+    const s = content(S7, "提携契約を結ぶタイミング", "【話し方】①最初から契約を迫らない。出会い→相互理解→紹介の可能性確認→条件合意→契約の5段階→②契約の目安となるサイン→③早すぎ・遅すぎのリスク。紹介の可能性が具体化した段階での契約が双方にとって最もスムーズ。");
+    msg(s, "相手の信頼を築き、「紹介の可能性が見えた段階」で締結すると、スムーズに紹介が生まれます");
+    rect(s, 0.3, 1.72, 9.4, 2.95, WHITE, { line: NAVY, round: true, r: 0.04 });
+    rect(s, 0.3, 1.72, 9.4, 0.32, NAVY, { round: true, r: 0.04 });
+    txt(s, "契約を結ぶタイミング（5つのステップ）", 0.3, 1.72, 9.4, 0.32, { size: 10.5, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
+    [["shake", "出会い・情報交換", "お互いの事業内容や\n強みを理解する段階", "この段階では\n契約は不要"], ["talk", "相互理解の深化", "価値観や顧客層、提供\n価値を共有する段階", "信頼関係の構築を\n最優先"], ["search", "紹介の可能性を確認", "紹介できる顧客が明確に\nなり、可能性を具体的に確認", "具体的な紹介事例や\nニーズを共有"], ["list", "条件の合意", "紹介の流れや基準、\n手数料条件をすり合わせ", "条件面での合意が\n取れたタイミング"], ["contract", "契約締結", "合意内容を契約書にし、\n正式にパートナーシップ開始", "このタイミングで\n契約を締結する"]].forEach(([k, t, d, tag], i) => {
+      const x = 0.42 + i * 1.86, w = 1.7;
+      num(s, i + 1, x, 2.13, 0.3, i === 4 ? RED : GREEN);
+      txt(s, t, x + 0.34, 2.1, w - 0.34, 0.36, { size: 9, bold: true, color: NAVY, valign: "middle", margin: 0 });
+      icon(s, k, x + w / 2 - 0.3, 2.55, 0.6, i === 4 ? RED : NAVY);
+      txt(s, d, x, 3.2, w, 0.5, { size: 7.5, align: "center", valign: "middle", margin: 0, ls: 1.1 });
+      rect(s, x + 0.08, 3.8, w - 0.16, 0.72, i === 4 ? "FCE8E6" : LGREEN, { round: true, r: 0.08 });
+      txt(s, tag, x + 0.08, 3.8, w - 0.16, 0.72, { size: 8.5, bold: true, color: i === 4 ? RED : GREEN, align: "center", valign: "middle", margin: 0, ls: 1.1 });
+      if (i < 4) arrowR(s, x + w + 0.0, 2.75, 0.15, 0.22, MGRAY);
+    });
+    const BOX = [
+      ["ok", "契約締結の目安となるサイン", GREEN, ["具体的な紹介ニーズや課題が明確に聞けるようになった", "過去の会話や提案に、前向きな反応が続いている", "試験的な紹介や小さな送客が発生し、手応えがある", "今後も継続的に紹介し合う意向が明確になった"], "ok"],
+      ["bulb", "ポイント", NAVY, ["早すぎる契約は相手にプレッシャーを与え、信頼構築を妨げる", "遅すぎる契約は、紹介発生時のトラブル（報酬・条件の認識違い）に", "「紹介の可能性が具体化した段階」での契約が、双方にとって最もスムーズ"], "ok"],
+      ["warn", "契約を遅らせるリスク", RED, ["紹介が発生した際に、報酬の有無や条件でトラブルになる", "相手に「本気度」が伝わらず、関係が深まりにくい", "他社が先に契約し、優先的なパートナーになってしまう"], "x"],
+    ];
+    BOX.forEach(([k, t, col, items, mark], i) => {
+      const x = 0.3 + i * 3.15, w = 3.0;
+      rect(s, x, 4.85, w, 2.17, WHITE, { line: col, round: true, r: 0.05 });
+      icon(s, k, x + 0.1, 4.93, 0.3, col);
+      txt(s, t, x + 0.45, 4.9, w - 0.5, 0.36, { size: 10, bold: true, color: col, valign: "middle", margin: 0 });
+      const step = items.length === 4 ? 0.42 : 0.55;
+      items.forEach((it, j) => {
+        const y = 5.33 + j * step;
+        if (mark === "x") txt(s, "✕", x + 0.1, y, 0.25, 0.3, { size: 12, bold: true, color: RED, valign: "middle", margin: 0 });
+        else icon(s, "ok", x + 0.12, y + 0.06, 0.2, col);
+        txt(s, it, x + 0.4, y - 0.04, w - 0.48, step, { size: 7.5, valign: "top", margin: 0, ls: 1.1 });
+      });
+    });
   }
   {
     const s = content(S7, "営業の進め方");

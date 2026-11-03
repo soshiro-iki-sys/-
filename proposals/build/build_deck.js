@@ -508,54 +508,54 @@ async function main() {
   pres.addSection({ title: S4 });
   divider(S4, "許可・資格について");
   {
-    const s = content(S4, "資格・許可について", "【話し方】①上の帯：契約は2本。お客様と当社が「サービス契約」、お客様と許可業者が「直接契約」→②5つのステップ：1〜4は当社、5の回収・処分だけ許可業者→③下：従来モデルとの違いとメリット。前提条件（当社は廃棄物を運搬しない／現場で許可業者へ引き渡す）と自治体ごとのルールは事前に確認する。");
+    const s = content(S4, "資格・許可について", "【話し方】①左の図：契約は2本。お客様と当社が「サービス契約」、お客様と許可業者が「直接契約」→②右の流れ：1〜4は当社、5の回収・処分だけ許可業者（現場で引き渡す）→③下：従来モデルとの違いとメリット。前提条件（当社は廃棄物を運搬しない／現場で許可業者へ引き渡す）と自治体ごとのルールは事前に確認する。");
     const GOLDT = "B8892B";
     txt(s, [B("三社間契約", { color: NAVY }), B("なら、", { color: DARK, fontSize: 16 }), B("一廃許可がなくても", { color: GOLDT }), B("始められます", { color: DARK, fontSize: 16 })], 0.4, 0.98, 9.2, 0.55, { size: 21, valign: "middle", margin: 0 });
-    // お客様
-    rect(s, 0.4, 1.7, 1.3, 2.95, LBLUE, { line: BLUE, lw: 1.5, round: true, r: 0.06 });
-    icon(s, "users", 0.65, 2.5, 0.8, BLUE);
-    txt(s, "お客様", 0.4, 3.4, 1.3, 0.4, { size: 15, bold: true, color: BLUE, align: "center", valign: "middle", margin: 0 });
-    txt(s, "2社と\nそれぞれ契約", 0.4, 3.85, 1.3, 0.55, { size: 9.5, bold: true, color: GRAY, align: "center", valign: "middle", margin: 0, ls: 1.1 });
-    // 契約の帯
-    const X0 = 1.85, CW = 1.43, GAP = 0.15;
-    const cx = (i) => X0 + i * (CW + GAP);
-    s.addShape(pres.shapes.PENTAGON, { x: X0, y: 1.7, w: cx(3) + CW - X0, h: 0.5, fill: { color: NAVY }, line: { type: "none" }, objectName: "c1" });
-    txt(s, [B("① サービス契約", { fontSize: 13 }), B("　お客様 ⇔ 当社（仕分け・搬出）", { fontSize: 10.5 })], X0 + 0.1, 1.7, cx(3) + CW - X0 - 0.3, 0.5, { color: WHITE, valign: "middle", margin: 0 });
-    rect(s, cx(4), 1.7, CW, 0.5, GREEN);
-    txt(s, [B("② 直接契約\n", { fontSize: 11 }), B("お客様 ⇔ 許可業者", { fontSize: 8.5 })], cx(4), 1.7, CW, 0.5, { color: WHITE, align: "center", valign: "middle", margin: 0, ls: 1.0 });
-    // 5ステップ
-    const ST = [["list", "ご相談・\nお見積り", "ご要望をヒアリング"], ["box", "仕分け・\n整理", "貴重品の探索・確認"], ["dolly", "搬出・\n運搬", "室内から搬出・分別"], ["shake", "許可業者へ\n引渡し", "現場で直接引渡し"], ["recycle", "回収・\n処分", "許可業者が実施"]];
+    // ---- 左：三者の関係（誰と契約するか） ----
+    txt(s, "誰と契約するか", 0.4, 1.58, 5.0, 0.3, { size: 11, bold: true, color: GRAY, valign: "middle", margin: 0 });
+    line(s, 1.45, 2.67, 0.85, 1.13, NAVY, 2.75, { flipV: true });
+    line(s, 3.5, 2.67, 0.9, 1.13, GREEN, 2.75);
+    rect(s, 1.85, 1.92, 2.1, 0.75, LBLUE, { line: NAVY, lw: 1.25, round: true, r: 0.08 });
+    icon(s, "users", 2.0, 2.06, 0.48, NAVY);
+    txt(s, "お客様", 2.55, 1.92, 1.35, 0.75, { size: 15, bold: true, color: NAVY, valign: "middle", margin: 0 });
+    txt(s, [B("① サービス契約\n", { fontSize: 11, color: NAVY }), B("仕分け・搬出・買取", { fontSize: 9, color: NAVY })], 0.2, 2.85, 1.45, 0.55, { align: "right", valign: "middle", margin: 0, ls: 1.05 });
+    txt(s, [B("② 直接契約\n", { fontSize: 11, color: GREEN }), B("収集運搬・処分", { fontSize: 9, color: GREEN })], 4.1, 2.85, 1.45, 0.55, { valign: "middle", margin: 0, ls: 1.05 });
+    rect(s, 0.4, 3.8, 2.1, 0.85, NAVY, { round: true, r: 0.08 });
+    icon(s, "user", 0.52, 3.98, 0.5, WHITE);
+    txt(s, "当社\n（遺品整理）", 1.08, 3.8, 1.4, 0.85, { size: 12, bold: true, color: WHITE, valign: "middle", margin: 0, ls: 1.05 });
+    rect(s, 3.35, 3.8, 2.1, 0.85, GREEN, { round: true, r: 0.08 });
+    icon(s, "recycle", 3.47, 3.98, 0.5, WHITE);
+    txt(s, "一般廃棄物\n許可業者", 4.03, 3.8, 1.4, 0.85, { size: 12, bold: true, color: WHITE, valign: "middle", margin: 0, ls: 1.05 });
+    line(s, 2.55, 4.22, 0.75, 0, MGRAY, 1.5, { dash: "dash", arrow: true });
+    txt(s, "現場で\n引き渡し", 2.5, 4.27, 0.85, 0.38, { size: 8, color: GRAY, align: "center", valign: "middle", margin: 0, ls: 1.0 });
+    // ---- 右：作業の流れと担当 ----
+    txt(s, "誰が何をするか", 5.85, 1.58, 3.75, 0.3, { size: 11, bold: true, color: GRAY, valign: "middle", margin: 0 });
+    const ST = [["list", "ご相談・お見積り", "当社"], ["box", "仕分け・整理", "当社"], ["dolly", "搬出・運搬", "当社"], ["shake", "許可業者へ引渡し", "当社"], ["recycle", "回収・処分", "許可業者"]];
+    line(s, 6.13, 2.1, 0, 2.3, LINE, 2);
     ST.forEach((st, i) => {
-      const x = cx(i), col = i === 4 ? GREEN : NAVY;
-      rect(s, x, 2.32, CW, 1.83, WHITE, { line: col, lw: 1.5, round: true, r: 0.06 });
-      num(s, i + 1, x + 0.1, 2.42, 0.36, col);
-      icon(s, st[0], x + CW / 2 - 0.3, 2.47, 0.6, col);
-      txt(s, st[1], x, 3.12, CW, 0.55, { size: 12, bold: true, color: col, align: "center", valign: "middle", margin: 0, ls: 1.0 });
-      txt(s, st[2], x, 3.7, CW, 0.35, { size: 8.5, color: GRAY, align: "center", valign: "middle", margin: 0 });
-      if (i < 4) s.addShape(pres.shapes.RIGHT_ARROW, { x: x + CW + 0.01, y: 3.1, w: GAP - 0.02, h: 0.24, fill: { color: MGRAY }, line: { type: "none" }, objectName: nm("ar") });
+      const y = 1.92 + i * 0.55, col = i === 4 ? GREEN : NAVY;
+      rect(s, 5.85, y, 3.75, 0.47, i === 4 ? LGREEN : LBLUE, { round: true, r: 0.08 });
+      num(s, i + 1, 5.95, y + 0.06, 0.35, col);
+      icon(s, st[0], 6.42, y + 0.08, 0.3, col);
+      txt(s, st[1], 6.82, y, 1.9, 0.47, { size: 11, bold: true, color: col, valign: "middle", margin: 0 });
+      rect(s, 8.7, y + 0.1, 0.8, 0.27, col, { round: true, r: 0.12 });
+      txt(s, st[2], 8.7, y + 0.1, 0.8, 0.27, { size: 8.5, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
     });
-    // 担当の括り
-    const brk = (x1, x2, col, t) => {
-      line(s, x1, 4.25, 0, 0.12, col, 1.75); line(s, x2, 4.25, 0, 0.12, col, 1.75); line(s, x1, 4.37, x2 - x1, 0, col, 1.75);
-      txt(s, t, x1, 4.4, x2 - x1, 0.28, { size: 11, bold: true, color: col, align: "center", valign: "middle", margin: 0 });
-    };
-    brk(cx(0) + 0.05, cx(3) + CW - 0.05, NAVY, "当社が担当");
-    brk(cx(4) + 0.05, cx(4) + CW - 0.05, GREEN, "許可業者が担当");
-    // 従来モデルとの違い
-    rect(s, 0.4, 4.9, 2.95, 1.4, LGRAY, { round: true, r: 0.06 });
-    txt(s, "✕ 従来モデル", 0.55, 4.97, 2.7, 0.35, { size: 13, bold: true, color: MGRAY, valign: "middle", margin: 0 });
-    txt(s, "当社が回収・処分まで行う\n→ 許可がないと違法リスク", 0.55, 5.35, 2.7, 0.85, { size: 10.5, color: GRAY, valign: "middle", margin: 0, ls: 1.25 });
-    arrowR(s, 3.42, 5.42, 0.3, 0.36, RED);
-    rect(s, 3.8, 4.9, 2.95, 1.4, "FCE8E6", { line: RED, lw: 1.5, round: true, r: 0.06 });
-    txt(s, "○ 三社間契約", 3.95, 4.97, 2.7, 0.35, { size: 13, bold: true, color: RED, valign: "middle", margin: 0 });
-    txt(s, [B("処分は許可業者が直接契約\n", { color: DARK }), B("→ 法令に沿って運営できる", { color: RED })], 3.95, 5.35, 2.7, 0.85, { size: 10.5, valign: "middle", margin: 0, ls: 1.25 });
-    // メリット
-    txt(s, "導入のメリット", 6.95, 4.88, 2.65, 0.3, { size: 11, bold: true, color: NAVY, valign: "middle", margin: 0 });
+    // ---- 下：従来モデルとの違い・メリット ----
+    line(s, 0.4, 4.85, 9.2, 0, LINE, 0.75);
+    rect(s, 0.4, 5.0, 2.75, 1.3, LGRAY, { round: true, r: 0.06 });
+    txt(s, "✕ 従来モデル", 0.55, 5.06, 2.5, 0.34, { size: 12.5, bold: true, color: MGRAY, valign: "middle", margin: 0 });
+    txt(s, "当社が回収・処分まで行う\n→ 許可がないと違法リスク", 0.55, 5.42, 2.5, 0.8, { size: 10, color: GRAY, valign: "middle", margin: 0, ls: 1.25 });
+    arrowR(s, 3.22, 5.47, 0.3, 0.36, RED);
+    rect(s, 3.6, 5.0, 2.75, 1.3, "FCE8E6", { line: RED, lw: 1.5, round: true, r: 0.06 });
+    txt(s, "○ 三社間契約", 3.75, 5.06, 2.5, 0.34, { size: 12.5, bold: true, color: RED, valign: "middle", margin: 0 });
+    txt(s, [B("処分は許可業者が直接契約\n", { color: DARK }), B("→ 法令に沿って運営できる", { color: RED })], 3.75, 5.42, 2.5, 0.8, { size: 10, valign: "middle", margin: 0, ls: 1.25 });
+    txt(s, "導入のメリット", 6.6, 4.96, 3.0, 0.3, { size: 11, bold: true, color: NAVY, valign: "middle", margin: 0 });
     [["shield", "法令遵守で安心"], ["rocket", "早期に開始"], ["award", "信頼性UP"], ["chart", "営業に集中"]].forEach((m, i) => {
-      const x = 6.95 + (i % 2) * 1.35, y = 5.22 + Math.floor(i / 2) * 0.55;
-      rect(s, x, y, 1.28, 0.48, LBLUE, { round: true, r: 0.1 });
-      icon(s, m[0], x + 0.07, y + 0.1, 0.28, NAVY);
-      txt(s, m[1], x + 0.38, y, 0.88, 0.48, { size: 8.5, bold: true, color: NAVY, valign: "middle", margin: 0 });
+      const x = 6.6 + (i % 2) * 1.52, y = 5.3 + Math.floor(i / 2) * 0.52;
+      rect(s, x, y, 1.45, 0.45, LBLUE, { round: true, r: 0.1 });
+      icon(s, m[0], x + 0.08, y + 0.09, 0.27, NAVY);
+      txt(s, m[1], x + 0.4, y, 1.03, 0.45, { size: 9, bold: true, color: NAVY, valign: "middle", margin: 0 });
     });
     key(s, "許可がなくても、法令に沿ってスモールスタートできます。", { y: 6.45, size: 17 });
   }

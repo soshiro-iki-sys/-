@@ -1292,49 +1292,111 @@ async function main() {
       txt(s, t, 6.6, y, 2.9, 0.4, { size: 10, bold: true, valign: "middle", margin: 0 });
     });
   }
+  // ---- 営業 ①：営業KPI ----
   {
-    const s = content(S7, "営業の進め方");
-    msg(s, "契約率80%を基準に、最初の電話対応と現地での即決で受注します", { size: 14 });
-    table(s, [["", "1年目", "2年目", "3年目"], ["営業人員", "1名", "2名", "3名"], ["月間集客件数", "12.5件", "18.75件", "35件"], ["月間契約件数", "10件", "15件", "28件"], ["一人当たり契約件数（月）", "10件", "7.5件", "約9.3件"]], 0.4, 1.6, 4.5, [1.95, 0.85, 0.85, 0.85], { size: 10.5, rowH: 0.46, firstColFill: true });
-    txt(s, "※契約率80%を基準に算出", 0.4, 3.95, 4.5, 0.3, { size: 9, color: GRAY, margin: 0 });
-    txt(s, "案件の規模で、営業方法を使い分けます", 5.1, 1.6, 4.5, 0.35, { size: 11.5, bold: true, color: NAVY, margin: 0 });
-    rect(s, 5.1, 2.0, 2.15, 2.2, LORANGE, { round: true });
-    txt(s, [B("30万円未満\n", { fontSize: 13, color: ORANGE }), B("オンライン完結\n\n", { fontSize: 11 }), B("電話→アンケート→写真→見積→電話で契約\n訪問を省いて安く・早く", { fontSize: 9.5, color: GRAY })], 5.15, 2.05, 2.05, 2.1, { align: "center", valign: "middle", ls: 1.15 });
-    rect(s, 7.45, 2.0, 2.15, 2.2, LBLUE, { round: true });
-    txt(s, [B("30万円以上\n", { fontSize: 13, color: NAVY }), B("現地確認＋即決\n\n", { fontSize: 11 }), B("電話→事前準備→現地確認→その場で見積→契約\n追加提案で単価UP", { fontSize: 9.5, color: GRAY })], 7.5, 2.05, 2.05, 2.1, { align: "center", valign: "middle", ls: 1.15 });
-    const K3 = [["clock", "スピード", "問い合わせ後\n5分以内に電話"], ["talk", "ヒアリング", "お金・時期・競合・\nプラン・キーマンを確認"], ["heart", "信頼と提案", "ご遺族に寄り添い、\n関連サービスも提案"]];
-    K3.forEach((k, i) => {
-      const x = 0.4 + i * 3.13;
-      rect(s, x, 4.45, 2.94, 1.75, WHITE, { line: ORANGE, lw: 1.25 });
-      icon(s, k[0], x + 0.15, 4.6, 0.6, WHITE, ORANGE);
-      txt(s, k[1], x + 0.85, 4.6, 2.0, 0.6, { size: 14, bold: true, color: ORANGE, valign: "middle", margin: 0 });
-      txt(s, k[2], x + 0.15, 5.3, 2.64, 0.8, { size: 10.5, ls: 1.2 });
+    const s = content(S7, "営業KPI", "【話し方】①売上は「集客件数×契約率×単価」で決まる→②契約率80%を基準に、1年目は営業1名・月10件契約からスタート→③3年目は3名体制・月28件で売上1億円→④一人当たりの契約件数を落とさないことが利益のカギ。\n【根拠】3年1億円モデル（単価30万円・契約率80%）。");
+    msg(s, "契約率80%を基準に、少人数の営業体制で3年1億円をつくります");
+    const R = (t) => ({ text: t, options: { bold: true, color: RED } });
+    table(s, [
+      ["", "1年目", "2年目", "3年目"],
+      ["営業人員", "1名", "2名", "3名"],
+      ["月間集客件数", "12.5件", "18.75件", "35件"],
+      ["月間契約件数", "10件", "15件", "28件"],
+      ["一人当たり契約件数（月）", "10件", "7.5件", "約9.3件"],
+      ["単価", "30万円", "30万円", "30万円"],
+      ["売上", R("3,600万円"), R("5,400万円"), R("1億円")],
+    ], 0.3, 1.75, 5.75, [2.15, 1.2, 1.2, 1.2], { size: 10.5, rowH: 0.5, firstColFill: true });
+    txt(s, "※契約率は全期間80%を基準として算出", 0.3, 5.3, 5.75, 0.28, { size: 8.5, color: GRAY, margin: 0 });
+    // 右：売上の分解（3年目）
+    rect(s, 6.3, 1.75, 3.4, 3.83, LGRAY, { round: true, r: 0.05 });
+    txt(s, "売上の考え方（3年目）", 6.3, 1.82, 3.4, 0.32, { size: 10.5, bold: true, color: NAVY, align: "center", valign: "middle", margin: 0 });
+    const F = [["月間集客件数", "35件", NAVY], ["契約率", "80%", RED], ["月間契約件数", "28件", NAVY], ["単価", "30万円", NAVY]];
+    const OP = ["×", "＝", "×"];
+    F.forEach(([l, v, c], i) => {
+      const y = 2.22 + i * 0.68;
+      rect(s, 6.55, y, 2.9, 0.5, WHITE, { line: i === 1 ? RED : LINE, lw: i === 1 ? 1.5 : 1, round: true, r: 0.1 });
+      txt(s, l, 6.65, y, 1.5, 0.5, { size: 9.5, bold: true, valign: "middle", margin: 0 });
+      txt(s, v, 8.0, y, 1.35, 0.5, { size: 15, bold: true, color: c, align: "right", valign: "middle", margin: 0 });
+      if (i < 3) txt(s, OP[i], 6.55, y + 0.47, 2.9, 0.22, { size: 11, bold: true, color: GRAY, align: "center", valign: "middle", margin: 0 });
     });
-    key(s, "最初の電話対応が、契約率を決めます。", { y: 6.4, size: 16 });
+    arrowD(s, 7.8, 4.92, 0.4, 0.2, RED);
+    txt(s, [B("年間売上 ", { fontSize: 11 }), B("約1億円", { fontSize: 17, color: RED })], 6.3, 5.12, 3.4, 0.4, { align: "center", valign: "middle", margin: 0 });
+    // ポイント
+    [["target", "契約率80%を基準に設定"], ["chart", "売上は3年で約2.8倍"], ["users", "一人当たり生産性を最大化"]].forEach(([k, t], i) => {
+      const x = 0.3 + i * 3.17;
+      rect(s, x, 5.78, 3.0, 0.5, WHITE, { line: NAVY, round: true, r: 0.12 });
+      icon(s, k, x + 0.12, 5.88, 0.3, NAVY);
+      txt(s, t, x + 0.5, 5.78, 2.45, 0.5, { size: 10.5, bold: true, color: NAVY, valign: "middle", margin: 0 });
+    });
+    key(s, "成果を左右するのは「契約率」。だからこそ、営業の型づくりが重要です。", { y: 6.42, size: 14 });
   }
+  // ---- 営業 ②：全体フロー ----
   {
-    const s = content(S7, "0次接客とクロージング");
-    msg(s, "お客様は「電話の印象」で、この会社に任せたいかを判断しています", { size: 14 });
-    icon(s, "phone", 0.45, 1.65, 0.75, WHITE, NAVY);
-    txt(s, "お客様が知りたいこと", 1.3, 1.65, 3.5, 0.75, { size: 13, bold: true, color: NAVY, valign: "middle", margin: 0 });
-    bubble(s, "この会社は\n信頼できる？", 0.45, 2.55, 1.45, 0.95);
-    bubble(s, "高くない？\n追加料金は？", 1.98, 2.55, 1.45, 0.95);
-    bubble(s, "対応は\n丁寧？", 3.51, 2.55, 1.45, 0.95);
-    frame(s, 0.4, 3.75, 4.6, 2.5, "電話で確認すること", NAVY, { hsize: 12 });
-    [["基本情報", "故人様との関係・キーマン・希望時期・予算・他社状況"], ["現場の状況", "間取り・階数・エレベーター・駐車場・物量・重量物"], ["個別事情", "捜索物・買取・供養や特殊清掃の希望・立会い"], ["整理後の予定", "売却・解体・リフォームの検討"]].forEach((r, i) => {
-      txt(s, r[0], 0.55, 4.25 + i * 0.48, 1.2, 0.42, { size: 10, bold: true, color: NAVY, valign: "middle", margin: 0 });
-      txt(s, r[1], 1.75, 4.25 + i * 0.48, 3.2, 0.42, { size: 9, valign: "middle", margin: 0 });
+    const s = content(S7, "遺品整理営業の全体フロー", "【話し方】①流れは問い合わせ→現地確認→見積提出・契約→作業実施→②30万円未満はオンライン中心で効率化。訪問を省いたコストを価格に反映し、即日見積で契約率を上げる→③30万円以上は現地訪問で信頼と提案力を高め、追加提案で単価アップ→④共通の3つのポイント：スピード対応（5分以内架電）／ヒアリング力／信頼構築と提案力。");
+    msg(s, "案件の規模で営業方法を使い分け、少ない人数でも契約率と単価を高めます");
+    ["問い合わせ", "現地確認", "見積提出・契約", "作業実施"].forEach((t, i) => {
+      chevron(s, 0.3 + i * 2.35, 1.72, 2.35, 0.42, [NAVY, NAVY2, BLUE, BLUE][i], t, { first: i === 0, size: 11 });
     });
-    frame(s, 5.2, 1.65, 4.4, 4.6, "契約を後押しする3つのキーフレーズ", RED, { hsize: 12 });
-    [["共感", "「そのお気持ち、よく分かります。」"], ["安心", "「追加料金は一切ありません。すべてコミコミですので安心です。」"], ["希少性", "「ご希望の日程は埋まりやすいので、早めのご決断がおすすめです。」"]].forEach((r, i) => {
-      const y = 2.2 + i * 1.12;
-      num(s, i + 1, 5.35, y + 0.08, 0.4, RED);
-      txt(s, r[0], 5.85, y, 3.6, 0.45, { size: 13, bold: true, color: RED, valign: "middle", margin: 0 });
-      txt(s, r[1], 5.85, y + 0.45, 3.65, 0.6, { size: 10.5, ls: 1.2, margin: 0 });
+    const COL = [
+      ["30万円未満の案件", "オンライン中心で効率化", ORANGE, LORANGE, ["0次接客（電話ヒアリング）", "アンケート送付（SMS・LINE）", "写真のご提出（お客様）", "オンラインで見積提出", "電話でクロージング・契約"], ["訪問を省き、コストを価格に反映", "即日見積・即対応で契約率アップ"]],
+      ["30万円以上の案件", "現地訪問で信頼と提案力を強化", BLUE, LBLUE, ["0次接客（電話ヒアリング）", "事前情報収集・日程調整", "現地確認（訪問）", "見積提示・追加提案", "その場でクロージング・契約"], ["正確な見積りで安心感を提供", "追加提案で単価アップ"]],
+    ];
+    COL.forEach(([h, sub, c, bg, steps, merit], i) => {
+      const x = 0.3 + i * 4.75;
+      rect(s, x, 2.32, 4.65, 3.3, WHITE, { line: c, lw: 1.25 });
+      rect(s, x, 2.32, 4.65, 0.4, c);
+      txt(s, h, x, 2.32, 4.65, 0.4, { size: 12, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
+      txt(s, sub, x, 2.76, 4.65, 0.3, { size: 10.5, bold: true, color: c, align: "center", valign: "middle", margin: 0 });
+      steps.forEach((t, k) => {
+        const y = 3.12 + k * 0.36;
+        rect(s, x + 0.2, y, 4.25, 0.3, bg);
+        txt(s, [B(`STEP${k + 1}　`, { color: c }), B(t)], x + 0.3, y, 4.1, 0.3, { size: 9.5, valign: "middle", margin: 0 });
+      });
+      merit.forEach((t, k) => {
+        icon(s, "ok", x + 0.25, 4.98 + k * 0.28, 0.2, c);
+        txt(s, t, x + 0.52, 4.94 + k * 0.28, 4.0, 0.28, { size: 9.5, valign: "middle", margin: 0 });
+      });
     });
-    rect(s, 5.35, 5.55, 4.1, 0.55, "FCE8E6");
-    txt(s, "契約は「ゴール」ではなく「スタート」", 5.35, 5.55, 4.1, 0.55, { size: 11.5, bold: true, color: RED, align: "center", valign: "middle", margin: 0 });
-    key(s, "契約率の8割は、最初の電話対応（0次接客）で決まります。", { y: 6.45, size: 16 });
+    // 3つのポイント
+    txt(s, "共通する3つのポイント", 0.3, 5.72, 9.4, 0.28, { size: 10.5, bold: true, color: NAVY, align: "center", valign: "middle", margin: 0 });
+    [["clock", "スピード対応", "問い合わせ後5分以内に架電"], ["talk", "ヒアリング力", "状況・課題・希望を正確に把握"], ["heart", "信頼構築と提案力", "ご遺族に寄り添い、課題を解決"]].forEach(([k, t, d], i) => {
+      const x = 0.3 + i * 3.17;
+      rect(s, x, 6.05, 3.0, 0.75, WHITE, { line: LINE, round: true, r: 0.08 });
+      icon(s, k, x + 0.12, 6.17, 0.5, WHITE, NAVY);
+      txt(s, [B(t + "\n", { fontSize: 11, color: NAVY }), B(d, { fontSize: 8.5, bold: false })], x + 0.72, 6.05, 2.25, 0.75, { valign: "middle", margin: 0, ls: 1.15 });
+    });
+  }
+  // ---- 営業 ③：0次接客とクロージング ----
+  {
+    const s = content(S7, "0次接客とクロージング", "【話し方】①お客様は最初の電話の印象で「この会社に任せたいか」を判断している→②電話では要望の把握・単価アップの情報収集・信頼の獲得の3つを行う（確認項目：故人様との関係・キーマン・希望時期・予算・他社状況／間取り・階数・駐車場・物量／捜索物・買取・供養／整理後の売却・解体・リフォーム予定）→③見積り説明では、よくある不安に先回りして答える→④キーフレーズ：共感「そのお気持ち、よく分かります」／安心「追加料金は一切ありません」／希少性「ご希望の日程は埋まりやすいので、早めのご決断がおすすめです」。\n【トーク例】他社と比較したい→「ご希望の日程が埋まってしまう可能性がございますので、まずは日程だけでも仮押さえさせていただきますと安心です」");
+    msg(s, "契約率は、最初の電話と見積りのご説明でほぼ決まります");
+    // 左：0次接客
+    frame(s, 0.3, 1.72, 4.55, 4.5, "0次接客（最初の電話）", NAVY, { hsize: 12 });
+    txt(s, [B("お客様は"), B("電話の印象", { color: RED }), B("で\n「この会社に任せたいか」を判断しています")], 0.4, 2.2, 4.35, 0.6, { size: 10.5, align: "center", valign: "middle", margin: 0, ls: 1.15 });
+    [["信頼\nできる？"], ["高く\nない？"], ["対応は\n丁寧？"]].forEach(([t], i) => {
+      bubble(s, t, 0.55 + i * 1.4, 2.9, 1.2, 0.75, { size: 10, color: ORANGE, line: ORANGE });
+    });
+    txt(s, "電話で行う3つのこと", 0.4, 3.9, 4.35, 0.3, { size: 10.5, bold: true, color: NAVY, align: "center", valign: "middle", margin: 0 });
+    [["要望を正確に把握", "最適なご提案につなげる"], ["単価アップの情報収集", "買取・供養・解体などの材料"], ["信頼の獲得", "安心して任せられる会社に"]].forEach(([t, d], i) => {
+      const y = 4.27 + i * 0.6;
+      num(s, i + 1, 0.5, y + 0.07, 0.36, NAVY);
+      txt(s, [B(t + "\n", { fontSize: 10.5 }), B(d, { fontSize: 8.5, bold: false, color: GRAY })], 1.0, y, 3.75, 0.52, { valign: "middle", margin: 0, ls: 1.1 });
+    });
+    // 右：クロージング
+    frame(s, 5.15, 1.72, 4.55, 4.5, "見積り説明〜クロージング", RED, { hsize: 12 });
+    ["見積の説明", "安心のご提供", "日程のご提案", "契約"].forEach((t, i) => {
+      chevron(s, 5.25 + i * 1.08, 2.25, 1.1, 0.4, i === 3 ? RED : MGRAY, t, { first: i === 0, size: 8.5 });
+    });
+    txt(s, "よくある不安に、先回りしてお答えします", 5.25, 2.8, 4.35, 0.3, { size: 10.5, bold: true, color: RED, align: "center", valign: "middle", margin: 0 });
+    [["他社と比較したい", "まずは日程だけ仮押さえ"], ["金額が高いかも", "買取・供養の活用で費用を抑える"], ["追加料金が不安", "コミコミ価格で追加料金なし"], ["スタッフが不安", "自社スタッフ・マナー研修を徹底"]].forEach(([q, a], i) => {
+      const y = 3.2 + i * 0.68;
+      rect(s, 5.3, y, 1.55, 0.55, "FCE8E6", { round: true, r: 0.1 });
+      txt(s, q, 5.3, y, 1.55, 0.55, { size: 9, bold: true, color: RED, align: "center", valign: "middle", margin: 0 });
+      arrowR(s, 6.92, y + 0.17, 0.25, 0.22, MGRAY);
+      txt(s, a, 7.25, y, 2.35, 0.55, { size: 9.5, bold: true, valign: "middle", margin: 0 });
+      if (i < 3) line(s, 5.3, y + 0.62, 4.3, 0, LINE, 0.5, { dash: "dash" });
+    });
+    key(s, "電話で信頼をつくり、見積りで不安を消す。これが契約率80%の土台です。", { y: 6.35, size: 14 });
   }
   {
     const s = content(S7, "現場品質の仕組み");

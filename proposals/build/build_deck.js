@@ -1080,43 +1080,111 @@ async function main() {
     key(s, "広告ですぐ反響をとり、紹介とSEOで広告費を下げていきます。", { y: 6.35, size: 16 });
   }
   {
-    const s = content(S7, "WEB集客の全体像", "【話し方】①まずは反響が取れる専門HP（受け皿）をつくる。料金・事例・問い合わせ導線の3点が要→②次にSEO・MEO・PPC広告で流入を増やす。PPCはすぐ、MEOは1〜3ヶ月、SEOは3〜6ヶ月で効果が出始める→③受け皿がないまま広告を出すと費用がムダになるので、この順番で進める。");
+    const s = content(S7, "WEB集客の全体像", "【話し方】①まずは反響が取れる専門HP（受け皿）をつくる。HPでお客様の6つの不安を解消する→②次にSEO・MEO・PPC広告で流入を増やす。PPCはすぐ、MEOは1〜3ヶ月、SEOは3〜6ヶ月で効果が出始める→③この順番を守ると、広告費のムダが出ない。");
     txt(s, [B("遺品整理のWEB集客の全体像", { color: NAVY }), B("【成功の2ステップ】", { color: NAVY })], 0.3, 0.9, 9.4, 0.38, { size: 18, align: "center", valign: "middle", margin: 0 });
-    txt(s, [B("まずは", { color: NAVY }), B("専門HP", { color: RED }), B("で受け皿をつくり、次に", { color: NAVY }), B("SEO・MEO・PPC広告", { color: RED }), B("で人を呼び込む", { color: NAVY })], 0.3, 1.27, 9.4, 0.28, { size: 11.5, align: "center", valign: "middle", margin: 0 });
-    const PY = 1.8, PH = 4.3;
-    // STEP1
-    const AX = 0.3, AW = 3.6;
-    rect(s, AX, PY, AW, PH, WHITE, { line: NAVY, lw: 1.5, round: true, r: 0.05 });
-    rect(s, AX, PY, AW, 0.6, NAVY, { round: true, r: 0.05 });
-    num(s, 1, AX + 0.15, PY + 0.1, 0.4, WHITE, NAVY);
-    txt(s, "専門HPをつくる", AX + 0.65, PY, AW - 0.7, 0.6, { size: 17, bold: true, color: WHITE, valign: "middle", margin: 0 });
-    icon(s, "laptop", AX + AW / 2 - 0.5, PY + 0.8, 1.0, NAVY);
-    txt(s, "問い合わせが増える「受け皿」", AX, PY + 1.85, AW, 0.35, { size: 12.5, bold: true, color: NAVY, align: "center", valign: "middle", margin: 0 });
-    ["料金がひと目で分かる", "事例・口コミで信頼される", "電話・LINEですぐ問い合わせできる"].forEach((t, i) => {
-      const y = PY + 2.4 + i * 0.58;
-      rect(s, AX + 0.2, y, AW - 0.4, 0.48, LBLUE, { round: true, r: 0.1 });
-      icon(s, "ok", AX + 0.32, y + 0.1, 0.28, NAVY);
-      txt(s, t, AX + 0.7, y, AW - 0.95, 0.48, { size: 11, bold: true, valign: "middle", margin: 0 });
+    txt(s, [B("まずは", { color: NAVY }), B("反響が取れる専門HP", { color: RED }), B("を構築し、次に", { color: NAVY }), B("SEO・MEO・PPC広告", { color: RED }), B("で流入数を増やします", { color: NAVY })], 0.3, 1.27, 9.4, 0.28, { size: 11, align: "center", valign: "middle", margin: 0 });
+    const PY = 1.65, PH = 3.85;
+    // ---- STEP1 ----
+    const AX = 0.3, AW = 4.55;
+    rect(s, AX, PY, AW, PH, WHITE, { line: NAVY, lw: 1.25, round: true, r: 0.04 });
+    rect(s, AX, PY, AW, 0.5, NAVY, { round: true, r: 0.04 });
+    num(s, 1, AX + 0.12, PY + 0.07, 0.36, WHITE, NAVY);
+    txt(s, "反響が取れる専門HPを構築する", AX + 0.55, PY, AW - 0.6, 0.5, { size: 13.5, bold: true, color: WHITE, valign: "middle", margin: 0 });
+    txt(s, "＝ 信頼され、問い合わせが増える「受け皿」をつくる", AX, PY + 0.52, AW, 0.27, { size: 9, bold: true, color: NAVY, align: "center", valign: "middle", margin: 0 });
+    // HPイメージ
+    const HX = AX + 0.12, HY = PY + 0.85, HW = 2.25, HH = 1.8;
+    rect(s, HX, HY, HW, HH, WHITE, { line: "B8C0CC", lw: 1 });
+    rect(s, HX, HY, HW, 0.22, "EEF1F6");
+    txt(s, "○○遺品整理センター", HX + 0.06, HY, 1.3, 0.22, { size: 6.5, bold: true, color: NAVY, valign: "middle", margin: 0 });
+    rect(s, HX + 1.45, HY + 0.03, 0.74, 0.16, GREEN, { round: true, r: 0.05 });
+    txt(s, "☎ 0120-xxx-xxx", HX + 1.45, HY + 0.03, 0.74, 0.16, { size: 5.5, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
+    rect(s, HX, HY + 0.22, HW, 0.82, "E8EBF0");
+    txt(s, "遺品整理・生前整理は\nプロにお任せください", HX + 0.08, HY + 0.28, 1.5, 0.45, { size: 8, bold: true, color: NAVY, valign: "middle", margin: 0, ls: 1.05 });
+    oval(s, HX + 1.6, HY + 0.32, 0.58, 0.58, YEL);
+    txt(s, "実績\n1,000件", HX + 1.6, HY + 0.32, 0.58, 0.58, { size: 6.5, bold: true, color: NAVY, align: "center", valign: "middle", margin: 0, ls: 1.0 });
+    ["見積無料", "追加料金なし", "即日対応"].forEach((t, i) => { rect(s, HX + 0.08 + i * 0.5, HY + 0.78, 0.46, 0.17, BLUE, { round: true, r: 0.05 }); txt(s, t, HX + 0.08 + i * 0.5, HY + 0.78, 0.46, 0.17, { size: 4.5, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 }); });
+    txt(s, "選ばれる6つの理由", HX, HY + 1.07, HW, 0.2, { size: 6.5, bold: true, color: NAVY, align: "center", valign: "middle", margin: 0 });
+    ["user", "list", "coins", "pray", "shield", "award"].forEach((k, i) => icon(s, k, HX + 0.14 + i * 0.35, HY + 1.33, 0.26, NAVY));
+    txt(s, "スマホでも見やすく", HX, HY + 1.6, HW, 0.18, { size: 6, color: GRAY, align: "center", valign: "middle", margin: 0 });
+    // ポイント
+    txt(s, "反響が取れるHPのポイント", AX + 2.5, HY - 0.02, 1.95, 0.26, { size: 9.5, bold: true, color: NAVY, valign: "middle", margin: 0 });
+    ["サービス・料金が明確", "事例・お客様の声で信頼", "資格・実績をしっかり掲載", "電話・LINE・フォームの導線", "スマホで見やすい構成"].forEach((t, i) => {
+      icon(s, "ok", AX + 2.5, HY + 0.32 + i * 0.3, 0.2, NAVY);
+      txt(s, t, AX + 2.75, HY + 0.27 + i * 0.3, 1.75, 0.3, { size: 8.5, bold: true, valign: "middle", margin: 0 });
+    });
+    // お客様の不安
+    rect(s, AX + 0.12, PY + 2.75, AW - 0.24, 0.24, NAVY, { round: true, r: 0.1 });
+    txt(s, "HPで解消するお客様の6つの不安", AX + 0.12, PY + 2.75, AW - 0.24, 0.24, { size: 8.5, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
+    ["費用はいくら？", "どこに頼めばいい？", "信頼できる会社？", "作業の流れは？", "追加料金は？", "作業員は慣れている？"].forEach((t, i) => {
+      const x = AX + 0.12 + (i % 3) * 1.45, y = PY + 3.05 + Math.floor(i / 3) * 0.38;
+      rect(s, x, y, 1.39, 0.32, LBLUE, { round: true, r: 0.08 });
+      txt(s, t, x, y, 1.39, 0.32, { size: 8.5, bold: true, color: NAVY, align: "center", valign: "middle", margin: 0 });
     });
     // 矢印
-    s.addShape(pres.shapes.RIGHT_ARROW, { x: 4.0, y: PY + 1.85, w: 0.45, h: 0.6, fill: { color: RED }, line: { type: "none" }, objectName: "arr_web" });
-    // STEP2
-    const BX = 4.55, BW = 5.15;
-    rect(s, BX, PY, BW, PH, WHITE, { line: GREEN, lw: 1.5, round: true, r: 0.05 });
-    rect(s, BX, PY, BW, 0.6, GREEN, { round: true, r: 0.05 });
-    num(s, 2, BX + 0.15, PY + 0.1, 0.4, WHITE, GREEN);
-    txt(s, "流入を増やす", BX + 0.65, PY, BW - 0.7, 0.6, { size: 17, bold: true, color: WHITE, valign: "middle", margin: 0 });
-    [["search", "SEO", "検索から集客", "3〜6ヶ月", PURPLE], ["map", "MEO", "地図検索から集客", "1〜3ヶ月", GREEN], ["horn", "PPC広告", "今すぐ客を集客", "すぐ", ORANGE]].forEach(([k, n, role, time, col], i) => {
-      const x = BX + 0.18 + i * 1.66, y = PY + 0.8, w = 1.5;
-      rect(s, x, y, w, 3.3, WHITE, { line: col, lw: 1.25, round: true, r: 0.06 });
-      icon(s, k, x + w / 2 - 0.35, y + 0.18, 0.7, WHITE, col);
-      txt(s, n, x, y + 0.98, w, 0.4, { size: 16, bold: true, color: col, align: "center", valign: "middle", margin: 0 });
-      txt(s, role, x, y + 1.4, w, 0.35, { size: 10, bold: true, align: "center", valign: "middle", margin: 0 });
-      rect(s, x + 0.12, y + 1.95, w - 0.24, 1.15, LGRAY, { round: true, r: 0.08 });
-      txt(s, "効果が出るまで", x + 0.12, y + 2.02, w - 0.24, 0.3, { size: 8.5, bold: true, color: GRAY, align: "center", valign: "middle", margin: 0 });
-      txt(s, time, x + 0.05, y + 2.35, w - 0.1, 0.6, { size: 16, bold: true, color: col, align: "center", valign: "middle", margin: 0 });
+    s.addShape(pres.shapes.RIGHT_ARROW, { x: 4.88, y: PY + 1.6, w: 0.24, h: 0.5, fill: { color: NAVY }, line: { type: "none" }, objectName: "arr_web" });
+    // ---- STEP2 ----
+    const BX = 5.15, BW = 4.55;
+    rect(s, BX, PY, BW, PH, WHITE, { line: GREEN, lw: 1.25, round: true, r: 0.04 });
+    rect(s, BX, PY, BW, 0.5, GREEN, { round: true, r: 0.04 });
+    num(s, 2, BX + 0.12, PY + 0.07, 0.36, WHITE, GREEN);
+    txt(s, [B("流入数を増やす", { fontSize: 13.5 }), B("（SEO・MEO・PPC広告）", { fontSize: 10 })], BX + 0.55, PY, BW - 0.6, 0.5, { color: WHITE, valign: "middle", margin: 0 });
+    txt(s, "＝ さまざまな集客チャネルからHPへのアクセスを増やす", BX, PY + 0.52, BW, 0.27, { size: 9, bold: true, color: GREEN, align: "center", valign: "middle", margin: 0 });
+    const CH = [
+      ["SEO対策", "検索エンジンからの\n自然流入を増やす", "3〜6ヶ月", ["お役立ち記事で\n検索上位を狙う", "資産として長く\n集客できる"], PURPLE, "seo"],
+      ["MEO対策", "Googleマップでの\n上位表示で地域集客", "1〜3ヶ月", ["Googleビジネス\nプロフィールを最適化", "口コミを増やし\n評価を上げる"], GREEN, "meo"],
+      ["PPC広告", "今すぐ依頼したい人に\nすぐアプローチ", "すぐ", ["地域・キーワードを\n絞って配信", "短期間で反響を\n獲得できる"], ORANGE, "ppc"],
+    ];
+    CH.forEach(([n, role, time, pts, col, kind], i) => {
+      const x = BX + 0.1 + i * 1.47, y = PY + 0.83, w = 1.41;
+      rect(s, x, y, w, 2.97, WHITE, { line: col, lw: 1.25, round: true, r: 0.05 });
+      txt(s, n, x, y + 0.03, w, 0.3, { size: 12, bold: true, color: col, align: "center", valign: "middle", margin: 0 });
+      txt(s, role, x, y + 0.32, w, 0.36, { size: 7, bold: true, align: "center", valign: "middle", margin: 0, ls: 1.0 });
+      // 画面イメージ
+      const mx = x + 0.08, my = y + 0.72, mw = w - 0.16, mh = 1.0;
+      rect(s, mx, my, mw, mh, "FAFBFD", { line: "C9D1DE" });
+      if (kind === "seo" || kind === "ppc") {
+        rect(s, mx + 0.06, my + 0.06, mw - 0.12, 0.17, WHITE, { line: "C9D1DE", round: true, r: 0.08 });
+        icon(s, "search", mx + 0.1, my + 0.09, 0.11, MGRAY);
+        txt(s, kind === "seo" ? "遺品整理 費用相場" : "遺品整理 ○○市", mx + 0.24, my + 0.06, mw - 0.3, 0.17, { size: 5.5, color: DARK, valign: "middle", margin: 0 });
+      }
+      if (kind === "seo") {
+        ["遺品整理の費用相場とは？", "実家の片付けは何から？", "遺品整理と不用品回収の違い"].forEach((t, k) => {
+          txt(s, t, mx + 0.06, my + 0.28 + k * 0.23, mw - 0.1, 0.13, { size: 5.5, bold: true, color: BLUE, valign: "middle", margin: 0 });
+          rect(s, mx + 0.06, my + 0.42 + k * 0.23, mw * 0.7, 0.03, "D5DAE2");
+        });
+      } else if (kind === "meo") {
+        rect(s, mx, my, mw, 0.5, "E3ECD9");
+        line(s, mx, my + 0.18, mw, 0.15, "FFFFFF", 2); line(s, mx + 0.4, my, 0.25, 0.5, "FFFFFF", 2);
+        icon(s, "map", mx + 0.42, my + 0.1, 0.22, RED); icon(s, "map", mx + 0.75, my + 0.06, 0.22, RED);
+        txt(s, "○○遺品整理センター", mx + 0.05, my + 0.53, mw - 0.1, 0.15, { size: 5.5, bold: true, color: NAVY, valign: "middle", margin: 0 });
+        txt(s, [B("4.9 ", { color: DARK }), B("★★★★★", { color: "F2B705" }), B(" (128)", { color: GRAY })], mx + 0.05, my + 0.68, mw - 0.1, 0.13, { size: 5.5, valign: "middle", margin: 0 });
+        txt(s, "営業時間 8:00〜20:00", mx + 0.05, my + 0.82, mw - 0.1, 0.13, { size: 5, color: GRAY, valign: "middle", margin: 0 });
+      } else {
+        txt(s, "広告", mx + 0.06, my + 0.28, 0.3, 0.13, { size: 5, bold: true, color: DARK, valign: "middle", margin: 0 });
+        txt(s, "遺品整理｜即日対応・見積無料", mx + 0.06, my + 0.42, mw - 0.1, 0.16, { size: 5.5, bold: true, color: BLUE, valign: "middle", margin: 0 });
+        txt(s, "遺品整理の専門業者。仕分け・供養・買取までワンストップで安心対応。", mx + 0.06, my + 0.58, mw - 0.1, 0.24, { size: 4.8, color: DARK, valign: "top", margin: 0, ls: 1.0 });
+        ["即日対応", "見積無料", "追加料金なし"].forEach((t, k) => { rect(s, mx + 0.06 + k * 0.4, my + 0.83, 0.37, 0.12, LBLUE, { round: true, r: 0.04 }); txt(s, t, mx + 0.06 + k * 0.4, my + 0.83, 0.37, 0.12, { size: 4, bold: true, color: BLUE, align: "center", valign: "middle", margin: 0 }); });
+      }
+      // 効果が出るまで
+      rect(s, x + 0.1, y + 1.78, w - 0.2, 0.26, LGRAY, { round: true, r: 0.1 });
+      txt(s, [B("効果まで ", { fontSize: 6.5, color: GRAY }), B(time, { fontSize: 10, color: col })], x + 0.1, y + 1.78, w - 0.2, 0.26, { align: "center", valign: "middle", margin: 0 });
+      pts.forEach((p, j) => txt(s, "・" + p, x + 0.08, y + 2.1 + j * 0.42, w - 0.12, 0.42, { size: 7.5, valign: "top", margin: 0, ls: 1.05 }));
     });
-    key(s, "受け皿 → 集客の順番で、ムダのない集客と安定した売上アップを実現します。", { y: 6.38, size: 15 });
+    // ---- 下：集客の流れとゴール ----
+    rect(s, 0.3, 5.6, 1.15, 0.72, NAVY, { round: true, r: 0.06 });
+    txt(s, "集客の流れ\n（2ステップ）", 0.3, 5.6, 1.15, 0.72, { size: 9.5, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0, ls: 1.05 });
+    rect(s, 1.55, 5.6, 2.6, 0.72, WHITE, { line: NAVY, round: true, r: 0.06 });
+    icon(s, "laptop", 1.65, 5.76, 0.4, NAVY);
+    txt(s, [B("① 専門HPを構築\n", { fontSize: 10, color: NAVY }), B("問い合わせの「受け皿」を整える", { fontSize: 7.5, color: DARK })], 2.12, 5.6, 2.0, 0.72, { valign: "middle", margin: 0, ls: 1.05 });
+    arrowR(s, 4.2, 5.82, 0.3, 0.28, NAVY);
+    rect(s, 4.55, 5.6, 2.6, 0.72, WHITE, { line: GREEN, round: true, r: 0.06 });
+    icon(s, "search", 4.65, 5.76, 0.4, GREEN);
+    txt(s, [B("② 流入数を増やす\n", { fontSize: 10, color: GREEN }), B("SEO・MEO・PPCで反響を獲得", { fontSize: 7.5, color: DARK })], 5.12, 5.6, 2.0, 0.72, { valign: "middle", margin: 0, ls: 1.05 });
+    arrowR(s, 7.2, 5.82, 0.3, 0.28, NAVY);
+    rect(s, 7.55, 5.6, 2.15, 0.72, NAVY, { round: true, r: 0.06 });
+    icon(s, "chart", 7.62, 5.78, 0.36, YEL);
+    txt(s, [B("最終的なゴール\n", { fontSize: 8, color: YEL }), B("問い合わせ増加→\n成約・売上の拡大", { fontSize: 8, color: WHITE })], 8.03, 5.6, 1.65, 0.72, { valign: "middle", margin: 0, ls: 1.0 });
+    key(s, "この2ステップを正しく実行し、費用対効果の高い集客と安定した売上アップを実現します。", { y: 6.42, size: 13.5 });
   }
   {
     const s = content(S7, "専門HPとチラシのつくり方");

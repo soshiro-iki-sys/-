@@ -1262,39 +1262,34 @@ async function main() {
   }
   // ---- アライアンス提携 ②：貴社での進め方 ----
   {
-    const s = content(S7, "アライアンス構築の進め方", "【話し方】①立ち上げ2ヶ月目から並行して動き、6ヶ月で紹介元15社を目指す→②各フェーズで貴社がやること／船井総研が支援することを分けて説明→③提携のカギは「紹介元の信用を守る」こと。紹介元が一番恐れるのは、変な業者を紹介して自社の信用を失うこと。\n【要確認】フェーズの月数は支援スケジュール（アライアンス提携：2ヶ月目中盤〜6ヶ月目）に合わせて調整。");
-    msg(s, "6ヶ月で紹介元15社のネットワークをつくり、紹介が定着する状態を目指します");
+    const s = content(S7, "アライアンス構築の進め方", "【話し方】①まず提携先を選び、ご挨拶に伺う→②最初の紹介案件で信頼をつくってから提携契約→③作業報告・定期訪問で紹介を定着させる→④目安は紹介元15社で毎月5〜8件→⑤提携のカギは「紹介元の信用を守る」こと。紹介元が一番恐れるのは、変な業者を紹介して自社の信用を失うこと。\n【数値根拠】一番店マニュアル集客編：紹介元15社につき月5〜8件の紹介。\n【要確認】フェーズの月数は支援スケジュール（アライアンス提携：2ヶ月目中盤〜6ヶ月目）に合わせて調整。");
+    msg(s, "提携先を選び、信頼を積み重ねることで、紹介が毎月入ってくる状態をつくります");
     const PH = [
-      ["2〜3ヶ月目", "提携先の選定", "地域の不動産・士業・\n葬儀社・ケアマネなどを\n洗い出す", "エリア別リスト作成と\n優先順位付け（A/B/C）"],
-      ["3〜4ヶ月目", "ご挨拶・初回訪問", "提携資料を持って\nご挨拶に伺う", "提携提案書・紹介資料の制作\n訪問時のトーク設計"],
-      ["4〜6ヶ月目", "提携契約", "最初の紹介案件で\n信頼をつくり、\n条件をすり合わせる", "契約タイミングの判断\n紹介料など条件の設計"],
-      ["7ヶ月目〜", "紹介の定着", "作業報告・定期訪問で\n関係を続ける", "紹介件数の管理と\n月次での改善"],
+      ["2〜3ヶ月目", "提携先の選定", "map", "地域の不動産会社・士業・\n葬儀社・ケアマネなどを\n洗い出し、優先順位をつける"],
+      ["3〜4ヶ月目", "ご挨拶・初回訪問", "shake", "提携資料を持って\nご挨拶に伺い、\n困りごとをお聞きする"],
+      ["4〜6ヶ月目", "提携契約", "contract", "最初の紹介案件で\n信頼をつくり、\n条件をすり合わせる"],
+      ["7ヶ月目〜", "紹介の定着", "recycle", "作業報告・定期訪問で\n関係を続け、\n紹介を増やしていく"],
     ];
-    const X0 = 1.35, CW = 2.08;
-    rect(s, 0.3, 2.35, 0.98, 1.05, LBLUE);
-    txt(s, "貴社で\n行うこと", 0.3, 2.35, 0.98, 1.05, { size: 10, bold: true, color: NAVY, align: "center", valign: "middle", margin: 0, ls: 1.1 });
-    rect(s, 0.3, 3.5, 0.98, 1.05, LORANGE);
-    txt(s, "船井総研\nのご支援", 0.3, 3.5, 0.98, 1.05, { size: 10, bold: true, color: ORANGE, align: "center", valign: "middle", margin: 0, ls: 1.1 });
-    PH.forEach(([m, t, a, b], i) => {
-      const x = X0 + i * CW;
-      chevron(s, x, 1.72, CW + 0.05, 0.5, i === 3 ? RED : [NAVY, NAVY2, BLUE][i], "", { first: i === 0 });
+    const X0 = 0.3, CW = 2.35;
+    PH.forEach(([m, t, k, a], i) => {
+      const x = X0 + i * CW, col = i === 3 ? RED : [NAVY, NAVY2, BLUE][i];
+      chevron(s, x, 1.72, CW + 0.05, 0.5, col, "", { first: i === 0 });
       txt(s, [B(m + "\n", { fontSize: 8, color: WHITE }), B(t, { fontSize: 11, color: WHITE })], x + (i === 0 ? 0.05 : 0.18), 1.72, CW - 0.3, 0.5, { align: "center", valign: "middle", margin: 0, ls: 1.0 });
-      rect(s, x + 0.04, 2.35, CW - 0.1, 1.05, WHITE, { line: LINE });
-      txt(s, a, x + 0.12, 2.35, CW - 0.26, 1.05, { size: 9.5, valign: "middle", margin: 0, ls: 1.2 });
-      rect(s, x + 0.04, 3.5, CW - 0.1, 1.05, WHITE, { line: "F0C9A6" });
-      txt(s, b, x + 0.12, 3.5, CW - 0.26, 1.05, { size: 9.5, valign: "middle", margin: 0, ls: 1.2 });
+      rect(s, x + 0.05, 2.35, CW - 0.12, 1.75, WHITE, { line: LINE });
+      icon(s, k, x + CW / 2 - 0.3, 2.47, 0.6, WHITE, col);
+      txt(s, a, x + 0.12, 3.15, CW - 0.26, 0.9, { size: 9.5, align: "center", valign: "middle", margin: 0, ls: 1.2 });
     });
-    // 目標
-    txt(s, [B("6ヶ月後の目標　", { fontSize: 11, color: NAVY }), B("提携先 ", { fontSize: 11 }), B("15社", { fontSize: 18, color: RED }), B("　／　紹介 ", { fontSize: 11 }), B("毎月5〜8件", { fontSize: 18, color: RED })], 0.3, 4.7, 9.4, 0.5, { align: "center", valign: "middle", margin: 0 });
+    // 目安
+    txt(s, [B("目安　", { fontSize: 11, color: NAVY }), B("紹介元 ", { fontSize: 11 }), B("15社", { fontSize: 18, color: RED }), B(" で、紹介は ", { fontSize: 11 }), B("毎月5〜8件", { fontSize: 18, color: RED })], 0.3, 4.3, 9.4, 0.5, { align: "center", valign: "middle", margin: 0 });
     // カギ
-    rect(s, 0.3, 5.35, 9.4, 1.55, LGRAY, { round: true, r: 0.05 });
-    icon(s, "shield", 0.55, 5.62, 0.75, WHITE, NAVY);
-    txt(s, [B("提携のカギは「紹介元の信用を守る」こと\n", { fontSize: 12.5, color: NAVY }), B("紹介元が一番恐れているのは、紹介した業者のせいで自社の信用を失うこと。\n「この会社なら安心して任せられる」と思っていただくことが、紹介の継続につながります。", { fontSize: 9, bold: false })], 1.45, 5.45, 4.55, 1.35, { valign: "middle", margin: 0, ls: 1.25 });
+    rect(s, 0.3, 5.0, 9.4, 1.75, LGRAY, { round: true, r: 0.05 });
+    icon(s, "shield", 0.55, 5.45, 0.8, WHITE, NAVY);
+    txt(s, [B("提携のカギは「紹介元の信用を守る」こと\n", { fontSize: 12.5, color: NAVY }), B("紹介元が一番恐れているのは、紹介した業者のせいで\n自社の信用を失うこと。「この会社なら安心して任せられる」\nと思っていただくことが、紹介の継続につながります。", { fontSize: 9, bold: false })], 1.5, 5.1, 4.5, 1.55, { valign: "middle", margin: 0, ls: 1.25 });
     [["clock", "迅速なレスポンス"], ["yen", "明朗な見積り"], ["check", "丁寧な作業と事後報告"]].forEach(([k, t], i) => {
-      const y = 5.47 + i * 0.45;
-      rect(s, 6.15, y, 3.4, 0.38, WHITE, { line: LINE, round: true, r: 0.1 });
-      icon(s, k, 6.25, y + 0.06, 0.26, GREEN);
-      txt(s, t, 6.6, y, 2.9, 0.38, { size: 10, bold: true, valign: "middle", margin: 0 });
+      const y = 5.2 + i * 0.5;
+      rect(s, 6.15, y, 3.4, 0.4, WHITE, { line: LINE, round: true, r: 0.1 });
+      icon(s, k, 6.25, y + 0.07, 0.26, GREEN);
+      txt(s, t, 6.6, y, 2.9, 0.4, { size: 10, bold: true, valign: "middle", margin: 0 });
     });
   }
   {

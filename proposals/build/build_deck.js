@@ -563,39 +563,62 @@ async function main() {
     key(s, "許可がなくても、法令に沿ってスモールスタートできます。", { y: 6.45, size: 17 });
   }
   {
-    const s = content(S4, "資格・許可について", "【話し方】①まずは三社間契約（許可なし）で始められる→②許可を取ると回収・運搬まで自社で完結でき、利益率・スピード・対応力が上がる→③将来の選択肢として検討。許可の要件や新規受付の有無は自治体ごとに異なるため、事前に確認する。");
-    const GOLDT = "B8892B";
-    txt(s, [B("一般廃棄物収集運搬許可", { color: NAVY }), B("を持つと、", { color: DARK, fontSize: 16 }), B("収益性がさらに向上", { color: GOLDT }), B("します", { color: DARK, fontSize: 16 })], 0.4, 0.98, 9.2, 0.55, { size: 20, align: "center", valign: "middle", margin: 0 });
-    txt(s, "許可がなくても三社間契約で事業はできます。許可は「利益を伸ばすための次の一手」です。", 0.4, 1.5, 9.2, 0.32, { size: 11, bold: true, color: GRAY, valign: "middle", margin: 0 });
-    // 左右の比較
-    const M = [
-      [0.4, "許可なし（提携モデル）", MGRAY, LGRAY, [["当社", NAVY], ["許可業者", GREEN]], "回収・処分は許可業者に外注", [["処分", "許可業者に外注"], ["日程", "外注先の都合に合わせる"], ["利益率", "標準"]]],
-      [5.15, "許可あり（自社完結モデル）", GREEN, LGREEN, [["当社", NAVY], ["当社", NAVY]], "回収・運搬まで自社で完結", [["処分", "自社で回収・運搬"], ["日程", "自社で柔軟に調整"], ["利益率", "外注コスト削減で向上"]]],
-    ];
-    M.forEach(([x, head, col, bg, flow, cap, rows], k) => {
-      rect(s, x, 1.95, 4.45, 3.0, bg, { line: k ? GREEN : null, lw: 1.5, round: true, r: 0.05 });
-      txt(s, head, x + 0.15, 2.03, 4.15, 0.38, { size: 14, bold: true, color: col, valign: "middle", margin: 0 });
-      chevron(s, x + 0.15, 2.5, 1.45, 0.48, NAVY, "仕分け・搬出", { first: true, size: 9.5 });
-      chevron(s, x + 1.5, 2.5, 1.45, 0.48, flow[1][1], "回収・運搬", { size: 9.5 });
-      chevron(s, x + 2.85, 2.5, 1.45, 0.48, flow[1][1], "処分", { size: 9.5 });
-      txt(s, [B("当社", { color: NAVY }), B(k ? "　→　当社　→　当社" : "　→　許可業者　→　許可業者", { color: flow[1][1] })], x + 0.15, 3.0, 4.15, 0.28, { size: 9, align: "center", valign: "middle", margin: 0 });
-      rows.forEach((r, i) => {
-        const y = 3.38 + i * 0.5;
-        rect(s, x + 0.15, y, 1.0, 0.42, WHITE, { round: true, r: 0.1 });
-        txt(s, r[0], x + 0.15, y, 1.0, 0.42, { size: 10, bold: true, color: col, align: "center", valign: "middle", margin: 0 });
-        txt(s, r[1], x + 1.3, y, 3.0, 0.42, { size: 11.5, bold: k === 1, color: k ? DARK : GRAY, valign: "middle", margin: 0 });
-      });
+    const s = content(S4, "資格・許可について", "【話し方】①遺品整理に伴う回収・運搬・処分には原則として一般廃棄物収集運搬許可が必要→②ただし当社は仕分け・搬出までを担い、回収・処分は許可業者が行うので許可がなくても事業は可能（左）→③許可を取ると回収・運搬まで自社で完結でき、利益率・スケジュール・対応力が上がる（右・比較表）→④まずは三社間契約で始め、拡大に合わせて検討。許可の要件・新規受付の有無は自治体ごとに異なるため事前に確認する。");
+    // 見出し
+    txt(s, [B("一般廃棄物収集運搬許可", { color: NAVY }), B("を持つことで、収益性が", { color: NAVY }), B("さらに向上", { color: ORANGE }), B("します", { color: NAVY })], 0.3, 0.9, 9.4, 0.38, { size: 17, align: "center", valign: "middle", margin: 0 });
+    txt(s, "〜 許可がなくても事業は可能。許可を取得すれば、利益率をもっと高められます 〜", 0.3, 1.27, 9.4, 0.28, { size: 10.5, bold: true, color: NAVY, align: "center", valign: "middle", margin: 0 });
+    // 左：基本モデル
+    const LX = 0.3, LW = 5.0, TY = 1.65;
+    rect(s, LX, TY, LW, 2.2, WHITE, { line: NAVY, lw: 1.25 });
+    rect(s, LX, TY, LW, 0.3, NAVY);
+    txt(s, "当社の基本モデル（許可がなくても事業は可能です）", LX, TY, LW, 0.3, { size: 10, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
+    const P3 = [["お客様", "users", BLUE, LX + 0.12], ["当社", "user", NAVY, LX + 1.97], ["一般廃棄物業者\n（許可業者）", "truck", GREEN, LX + 3.83]];
+    P3.forEach(([t, ic, col, x]) => {
+      rect(s, x, TY + 0.4, 1.05, 1.08, WHITE, { line: col });
+      rect(s, x, TY + 0.4, 1.05, 0.34, col);
+      txt(s, t, x, TY + 0.4, 1.05, 0.34, { size: t.length > 4 ? 7.5 : 10, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0, ls: 1.0 });
+      icon(s, ic, x + 0.3, TY + 0.85, 0.45, col);
     });
-    s.addShape(pres.shapes.RIGHT_ARROW, { x: 4.88, y: 3.2, w: 0.25, h: 0.5, fill: { color: RED }, line: { type: "none" }, objectName: "arr_k" });
-    // メリット3つ
-    txt(s, "許可を取得するメリット", 0.4, 5.08, 9.2, 0.32, { size: 12, bold: true, color: GREEN, valign: "middle", margin: 0 });
-    [["coins", "利益率の向上", "外注コストを抑え、収益性が上がる"], ["cal", "スケジュールの柔軟性", "外注先の調整が不要になる"], ["rocket", "サービスの幅が広がる", "スポット・即日対応にも応えられる"]].forEach((m, i) => {
-      const x = 0.4 + i * 3.1;
-      icon(s, m[0], x, 5.45, 0.6, WHITE, GREEN);
-      txt(s, m[1], x + 0.7, 5.42, 2.3, 0.32, { size: 12, bold: true, color: GREEN, valign: "middle", margin: 0 });
-      txt(s, m[2], x + 0.7, 5.74, 2.3, 0.32, { size: 9.5, color: GRAY, valign: "middle", margin: 0 });
+    s.addShape(pres.shapes.LEFT_RIGHT_ARROW, { x: LX + 1.2, y: TY + 0.62, w: 0.74, h: 0.16, fill: { color: NAVY }, line: { type: "none" }, objectName: "lr_a" });
+    txt(s, "① 直接契約\n（サービス提供）", LX + 1.15, TY + 0.35, 0.84, 0.28, { size: 6.5, bold: true, color: NAVY, align: "center", valign: "middle", margin: 0, ls: 1.0 });
+    txt(s, "・ご相談・お見積り\n・仕分け・搬出作業\n・回収・処分の手配", LX + 1.15, TY + 0.82, 0.84, 0.66, { size: 6.5, valign: "top", margin: 0, ls: 1.1 });
+    s.addShape(pres.shapes.LEFT_RIGHT_ARROW, { x: LX + 3.05, y: TY + 0.62, w: 0.74, h: 0.16, fill: { color: GREEN }, line: { type: "none" }, objectName: "lr_b" });
+    txt(s, "② 業務提携\n（回収・処分）", LX + 3.0, TY + 0.35, 0.84, 0.28, { size: 6.5, bold: true, color: GREEN, align: "center", valign: "middle", margin: 0, ls: 1.0 });
+    txt(s, "・回収・運搬\n・適正な処分", LX + 3.0, TY + 0.82, 0.84, 0.5, { size: 6.5, valign: "top", margin: 0, ls: 1.1 });
+    rect(s, LX + 0.12, TY + 1.58, LW - 0.24, 0.52, LBLUE, { round: true, r: 0.08 });
+    icon(s, "shake", LX + 0.22, TY + 1.65, 0.38, NAVY);
+    txt(s, [B("許可がなくてもサービス提供が可能！\n", { fontSize: 10, color: NAVY }), B("一般廃棄物業者との提携で、お客様へ安心・安全なサービスを提供できます。", { fontSize: 7.5, color: DARK })], LX + 0.7, TY + 1.58, LW - 0.85, 0.52, { valign: "middle", margin: 0, ls: 1.05 });
+    // 右：メリット
+    const RX = 5.45, RW = 4.25;
+    rect(s, RX, TY, RW, 2.2, WHITE, { line: GREEN, lw: 1.25 });
+    rect(s, RX, TY, RW, 0.3, GREEN);
+    txt(s, "一般廃棄物収集運搬許可を取得するメリット", RX, TY, RW, 0.3, { size: 10, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
+    [["coins", "利益率の向上", "自社で回収・運搬が完結するため、外注コストを抑え、収益性が向上します。"], ["cal", "スケジュールの柔軟性アップ", "外注の調整が不要になり、スケジュールを柔軟にコントロールできます。"], ["rocket", "サービスの幅が広がる", "スポット対応や即日対応など、より多様なニーズに応えられます。"]].forEach((m, i) => {
+      const y = TY + 0.38 + i * 0.6;
+      rect(s, RX + 0.1, y, RW - 0.2, 0.54, LGREEN, { round: true, r: 0.08 });
+      icon(s, m[0], RX + 0.18, y + 0.07, 0.4, WHITE, GREEN);
+      txt(s, m[1], RX + 0.66, y + 0.02, RW - 0.8, 0.22, { size: 9.5, bold: true, color: GREEN, valign: "middle", margin: 0 });
+      txt(s, m[2], RX + 0.66, y + 0.24, RW - 0.8, 0.3, { size: 7, valign: "top", margin: 0, ls: 1.05 });
     });
-    key(s, "まずは三社間契約で始め、事業の拡大に合わせて許可取得を検討します。", { y: 6.45, size: 15 });
+    // 比較表
+    const TY2 = 3.98;
+    rect(s, 0.3, TY2, 9.4, 0.26, NAVY);
+    txt(s, "一目でわかる比較表（例）", 0.3, TY2, 9.4, 0.26, { size: 10, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
+    const CX = [0.3, 2.0, 5.85], CWs = [1.7, 3.85, 3.85];
+    [["比較項目", LGRAY, NAVY], ["許可を持っていない場合（提携モデル）", LGRAY, NAVY], ["許可を持っている場合（自社完結モデル）", GREEN, WHITE]].forEach((h, j) => {
+      rect(s, CX[j], TY2 + 0.26, CWs[j], 0.27, h[1], { line: LINE });
+      txt(s, h[0], CX[j], TY2 + 0.26, CWs[j], 0.27, { size: 9, bold: true, color: h[2], align: "center", valign: "middle", margin: 0 });
+    });
+    const ROWS = [["shake", "契約形態", "お客様と直接契約／一般廃棄物業者と業務提携", "お客様と直接契約（回収・運搬まで自社対応）"], ["truck", "回収・運搬方法", "提携業者へ委託", "自社で回収・運搬"], ["yen", "コスト構造", "処分費用は外注（一般相場で対応）", "処分費用を抑えやすい（自社運営で効率化）"], ["chart", "利益率", "標準的な水準", "向上しやすい"], ["cal", "スケジュール調整", "外注業者のスケジュールに依存", "自社で柔軟に調整可能"], ["users", "サービス提供力", "提携による安定したサービス提供", "対応力・スピード・提案力がさらに強化"]];
+    ROWS.forEach((r, i) => {
+      const y = TY2 + 0.53 + i * 0.29;
+      [0, 1, 2].forEach((j) => rect(s, CX[j], y, CWs[j], 0.29, j === 2 ? "F3F9F4" : (i % 2 ? WHITE : "FAFBFD"), { line: LINE }));
+      icon(s, r[0], CX[0] + 0.1, y + 0.05, 0.19, NAVY);
+      txt(s, r[1], CX[0] + 0.36, y, 1.3, 0.29, { size: 8.5, bold: true, color: NAVY, valign: "middle", margin: 0 });
+      txt(s, r[2], CX[1], y, CWs[1], 0.29, { size: 8.5, align: "center", valign: "middle", margin: 0 });
+      txt(s, r[3], CX[2], y, CWs[2], 0.29, { size: 8.5, bold: true, color: GREEN, align: "center", valign: "middle", margin: 0 });
+    });
+    key(s, "まずは許可なしで始め、事業の拡大に合わせて許可取得を検討します。", { y: 6.42, size: 15 });
     foot(s, "※許可の要件・新規受付の有無は自治体により異なります。");
   }
   {

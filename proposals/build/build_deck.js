@@ -87,6 +87,7 @@ async function main() {
     const s = pres.addSlide({ masterName: "CONTENT", sectionTitle: section });
     s.addText(title, { placeholder: "title" });
     if (notes) s.addNotes(notes);
+    s._pageTitle = title;
     return s;
   }
   function divider(section, title, notes) {
@@ -148,8 +149,10 @@ async function main() {
   function line(s, x, y, w, h, color, width, opt = {}) {
     s.addShape(pres.shapes.LINE, { x, y, w, h, flipV: !!opt.flipV, line: { color, width: width || 1.5, dashType: opt.dash || "solid", endArrowType: opt.arrow ? "triangle" : undefined }, objectName: nm("line") });
   }
-  function msg(s, t, opt = {}) {
-    txt(s, t, 0.4, opt.y || 1.0, opt.w || 9.2, opt.h || 0.5, { size: opt.size || 16, bold: true, color: opt.color || NAVY, valign: "middle", margin: 0, align: opt.align || "left" });
+  // ページ見出し（中央揃え）：ページ名＋その下にメッセージ
+  function msg(s, t) {
+    txt(s, s._pageTitle, 0.4, 0.9, 9.2, 0.38, { size: 18, bold: true, color: NAVY, align: "center", valign: "middle", margin: 0 });
+    txt(s, t, 0.4, 1.27, 9.2, 0.28, { size: 11.5, bold: true, color: NAVY, align: "center", valign: "middle", margin: 0 });
   }
   function key(s, t, opt = {}) {
     txt(s, t, 0.3, opt.y || 6.45, 9.4, opt.h || 0.55, { size: opt.size || 18, bold: true, color: RED, align: "center", valign: "middle", margin: 0 });
@@ -510,7 +513,7 @@ async function main() {
   {
     const s = content(S4, "資格・許可について", "【話し方】①左の図：契約は2本。お客様と当社が「サービス契約」、お客様と許可業者が「直接契約」→②右の流れ：1〜4は当社、5の回収・処分だけ許可業者（現場で引き渡す）→③下：従来モデルとの違いとメリット。前提条件（当社は廃棄物を運搬しない／現場で許可業者へ引き渡す）と自治体ごとのルールは事前に確認する。");
     const GOLDT = "B8892B";
-    txt(s, [B("三社間契約", { color: NAVY }), B("なら、", { color: DARK, fontSize: 16 }), B("一廃許可がなくても", { color: GOLDT }), B("始められます", { color: DARK, fontSize: 16 })], 0.4, 0.98, 9.2, 0.55, { size: 21, valign: "middle", margin: 0 });
+    txt(s, [B("三社間契約", { color: NAVY }), B("なら、", { color: DARK, fontSize: 16 }), B("一廃許可がなくても", { color: GOLDT }), B("始められます", { color: DARK, fontSize: 16 })], 0.4, 0.98, 9.2, 0.55, { size: 21, align: "center", valign: "middle", margin: 0 });
     // ---- 左：三者の関係（誰と契約するか） ----
     txt(s, "誰と契約するか", 0.4, 1.58, 5.0, 0.3, { size: 11, bold: true, color: GRAY, valign: "middle", margin: 0 });
     line(s, 1.45, 2.67, 0.85, 1.13, NAVY, 2.75, { flipV: true });
@@ -562,7 +565,7 @@ async function main() {
   {
     const s = content(S4, "資格・許可について", "【話し方】①まずは三社間契約（許可なし）で始められる→②許可を取ると回収・運搬まで自社で完結でき、利益率・スピード・対応力が上がる→③将来の選択肢として検討。許可の要件や新規受付の有無は自治体ごとに異なるため、事前に確認する。");
     const GOLDT = "B8892B";
-    txt(s, [B("一般廃棄物収集運搬許可", { color: NAVY }), B("を持つと、", { color: DARK, fontSize: 16 }), B("収益性がさらに向上", { color: GOLDT }), B("します", { color: DARK, fontSize: 16 })], 0.4, 0.98, 9.2, 0.55, { size: 20, valign: "middle", margin: 0 });
+    txt(s, [B("一般廃棄物収集運搬許可", { color: NAVY }), B("を持つと、", { color: DARK, fontSize: 16 }), B("収益性がさらに向上", { color: GOLDT }), B("します", { color: DARK, fontSize: 16 })], 0.4, 0.98, 9.2, 0.55, { size: 20, align: "center", valign: "middle", margin: 0 });
     txt(s, "許可がなくても三社間契約で事業はできます。許可は「利益を伸ばすための次の一手」です。", 0.4, 1.5, 9.2, 0.32, { size: 11, bold: true, color: GRAY, valign: "middle", margin: 0 });
     // 左右の比較
     const M = [
@@ -598,7 +601,7 @@ async function main() {
   {
     const s = content(S4, "資格・許可について", "【話し方】①片付け・搬出だけなら許可は不要→②「買取」をするなら古物商許可が必要→③取ると買取利益が出て、お客様の費用も下がる→④取得は約40日・費用は2万円前後。取得後は本人確認・古物台帳・プレート掲示を必ず守る。");
     const GOLDT = "B8892B";
-    txt(s, [B("「買取」", { color: GOLDT }), B("をするなら、", { color: DARK, fontSize: 16 }), B("古物商許可", { color: NAVY }), B("を取得しましょう", { color: DARK, fontSize: 16 })], 0.4, 0.98, 9.2, 0.55, { size: 21, valign: "middle", margin: 0 });
+    txt(s, [B("「買取」", { color: GOLDT }), B("をするなら、", { color: DARK, fontSize: 16 }), B("古物商許可", { color: NAVY }), B("を取得しましょう", { color: DARK, fontSize: 16 })], 0.4, 0.98, 9.2, 0.55, { size: 21, align: "center", valign: "middle", margin: 0 });
     // 不要 / 必要
     rect(s, 0.4, 1.65, 4.45, 1.85, LGRAY, { round: true, r: 0.05 });
     txt(s, "許可は不要", 0.55, 1.72, 4.2, 0.35, { size: 13, bold: true, color: MGRAY, valign: "middle", margin: 0 });
@@ -718,8 +721,9 @@ async function main() {
   ];
   function industrySlide(d) {
     const s = content(S5, "業種別シナジー｜" + (d.short || d.name));
-    icon(s, d.icon, 0.4, 1.0, 0.5, WHITE, NAVY);
-    txt(s, d.name, 1.0, 1.0, 8, 0.5, { size: 17, bold: true, color: NAVY, valign: "middle", margin: 0 });
+    const nw = d.name.length * 18 / 72;
+    icon(s, d.icon, 5 - nw / 2 - 0.55, 0.98, 0.45, WHITE, NAVY);
+    txt(s, d.name, 0.4, 0.95, 9.2, 0.5, { size: 18, bold: true, color: NAVY, align: "center", valign: "middle", margin: 0 });
     rect(s, 0.4, 1.65, 3.6, 3.45, LGRAY);
     txt(s, "経営課題", 0.55, 1.7, 3.3, 0.4, { size: 13, bold: true, color: MGRAY, margin: 0 });
     d.issues.forEach((it, i) => {
@@ -748,7 +752,7 @@ async function main() {
   }
   function realEstateChange() {
     const s = content(S5, "補足｜不動産会社にとっての環境変化", "【要確認】法改正の出典（法務省の通達等）を確認し、出典欄に記載する。");
-    txt(s, [B("不動産情報を「風上」で掴む方法の一つが、", { color: DARK, fontSize: 17 }), B("使えなくなります。", { color: RED, fontSize: 22 })], 0.4, 1.0, 9.2, 0.6, { valign: "middle", margin: 0 });
+    txt(s, [B("不動産情報を「風上」で掴む方法の一つが、", { color: DARK, fontSize: 17 }), B("使えなくなります。", { color: RED, fontSize: 22 })], 0.4, 1.0, 9.2, 0.6, { align: "center", valign: "middle", margin: 0 });
     line(s, 0.7, 2.25, 8.6, 0, LINE, 4);
     [["これまで", 1.1, MGRAY], ["2026年10月〜", 4.4, RED], ["これから", 7.7, NAVY]].forEach(([t, x, c]) => {
       oval(s, x + 0.5, 2.07, 0.36, 0.36, c);
@@ -988,7 +992,7 @@ async function main() {
       txt(s, [B(p[1], { fontSize: 18, color: hot ? RED : NAVY }), B("円〜", { fontSize: 10, color: hot ? RED : NAVY })], x, 2.35, 1.76, 0.6, { align: "center", valign: "middle", margin: 0 });
       txt(s, p[2], x + 0.05, 3.0, 1.66, 0.75, { size: 9.5, align: "center", ls: 1.2, margin: 0 });
       txt(s, p[3], x + 0.05, 3.8, 1.66, 0.6, { size: 9, color: GRAY, align: "center", ls: 1.2, margin: 0 });
-      if (hot) { rect(s, x + 0.28, 1.47, 1.2, 0.3, YEL, { round: true }); txt(s, "よくあるご依頼", x + 0.28, 1.47, 1.2, 0.3, { size: 8.5, bold: true, align: "center", valign: "middle", margin: 0 }); }
+      if (hot) { rect(s, x + 0.28, 1.56, 1.2, 0.22, YEL, { round: true }); txt(s, "よくあるご依頼", x + 0.28, 1.56, 1.2, 0.22, { size: 8.5, bold: true, align: "center", valign: "middle", margin: 0 }); }
     });
     txt(s, [HL("仕分け・搬出・処分・簡易清掃・運搬まで含んだパック料金（追加料金なし）", { color: DARK })], 0.4, 4.7, 9.2, 0.35, { size: 11.5, align: "center", margin: 0 });
     txt(s, "オプション（必要な場合のみ）", 0.4, 5.15, 3, 0.3, { size: 11, bold: true, color: NAVY, margin: 0 });
@@ -1191,7 +1195,7 @@ async function main() {
   divider(S8, "成功事例企業が続出！", "事例企業名・数値は掲載許可を確認してから使う。");
   function caseSlide(name, area, n1, n2, l1, l2, detail, point, notes) {
     const s = content(S8, "成功事例紹介", notes);
-    txt(s, `${name}（${area}）`, 0.4, 1.0, 9.2, 0.5, { size: 17, bold: true, color: NAVY, valign: "middle", margin: 0 });
+    txt(s, `${name}（${area}）`, 0.4, 0.95, 9.2, 0.5, { size: 18, bold: true, color: NAVY, align: "center", valign: "middle", margin: 0 });
     photo(s, 0.4, 1.6, 5.2, 3.0, "HPのファーストビュー画像");
     txt(s, "立上げ2年目で", 5.85, 1.65, 3.7, 0.4, { size: 13, bold: true, margin: 0 });
     [[l1, n1], [l2, n2]].forEach((r, i) => {
@@ -1328,7 +1332,7 @@ async function main() {
       rect(s, x, 1.65, 2.94, 4.5, WHITE, { line: p[4], lw: hot ? 2.5 : 1.25, shadow: hot });
       rect(s, x, 1.65, 2.94, 0.95, p[4]);
       txt(s, [B(p[0] + "\n", { fontSize: 11 }), B(p[1], { fontSize: 12.5 })], x, 1.65, 2.94, 0.95, { color: WHITE, align: "center", valign: "middle" });
-      if (hot) { rect(s, x + 0.9, 1.47, 1.15, 0.32, YEL, { round: true }); txt(s, "おすすめ", x + 0.9, 1.47, 1.15, 0.32, { size: 10, bold: true, align: "center", valign: "middle", margin: 0 }); }
+      if (hot) { rect(s, x + 0.9, 1.56, 1.15, 0.22, YEL, { round: true }); txt(s, "おすすめ", x + 0.9, 1.56, 1.15, 0.22, { size: 9, bold: true, align: "center", valign: "middle", margin: 0 }); }
       p[2].forEach((r, k) => {
         const y = 2.75 + k * 0.92;
         txt(s, r[0], x + 0.15, y, 2.64, 0.42, { size: 9, color: GRAY, align: "center", valign: "middle", margin: 0 });

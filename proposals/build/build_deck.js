@@ -560,26 +560,76 @@ async function main() {
     key(s, "許可がなくても、法令に沿ってスモールスタートできます。", { y: 6.45, size: 17 });
   }
   {
-    const s = content(S4, "一般廃棄物収集運搬許可と古物商許可");
-    msg(s, "どちらも必須ではありませんが、取得すると収益性がさらに高まります");
-    frame(s, 0.4, 1.6, 4.5, 4.75, "一般廃棄物収集運搬許可", GREEN, { hh: 0.5, hsize: 14 });
-    txt(s, "許可がなくても事業は可能。\n取得すれば、利益率をもっと高められます。", 0.55, 2.2, 4.2, 0.65, { size: 11, bold: true, color: GREEN, ls: 1.25 });
-    [["coins", "利益率の向上", "回収・運搬が自社で完結し、外注コストを抑えられる"], ["cal", "スケジュールの柔軟性", "外注先の都合に左右されず、日程を調整できる"], ["rocket", "サービスの幅が広がる", "スポット対応や即日対応にも応えられる"]].forEach((m, i) => {
-      const y = 3.0 + i * 1.08;
-      icon(s, m[0], 0.6, y + 0.1, 0.62, WHITE, GREEN);
-      txt(s, m[1], 1.35, y, 3.4, 0.4, { size: 12.5, bold: true, color: GREEN, valign: "middle", margin: 0 });
-      txt(s, m[2], 1.35, y + 0.4, 3.4, 0.6, { size: 10, ls: 1.2, margin: 0 });
+    const s = content(S4, "資格・許可について", "【話し方】①まずは三社間契約（許可なし）で始められる→②許可を取ると回収・運搬まで自社で完結でき、利益率・スピード・対応力が上がる→③将来の選択肢として検討。許可の要件や新規受付の有無は自治体ごとに異なるため、事前に確認する。");
+    const GOLDT = "B8892B";
+    txt(s, [B("一般廃棄物収集運搬許可", { color: NAVY }), B("を持つと、", { color: DARK, fontSize: 16 }), B("収益性がさらに向上", { color: GOLDT }), B("します", { color: DARK, fontSize: 16 })], 0.4, 0.98, 9.2, 0.55, { size: 20, valign: "middle", margin: 0 });
+    txt(s, "許可がなくても三社間契約で事業はできます。許可は「利益を伸ばすための次の一手」です。", 0.4, 1.5, 9.2, 0.32, { size: 11, bold: true, color: GRAY, valign: "middle", margin: 0 });
+    // 左右の比較
+    const M = [
+      [0.4, "許可なし（提携モデル）", MGRAY, LGRAY, [["当社", NAVY], ["許可業者", GREEN]], "回収・処分は許可業者に外注", [["処分", "許可業者に外注"], ["日程", "外注先の都合に合わせる"], ["利益率", "標準"]]],
+      [5.15, "許可あり（自社完結モデル）", GREEN, LGREEN, [["当社", NAVY], ["当社", NAVY]], "回収・運搬まで自社で完結", [["処分", "自社で回収・運搬"], ["日程", "自社で柔軟に調整"], ["利益率", "外注コスト削減で向上"]]],
+    ];
+    M.forEach(([x, head, col, bg, flow, cap, rows], k) => {
+      rect(s, x, 1.95, 4.45, 3.0, bg, { line: k ? GREEN : null, lw: 1.5, round: true, r: 0.05 });
+      txt(s, head, x + 0.15, 2.03, 4.15, 0.38, { size: 14, bold: true, color: col, valign: "middle", margin: 0 });
+      chevron(s, x + 0.15, 2.5, 1.45, 0.48, NAVY, "仕分け・搬出", { first: true, size: 9.5 });
+      chevron(s, x + 1.5, 2.5, 1.45, 0.48, flow[1][1], "回収・運搬", { size: 9.5 });
+      chevron(s, x + 2.85, 2.5, 1.45, 0.48, flow[1][1], "処分", { size: 9.5 });
+      txt(s, [B("当社", { color: NAVY }), B(k ? "　→　当社　→　当社" : "　→　許可業者　→　許可業者", { color: flow[1][1] })], x + 0.15, 3.0, 4.15, 0.28, { size: 9, align: "center", valign: "middle", margin: 0 });
+      rows.forEach((r, i) => {
+        const y = 3.38 + i * 0.5;
+        rect(s, x + 0.15, y, 1.0, 0.42, WHITE, { round: true, r: 0.1 });
+        txt(s, r[0], x + 0.15, y, 1.0, 0.42, { size: 10, bold: true, color: col, align: "center", valign: "middle", margin: 0 });
+        txt(s, r[1], x + 1.3, y, 3.0, 0.42, { size: 11.5, bold: k === 1, color: k ? DARK : GRAY, valign: "middle", margin: 0 });
+      });
     });
-    frame(s, 5.1, 1.6, 4.5, 4.75, "古物商許可", NAVY, { hh: 0.5, hsize: 14 });
-    txt(s, "「片付け」だけなら不要。\n「買取」を行う場合に必要になります。", 5.25, 2.2, 4.2, 0.65, { size: 11, bold: true, color: NAVY, ls: 1.25 });
-    txt(s, "取得までの流れ（審査 約40日）", 5.25, 2.95, 4.2, 0.3, { size: 11, bold: true, color: NAVY, margin: 0 });
-    ["書類準備", "警察署へ申請", "審査", "許可証交付"].forEach((t, i) => chevron(s, 5.25 + i * 1.05, 3.3, 1.12, 0.5, i === 3 ? RED : NAVY, t, { first: i === 0, size: 9 }));
-    rect(s, 5.25, 4.0, 2.05, 1.1, LBLUE);
-    txt(s, [B("費用\n", { fontSize: 10.5, color: NAVY }), B("申請手数料 約19,000円\n各種証明書 約1,000〜3,000円", { fontSize: 9.5 })], 5.3, 4.0, 1.95, 1.1, { valign: "middle", ls: 1.2 });
-    rect(s, 7.4, 4.0, 2.05, 1.1, LBLUE);
-    txt(s, [B("取得後に必要なこと\n", { fontSize: 10.5, color: NAVY }), B("本人確認／古物台帳（3年保管）／プレート掲示", { fontSize: 9.5 })], 7.45, 4.0, 1.95, 1.1, { valign: "middle", ls: 1.2 });
-    txt(s, "対象品の例：ブランド品・貴金属・時計・家具・家電・骨董品・楽器・カメラ・工具", 5.25, 5.25, 4.2, 0.6, { size: 9.5, color: GRAY, ls: 1.2 });
-    key(s, "古物商許可は、早めの取得がおすすめです。", { y: 6.45, size: 16 });
+    s.addShape(pres.shapes.RIGHT_ARROW, { x: 4.88, y: 3.2, w: 0.25, h: 0.5, fill: { color: RED }, line: { type: "none" }, objectName: "arr_k" });
+    // メリット3つ
+    txt(s, "許可を取得するメリット", 0.4, 5.08, 9.2, 0.32, { size: 12, bold: true, color: GREEN, valign: "middle", margin: 0 });
+    [["coins", "利益率の向上", "外注コストを抑え、収益性が上がる"], ["cal", "スケジュールの柔軟性", "外注先の調整が不要になる"], ["rocket", "サービスの幅が広がる", "スポット・即日対応にも応えられる"]].forEach((m, i) => {
+      const x = 0.4 + i * 3.1;
+      icon(s, m[0], x, 5.45, 0.6, WHITE, GREEN);
+      txt(s, m[1], x + 0.7, 5.42, 2.3, 0.32, { size: 12, bold: true, color: GREEN, valign: "middle", margin: 0 });
+      txt(s, m[2], x + 0.7, 5.74, 2.3, 0.32, { size: 9.5, color: GRAY, valign: "middle", margin: 0 });
+    });
+    key(s, "まずは三社間契約で始め、事業の拡大に合わせて許可取得を検討します。", { y: 6.45, size: 15 });
+    foot(s, "※許可の要件・新規受付の有無は自治体により異なります。");
+  }
+  {
+    const s = content(S4, "資格・許可について", "【話し方】①片付け・搬出だけなら許可は不要→②「買取」をするなら古物商許可が必要→③取ると買取利益が出て、お客様の費用も下がる→④取得は約40日・費用は2万円前後。取得後は本人確認・古物台帳・プレート掲示を必ず守る。");
+    const GOLDT = "B8892B";
+    txt(s, [B("「買取」", { color: GOLDT }), B("をするなら、", { color: DARK, fontSize: 16 }), B("古物商許可", { color: NAVY }), B("を取得しましょう", { color: DARK, fontSize: 16 })], 0.4, 0.98, 9.2, 0.55, { size: 21, valign: "middle", margin: 0 });
+    // 不要 / 必要
+    rect(s, 0.4, 1.65, 4.45, 1.85, LGRAY, { round: true, r: 0.05 });
+    txt(s, "許可は不要", 0.55, 1.72, 4.2, 0.35, { size: 13, bold: true, color: MGRAY, valign: "middle", margin: 0 });
+    txt(s, "片付け・搬出・清掃・分別\n一般廃棄物業者への引渡し", 0.55, 2.1, 4.2, 0.65, { size: 11.5, color: GRAY, valign: "middle", margin: 0, ls: 1.25 });
+    txt(s, "→ 遺品整理だけなら、許可がなくても始められる", 0.55, 2.85, 4.2, 0.5, { size: 10, color: GRAY, valign: "middle", margin: 0 });
+    arrowR(s, 4.92, 2.35, 0.25, 0.45, RED);
+    rect(s, 5.25, 1.65, 4.35, 1.85, LBLUE, { line: NAVY, lw: 1.5, round: true, r: 0.05 });
+    txt(s, "古物商許可が必要", 5.4, 1.72, 4.1, 0.35, { size: 13, bold: true, color: NAVY, valign: "middle", margin: 0 });
+    ["遺品を買い取る", "買取品を販売する（店舗・ネット）", "古物市場へ出品する", "海外へ輸出・リユース販売する"].forEach((t, i) => {
+      icon(s, "ok", 5.42, 2.15 + i * 0.32, 0.24, NAVY);
+      txt(s, t, 5.75, 2.1 + i * 0.32, 3.8, 0.32, { size: 10.5, bold: true, valign: "middle", margin: 0 });
+    });
+    // メリット
+    txt(s, "取得するメリット", 0.4, 3.68, 9.2, 0.3, { size: 12, bold: true, color: NAVY, valign: "middle", margin: 0 });
+    [["yen", "買取利益という\n新しい収益"], ["coins", "お客様の\n処分費用を軽減"], ["link", "「処分＋買取」の\nワンストップ提案"], ["award", "他社との\n差別化"]].forEach((m, i) => {
+      const x = 0.4 + i * 2.33;
+      rect(s, x, 4.02, 2.15, 0.8, WHITE, { line: NAVY, lw: 1, round: true, r: 0.08 });
+      icon(s, m[0], x + 0.12, 4.16, 0.52, WHITE, NAVY);
+      txt(s, m[1], x + 0.75, 4.02, 1.35, 0.8, { size: 10.5, bold: true, color: NAVY, valign: "middle", margin: 0, ls: 1.1 });
+    });
+    // 取得の流れ・取得後
+    txt(s, "取得の流れ（審査 約40日）", 0.4, 4.98, 5.6, 0.3, { size: 11, bold: true, color: NAVY, valign: "middle", margin: 0 });
+    ["書類準備\n約1〜2週間", "警察署へ\n申請", "審査\n約40日", "許可証交付\n買取開始"].forEach((t, i) => chevron(s, 0.4 + i * 1.38, 5.32, 1.5, 0.62, i === 3 ? RED : NAVY, t, { first: i === 0, size: 9 }));
+    txt(s, "費用：申請手数料 19,000円 ＋ 証明書 約1,000〜3,000円", 0.4, 6.0, 5.6, 0.3, { size: 10, bold: true, valign: "middle", margin: 0 });
+    rect(s, 6.25, 4.98, 3.35, 1.35, "FFF8E8", { line: GOLD, round: true, r: 0.05 });
+    txt(s, "取得後に必ず守ること", 6.38, 5.03, 3.1, 0.3, { size: 11, bold: true, color: GOLDT, valign: "middle", margin: 0 });
+    ["本人確認を行う", "古物台帳に記録（3年保管）", "古物商プレートを掲示"].forEach((t, i) => {
+      icon(s, "ok", 6.4, 5.4 + i * 0.3, 0.22, GOLD);
+      txt(s, t, 6.7, 5.36 + i * 0.3, 2.85, 0.3, { size: 10, bold: true, valign: "middle", margin: 0 });
+    });
+    key(s, "必須ではありませんが、早めの取得で売上・利益が伸びます。", { y: 6.45, size: 16 });
   }
 
   // =====================================================================

@@ -167,7 +167,7 @@ async function main() {
     const fs = opt.size || 11;
     const data = rows.map((r, i) => r.map((cell, j) => {
       const isObj = typeof cell === "object" && cell !== null;
-      const base = { fontFace: FONT, fontSize: fs, valign: "middle", margin: [3, 6, 3, 6], border: { type: "solid", pt: 0.75, color: LINE }, align: j === 0 ? "left" : (opt.align || "center") };
+      const base = { fontFace: FONT, fontSize: fs, valign: "middle", margin: opt.margin || [3, 6, 3, 6], border: { type: "solid", pt: 0.75, color: LINE }, align: j === 0 ? "left" : (opt.align || "center") };
       if (i === 0) Object.assign(base, { bold: true, color: WHITE, fill: { color: opt.head || NAVY }, align: "center" });
       else Object.assign(base, { color: DARK, fill: { color: (i % 2 === 0) ? LGRAY : WHITE } });
       if (opt.firstColFill && j === 0 && i > 0) Object.assign(base, { bold: true, fill: { color: LBLUE }, color: NAVY });
@@ -1397,6 +1397,130 @@ async function main() {
       if (i < 3) line(s, 5.3, y + 0.62, 4.3, 0, LINE, 0.5, { dash: "dash" });
     });
     key(s, "電話で信頼をつくり、見積りで不安を消す。これが契約率80%の土台です。", { y: 6.35, size: 14 });
+  }
+  // ---- 見積作成 ①：段ボールのサイズ ----
+  {
+    const s = content(S7, "見積作成について", "【話し方】①見積は「段ボール何箱分か」で物量を数える→②基準は140サイズ段ボール。内寸で計算すると約0.09㎥、ほぼ0.1㎥→③つまり140サイズ10箱で1立米（リューベ）→④1立米あたり12,000〜15,000円が目安。紹介案件などは7,000〜10,000円。");
+    s._pageTitle = "段ボール換算の基準";
+    msg(s, "物量は「140サイズ段ボール何箱分か」で数え、立米単価で見積ります");
+    const BX = [["140", "605", "435", "345", "1,070mm × 770mm × 230mm"], ["120", "475", "335", "310", "840mm × 680mm × 180mm"], ["100", "385", "275", "290", "680mm × 500mm × 160mm"]];
+    BX.forEach(([sz, l, w, d, ok], i) => {
+      const y = 1.72 + i * 1.6;
+      rect(s, 0.3, y, 1.5, 1.38, LBROWN, { round: true, r: 0.06 });
+      icon(s, "box", 0.62, y + 0.25, 0.85, BROWN);
+      rect(s, 2.0, y + 0.06, 0.2, 0.2, BROWN);
+      txt(s, `${sz}サイズダンボール箱`, 2.28, y, 3.8, 0.32, { size: 14, bold: true, color: BROWN, valign: "middle", margin: 0 });
+      rect(s, 2.0, y + 0.42, 0.55, 0.24, BROWN, { round: true, r: 0.05 });
+      txt(s, "内寸", 2.0, y + 0.42, 0.55, 0.24, { size: 9, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
+      [["長さ", l], ["幅", w], ["深さ", d]].forEach(([lb, v], k) => {
+        const x = 2.65 + k * 1.15;
+        txt(s, [B(lb + "\n", { fontSize: 9 }), B(v, { fontSize: 14 }), B("mm", { fontSize: 9 })], x, y + 0.38, 1.05, 0.6, { align: "center", valign: "middle", margin: 0, ls: 1.0 });
+        if (k < 2) line(s, x + 1.1, y + 0.42, 0, 0.5, BROWN, 0.75, { dash: "sysDot" });
+      });
+      rect(s, 2.0, y + 1.06, 1.0, 0.26, BROWN, { round: true, r: 0.05 });
+      txt(s, "送り荷寸法", 2.0, y + 1.06, 1.0, 0.26, { size: 9, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
+      txt(s, ok, 3.1, y + 1.06, 3.0, 0.26, { size: 10, bold: true, valign: "middle", margin: 0 });
+      if (i < 2) line(s, 0.3, y + 1.48, 5.85, 0, BROWN, 1, { dash: "sysDot" });
+    });
+    // 右：計算
+    rect(s, 6.35, 1.72, 3.35, 4.6, LGRAY, { round: true, r: 0.05 });
+    txt(s, "140サイズ段ボール", 6.5, 1.85, 3.1, 0.38, { size: 14, bold: true, color: NAVY, valign: "middle", margin: 0 });
+    txt(s, "＝ 0.605m × 0.435m × 0.345m\n≒ 約0.09㎥\n≒ 0.1㎥", 6.5, 2.25, 3.1, 0.95, { size: 11, valign: "middle", margin: 0, ls: 1.25 });
+    line(s, 6.5, 3.3, 3.05, 0, LINE, 0.75, { dash: "dash" });
+    txt(s, [B("1リューベ（立米）\n", { fontSize: 10, color: GRAY }), B("＝ 140サイズ ", { fontSize: 12 }), B("10箱", { fontSize: 16, color: RED })], 6.5, 3.4, 3.1, 0.75, { valign: "middle", margin: 0, ls: 1.1 });
+    line(s, 6.5, 4.25, 3.05, 0, LINE, 0.75, { dash: "dash" });
+    txt(s, [B("1リューベ単価\n", { fontSize: 10, color: GRAY }), B("12,000〜15,000円", { fontSize: 16, color: RED })], 6.5, 4.35, 3.1, 0.75, { valign: "middle", margin: 0, ls: 1.1 });
+    rect(s, 6.5, 5.25, 3.05, 0.8, WHITE, { line: LINE, round: true, r: 0.08 });
+    txt(s, [B("紹介等の場合\n", { fontSize: 9.5, color: GRAY }), B("7,000〜10,000円", { fontSize: 13, color: NAVY })], 6.5, 5.25, 3.05, 0.8, { align: "center", valign: "middle", margin: 0, ls: 1.1 });
+    key(s, "140サイズ10箱 ＝ 1立米。これが見積の基本単位です。", { y: 6.45, size: 15 });
+  }
+  // ---- 見積作成 ②：現地調査・見積シート ----
+  {
+    const s = content(S7, "見積作成について", "【話し方】①現地調査は専用の見積シートで行う→②小物は1種類1箱、家具・家電は換算表で「何箱分か」に置き換える→③総物量（箱数）に箱単価を掛け、基本料金・特殊処分・オプションを足して、買取金額を差し引く→④誰が調査しても同じ金額になるのがポイント。");
+    s._pageTitle = "現地調査・見積シート（段ボール換算方式）";
+    msg(s, "段ボール何箱分に該当するかを確認し、箱単価を決めることで見積金額を算出します");
+    // 左：シートの構成
+    rect(s, 0.3, 1.72, 3.85, 4.15, WHITE, { line: NAVY, lw: 1.25 });
+    rect(s, 0.3, 1.72, 3.85, 0.36, NAVY);
+    txt(s, "遺品整理 現地調査・見積シート", 0.3, 1.72, 3.85, 0.36, { size: 10.5, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
+    txt(s, "基準：140サイズ段ボール＝1.0箱（約0.1㎥）", 0.4, 2.12, 3.65, 0.24, { size: 8, bold: true, color: RED, align: "right", valign: "middle", margin: 0 });
+    const cell = (t, x, y, w, h, c, hl) => {
+      rect(s, x, y, w, h, hl ? "FFF8E8" : WHITE, { line: hl ? RED : c, lw: hl ? 1.75 : 0.75 });
+      rect(s, x, y, w, 0.24, c);
+      txt(s, t, x, y, w, 0.24, { size: 7.5, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
+      for (let k = 1; k * 0.16 + 0.24 < h - 0.05; k++) line(s, x + 0.08, y + 0.24 + k * 0.16, w - 0.16, 0, "E1E5EC", 0.5);
+    };
+    cell("基本情報", 0.4, 2.4, 3.65, 0.5, NAVY);
+    cell("① 小物類", 0.4, 2.98, 1.2, 1.15, BLUE);
+    cell("② 家具・家電", 1.68, 2.98, 2.37, 1.15, GREEN, true);
+    cell("③ 特殊処分品", 0.4, 4.2, 1.2, 0.85, PURPLE);
+    cell("④ 買取可能品", 1.68, 4.2, 1.15, 0.85, ORANGE);
+    cell("⑤ オプション", 2.9, 4.2, 1.15, 0.85, RED);
+    cell("⑥ 作業条件", 0.4, 5.12, 1.2, 0.65, BLUE);
+    cell("⑦ 最終集計", 1.68, 5.12, 1.15, 0.65, PURPLE);
+    cell("⑧ 見積算出", 2.9, 5.12, 1.15, 0.65, NAVY);
+    arrowR(s, 4.18, 3.4, 0.3, 0.3, RED);
+    // 右：家具・家電の換算表
+    const H = { text: "", options: {} };
+    const L1 = [["冷蔵庫（大型）", "", "12"], ["冷蔵庫（小型）", "", "8"], ["洗濯機", "", "6"], ["乾燥機", "", "4"], ["電子レンジ", "", "2"], ["炊飯器", "", "1"], ["テレビ32型以下", "", "2"], ["テレビ50型以上", "", "4"], ["テレビ台", "", "4"], ["ソファ1人掛", "脚", "4"], ["ソファ2人掛", "脚", "8"], ["本棚（大）", "台", "10"], ["机", "台", "5"], ["学習机", "台", "7"], ["椅子", "脚", "1"], ["仏壇（小）", "台", "6"], ["仏壇（大）", "台", "15"]];
+    const R1 = [["ソファ3人掛", "脚", "12"], ["シングルベッド", "台", "10"], ["ダブルベッド", "台", "14"], ["マットレスS", "枚", "6"], ["マットレスD", "枚", "8"], ["婚礼タンス", "棹", "15"], ["整理タンス", "棹", "10"], ["チェスト", "台", "6"], ["食器棚（小）", "台", "8"], ["食器棚（大）", "台", "15"], ["本棚（小）", "台", "5"], ["金庫（小）", "台", "8"], ["金庫（大）", "台", "20"], ["その他家具①", "台", ""], ["その他家具②", "台", ""], ["その他家電", "台", ""], ["", "", ""]];
+    const nL = (i) => (i < 11 ? i + 1 : i + 12), nR = (i) => (i < 11 ? i + 12 : (i < 16 ? i + 18 : ""));
+    const G = { fill: { color: LGREEN } };
+    const rows = [[{ text: "家電", options: { fill: { color: GREEN } } }, { text: "", options: { fill: { color: GREEN } } }, { text: "", options: { fill: { color: GREEN } } }, { text: "", options: { fill: { color: GREEN } } }, { text: "家具・その他", options: { fill: { color: GREEN } } }, { text: "", options: { fill: { color: GREEN } } }, { text: "", options: { fill: { color: GREEN } } }, { text: "", options: { fill: { color: GREEN } } }]];
+    rows[0][0].options.colspan = 4; rows[0] = [rows[0][0], Object.assign({}, rows[0][4], { options: { fill: { color: GREEN }, colspan: 4 } })];
+    rows.push(["No", "品目", "単位", "箱数", "No", "品目", "単位", "箱数"].map((t) => ({ text: t, options: { bold: true, color: GREEN, fill: { color: LGREEN }, align: "center" } })));
+    for (let i = 0; i < 17; i++) {
+      const a = L1[i], b = R1[i];
+      rows.push([String(nL(i)), { text: a[0], options: { align: "left" } }, a[1], { text: a[2] ? a[2] + "箱" : "箱", options: { bold: true } }, String(nR(i)), { text: b[0], options: { align: "left" } }, b[1], { text: b[0] ? (b[2] ? b[2] + "箱" : "箱") : "", options: { bold: true } }]);
+    }
+    table(s, rows, 4.55, 1.72, 5.15, [0.36, 1.26, 0.4, 0.53, 0.36, 1.26, 0.4, 0.58], { size: 7.5, rowH: 0.2, head: GREEN, margin: [1, 3, 1, 3] });
+    // 下：見積算出
+    rect(s, 0.3, 5.98, 9.4, 0.42, LBLUE, { round: true, r: 0.1 });
+    txt(s, [B("見積金額 ＝ ", { color: NAVY }), B("総物量（箱）× 箱単価", { color: RED }), B(" ＋ 基本料金 ＋ 特殊処分 ＋ オプション − 買取金額", { color: NAVY })], 0.3, 5.98, 9.4, 0.42, { size: 11.5, align: "center", valign: "middle", margin: 0 });
+    key(s, "誰が調査しても、同じ金額が出せる仕組みにします。", { y: 6.48, size: 14 });
+  }
+  // ---- 見積作成 ③：立米・トラック・作業量 ----
+  {
+    const s = content(S7, "見積作成について", "【話し方】①140ダンボール＝3辺の合計140cm、10箱で約1立米→②2トントラック1台で10〜12立米＝約100〜120箱分→③作業量は1人あたり1.2立米/日が目安→④物量（立米）が分かれば、トラック台数と必要な人数・日数が決まる。例：2LDKで段ボール100箱程度＝約10立米→2トン車1台、約8人日。");
+    s._pageTitle = "物量・トラック・作業量の目安";
+    msg(s, "物量（立米）が分かれば、トラックの台数と必要な人員が決まります");
+    const C = PURPLE, LC = "F2EEF8";
+    const col = (i, head, lead, sub) => {
+      const x = 0.3 + i * 3.17;
+      rect(s, x, 1.72, 3.0, 4.95, WHITE, { line: "D9D0E8", round: true, r: 0.04 });
+      rect(s, x + 0.1, 1.8, 2.8, 0.42, C, { round: true, r: 0.1 });
+      txt(s, head, x + 0.1, 1.8, 2.8, 0.42, { size: 12, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
+      txt(s, [B(lead + "\n", { fontSize: 11 }), B(sub, { fontSize: 9, bold: false, color: GRAY })], x + 0.15, 2.3, 2.75, 0.95, { valign: "middle", margin: 0, ls: 1.2 });
+      return x;
+    };
+    // ①
+    let x = col(0, "ダンボールのサイズと立米換算", "140ダンボールとは？", "3辺の合計が140cmのダンボールです。\n縦×横×高さは複数のタイプがあります。");
+    icon(s, "box", x + 0.2, 3.4, 1.1, BROWN);
+    rect(s, x + 1.45, 3.3, 1.45, 1.3, LC, { round: true, r: 0.08 });
+    txt(s, [B("3辺の合計\n", { fontSize: 9, color: C }), B("140cm\n", { fontSize: 17, color: C }), B("（例）50×40×50cm\n60×40×40cm など", { fontSize: 7.5, bold: false, color: GRAY })], x + 1.45, 3.3, 1.45, 1.3, { align: "center", valign: "middle", margin: 0, ls: 1.1 });
+    txt(s, [B("10箱で約1立米（1㎥）\n", { fontSize: 11 }), B("140ダンボール10箱分の容量が\nおよそ1立米になります。", { fontSize: 9, bold: false, color: GRAY })], x + 0.15, 4.75, 2.75, 0.75, { valign: "middle", margin: 0, ls: 1.2 });
+    oval(s, x + 0.6, 5.55, 1.8, 1.05, LC);
+    txt(s, [B("140ダンボール10箱\n", { fontSize: 8.5, color: C }), B("＝約1㎥", { fontSize: 16, color: C })], x + 0.6, 5.55, 1.8, 1.05, { align: "center", valign: "middle", margin: 0, ls: 1.05 });
+    // ②
+    x = col(1, "2トントラックの積載目安", "最大積載量は約10〜12立米", "ダンボールに換算すると、\n約100〜120箱分を積むことができます。");
+    icon(s, "truck", x + 0.85, 3.35, 1.3, MGRAY);
+    txt(s, "2トントラック（標準サイズ）", x, 4.7, 3.0, 0.25, { size: 8.5, color: GRAY, align: "center", valign: "middle", margin: 0 });
+    [["最大積載量", "10〜12", "立米"], ["ダンボール換算", "100〜120", "箱分"]].forEach(([h, v, u], k) => {
+      const xx = x + 0.12 + k * 1.4;
+      rect(s, xx, 5.05, 1.33, 1.2, LC, { round: true, r: 0.08 });
+      rect(s, xx + 0.1, 5.12, 1.13, 0.24, C, { round: true, r: 0.12 });
+      txt(s, h, xx + 0.1, 5.12, 1.13, 0.24, { size: 8, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
+      txt(s, [B(v + "\n", { fontSize: 15, color: C }), B(u, { fontSize: 10, color: C })], xx, 5.4, 1.33, 0.8, { align: "center", valign: "middle", margin: 0, ls: 1.05 });
+    });
+    txt(s, "※トラックのサイズや荷物の形状により前後します", x + 0.1, 6.3, 2.8, 0.3, { size: 7.5, color: GRAY, align: "center", valign: "middle", margin: 0 });
+    // ③
+    x = col(2, "作業量の目安（1人あたり）", "1人あたり1.2立米/日が目安", "荷物の種類や現場の状況により、\n多少前後します。");
+    icon(s, "people", x + 0.9, 3.35, 1.2, NAVY);
+    rect(s, x + 0.15, 4.8, 2.7, 1.45, LC, { round: true, r: 0.08 });
+    rect(s, x + 0.45, 4.88, 2.1, 0.26, C, { round: true, r: 0.13 });
+    txt(s, "1人あたりの作業量（目安）", x + 0.45, 4.88, 2.1, 0.26, { size: 8.5, bold: true, color: WHITE, align: "center", valign: "middle", margin: 0 });
+    txt(s, [B("1.2", { fontSize: 28, color: C }), B(" 立米/日", { fontSize: 13, color: C })], x + 0.15, 5.2, 2.7, 0.65, { align: "center", valign: "middle", margin: 0 });
+    txt(s, "※搬出経路・作業環境により変動します", x + 0.15, 5.85, 2.7, 0.3, { size: 7.5, color: GRAY, align: "center", valign: "middle", margin: 0 });
   }
   {
     const s = content(S7, "現場品質の仕組み");

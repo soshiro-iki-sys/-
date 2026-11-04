@@ -1576,8 +1576,8 @@ async function main() {
   caseSlide("Mevius Moving Works様", "大阪府大阪市", "6,000万円", "30%超", "遺品整理事業の売上", "営業利益率", "不動産会社からの紹介を中心に集客し、成約率80%超を実現。引越し事業と連携し、遺品整理事業を強化。", "提携先からの紹介と、本業（引越し）との連携", "【要確認】掲載許可。HP画像を差し替える。");
   {
     const s = content(S8, "成功企業の共通点", "同業種の事例がある場合は、このページの前に追加する。");
-    msg(s, "成功している企業は、共通して4つのことを実践しています");
-    const C = [["store", "専門店として打ち出す", "多摩エリア特化の専門店", "遺品整理の専門ブランド", "貴社版の事業コンセプト"], ["shake", "紹介の仕組み", "事業の裾野を広げ紹介を獲得", "不動産会社からの紹介が中心", "提携先からの紹介"], ["clock", "スピード対応", "反響月40件に素早く対応", "成約率80%超", "5分以内の電話・現地即決"], ["yen", "利益が残る事業にする", "営業利益率 約37%\n（3,000万円／8,000万円）", "営業利益率 30%超", "3年目 営業利益率\n20%超の計画"]];
+    msg(s, "成功している企業は、共通して5つのことを実践しています");
+    const C = [["store", "専門店として打ち出す", "多摩エリア特化の専門店", "遺品整理の専門ブランド", "貴社版の事業コンセプト"], ["shake", "紹介の仕組み", "事業の裾野を広げ紹介を獲得", "不動産会社からの紹介が中心", "提携先からの紹介"], ["clock", "スピード対応", "反響月40件に素早く対応", "成約率80%超", "5分以内の電話・現地即決"], ["link", "他事業との連携", "買取・空き家買取へ拡大", "引越し事業と連携", "基盤となる\n遺品整理事業に参入"], ["yen", "利益が残る事業にする", "営業利益率 約37%\n（3,000万円／8,000万円）", "営業利益率 30%超", "3年目 営業利益率\n20%超の計画"]];
     const XS = [2.95, 5.15, 7.6], CWD = 2.1;
     [["蒼炎様", "立上げ2年目 売上8,000万円"], ["Mevius様", "立上げ2年目 営業利益率30%超"], ["貴社での進め方", "本日ご説明した内容"]].forEach(([h, d], j) => {
       const X = XS[j];
@@ -1585,16 +1585,16 @@ async function main() {
       txt(s, [B(h + "\n", { fontSize: 12, color: WHITE }), B(d, { fontSize: 8, bold: false, color: WHITE })], X, 1.72, CWD, 0.62, { align: "center", valign: "middle", margin: 0, ls: 1.1 });
     });
     C.forEach((c, i) => {
-      const y = 2.48 + i * 0.95;
-      rect(s, 0.3, y, 2.5, 0.82, LBLUE, { round: true, r: 0.08 });
-      icon(s, c[0], 0.42, y + 0.14, 0.54, WHITE, NAVY);
-      txt(s, c[1], 1.05, y, 1.7, 0.82, { size: 11, bold: true, color: NAVY, valign: "middle", margin: 0 });
+      const y = 2.48 + i * 0.78;
+      rect(s, 0.3, y, 2.5, 0.68, LBLUE, { round: true, r: 0.08 });
+      icon(s, c[0], 0.42, y + 0.09, 0.5, WHITE, NAVY);
+      txt(s, c[1], 1.02, y, 1.75, 0.68, { size: 11, bold: true, color: NAVY, valign: "middle", margin: 0 });
       [c[2], c[3], c[4]].forEach((t, j) => {
         const X = XS[j];
-        rect(s, X, y, CWD, 0.82, j === 2 ? "FCE8E6" : WHITE, { line: j === 2 ? "F2B8B3" : LINE, round: true, r: 0.08 });
-        txt(s, t, X + 0.08, y, CWD - 0.16, 0.82, { size: 10, bold: j === 2, color: j === 2 ? RED : DARK, align: "center", valign: "middle", margin: 0 });
+        rect(s, X, y, CWD, 0.68, j === 2 ? "FCE8E6" : WHITE, { line: j === 2 ? "F2B8B3" : LINE, round: true, r: 0.08 });
+        txt(s, t, X + 0.08, y, CWD - 0.16, 0.68, { size: 10, bold: j === 2, color: j === 2 ? RED : DARK, align: "center", valign: "middle", margin: 0 });
       });
-      arrowR(s, 7.3, y + 0.29, 0.24, 0.24, RED);
+      arrowR(s, 7.3, y + 0.22, 0.24, 0.24, RED);
     });
     line(s, 0.3, 6.32, 9.4, 0, LINE, 0.75, { dash: "dash" });
     key(s, "成功の型は、貴社でも再現できます。", { y: 6.42, size: 17 });

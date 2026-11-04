@@ -53,7 +53,7 @@ async function main() {
   const pres = new pptxgen();
   pres.layout = "LAYOUT_WIDE"; // 13.333 x 7.5
   pres.theme = { headFontFace: FONT, bodyFontFace: FONT };
-  pres.title = "不動産会社のための「遺品整理×空き家」新・仕入れ戦略";
+  pres.title = "不動産会社のための遺品整理参入ガイド";
   pres.author = "株式会社船井総合研究所";
   pres.company = "株式会社船井総合研究所";
 
@@ -147,14 +147,13 @@ async function main() {
   // =================================================================
   {
     const s = pres.addSlide({ masterName: "COVER" });
-    rect(s, 2.05, 1.55, 2.9, 0.42, BLUE, { round: true, r: 0.2 });
-    txt(s, "不動産会社様向けレポート", 2.05, 1.55, 2.9, 0.42, { size: 13, bold: true, color: WHITE, align: "center", valign: "middle" });
-    txt(s, [B("不動産会社のための\n", { color: NAVY }), B("「遺品整理×空き家」", { color: BLUE }), B("新・仕入れ戦略", { color: NAVY })], 2.05, 2.15, 10.5, 1.9, { size: 38, ls: 1.2, valign: "middle" });
-    hline(s, 2.1, 4.25, 9.6, LINE, 1);
-    txt(s, "2027年、売却相談を“市場に出る前”に掴む方法", 2.05, 4.4, 10.5, 0.55, { size: 20, bold: true, color: DARK, valign: "middle" });
-    txt(s, "ポータル・一括査定に頼らない、相続物件の仕入れルートのつくり方", 2.05, 4.95, 10.5, 0.4, { size: 13, color: GRAY, valign: "middle" });
+    rect(s, 2.05, 1.7, 2.9, 0.42, BLUE, { round: true, r: 0.2 });
+    txt(s, "不動産会社様向けレポート", 2.05, 1.7, 2.9, 0.42, { size: 13, bold: true, color: WHITE, align: "center", valign: "middle" });
+    txt(s, [B("不動産会社のための\n", { color: NAVY }), B("遺品整理", { color: BLUE }), B("参入ガイド", { color: NAVY })], 2.05, 2.3, 10.5, 1.9, { size: 42, ls: 1.2, valign: "middle" });
+    hline(s, 2.1, 4.4, 9.6, LINE, 1);
+    txt(s, "相続物件と“市場に出る前”に出会い、残置物撤去の内製化と仕入れ強化を同時に実現する", 2.05, 4.58, 10.8, 0.55, { size: 19, bold: true, color: DARK, valign: "middle" });
     txt(s, "株式会社 船井総合研究所", 2.05, 6.3, 6, 0.4, { size: 12, bold: true, color: NAVY, valign: "middle" });
-    s.addNotes("表紙。テーマは「相続物件の仕入れルート」。遺品整理を“本業の入口”として位置づける。");
+    s.addNotes("表紙。テーマは「相続物件の仕入れルート」。遺品整理を“本業の入口”として位置づけ、残置物撤去の内製化と仕入れ強化のシナジーを伝える。");
   }
 
   // =================================================================

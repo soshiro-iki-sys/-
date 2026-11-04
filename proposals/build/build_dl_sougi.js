@@ -174,22 +174,24 @@ async function main() {
   // =================================================================
   const C1 = "葬儀会社を取り巻く変化";
   {
-    const s = page(1, C1, [B("件数は増えても、"), B("1件あたりの売上は下がっている", { color: RED })],
-      "経済産業省の統計では、2024年の葬儀の取扱件数は約50万件で、2015年から約2割増えました。一方で売上高は約6,000億円前後で横ばいです。家族葬・一日葬など小規模な葬儀の広がりで、1件あたりの売上が下がっています。",
-      "【出典】経済産業省「特定サービス産業動態統計調査」（葬儀業）。数値は互助会保証株式会社の整理資料（2025年6月）に掲載された長期時系列による。売上の大きい事業所が対象で、葬儀業全体の合計ではない。調査対象の追加などで数値が不連続な期間がある。1件あたりの売上は売上高÷取扱件数で算出（公式の統計項目ではない）。【要確認】掲載前に経産省の長期データ（Excel）で数値を確認する。");
-    txt(s, "葬儀1件あたりの売上（売上高 ÷ 取扱件数）", 0.75, 2.72, 7, 0.32, { size: 12, bold: true, color: NAVY, valign: "middle" });
-    s.addChart(pres.charts.BAR, [{ name: "1件あたりの売上（万円）", labels: ["2015年", "2019年", "2020年", "2023年", "2024年"], values: [144.5, 134.3, 117.4, 118.5, 121.5] }], {
-      x: 0.72, y: 3.15, w: 6.6, h: 2.95, barDir: "col", barGapWidthPct: 55, chartColors: [NAVY], showValue: true, dataLabelPosition: "outEnd",
-      dataLabelFormatCode: "0.0\"万円\"", dataLabelFontSize: 12, dataLabelFontBold: true, dataLabelColor: NAVY, dataLabelFontFace: FONT,
-      catAxisLabelFontSize: 11, catAxisLabelFontFace: FONT, catAxisLabelColor: DARK, valAxisHidden: true, valGridLine: { style: "none" },
-      showLegend: false, valAxisMinVal: 0, valAxisMaxVal: 170, objectName: "unit_chart",
-    });
+    const s = page(1, C1, [B("1事業所あたりの売上は、"), B("2015年から約26%減っている", { color: RED })],
+      "経済産業省の統計を、葬儀を営む事業所1か所あたりに直すと、2024年の売上高は約2.0億円で、2015年の約2.8億円から約26%減りました。年間の取扱件数も約190件から約167件へ減り、1件あたりの単価も下がっています。",
+      "【出典】経済産業省「特定サービス産業動態統計調査」（葬儀業）の長期データ。互助会保証株式会社「葬祭業の推移」（2025年6月）に掲載の年次値（売上高・取扱件数・調査企業の当該業務を営む事業所数）から、1事業所あたりの売上高（売上高÷事業所数）・取扱件数（取扱件数÷事業所数）を算出。\n【注意】調査対象は売上の大きい企業の事業所で、葬儀業全体ではない。事業所数は調査対象の追加でも増えるため、1事業所あたりの減少には調査範囲の変化の影響も含まれる。");
+    txt(s, "葬儀を営む1事業所あたりの年間売上高", 0.75, 2.72, 7, 0.32, { size: 12, bold: true, color: NAVY, valign: "middle" });
     rect(s, 5.15, 2.7, 2.15, 0.36, WHITE, { line: RED, lw: 1.25, round: true, r: 0.2 });
-    txt(s, [B("2015年比 ", { color: DARK }), B("約16%減", { color: RED })], 5.15, 2.7, 2.15, 0.36, { size: 12, align: "center", valign: "middle" });
-    txt(s, "売上高と取扱件数の推移", 7.65, 2.72, 5, 0.32, { size: 12, bold: true, color: NAVY, valign: "middle" });
-    table(s, [["年", "売上高", "取扱件数", "1件あたり"], ["2015年", "6,065億円", "41.9万件", "144.5万円"], ["2019年", "6,001億円", "44.7万件", "134.3万円"], ["2020年", "5,135億円", "43.7万件", "117.4万円"], ["2023年", "5,945億円", "50.2万件", "118.5万円"], [{ text: "2024年", options: { bold: true, color: BLUE, fill: { color: LAV } } }, { text: "6,109億円", options: { bold: true, color: BLUE, fill: { color: LAV } } }, { text: "50.3万件", options: { bold: true, color: BLUE, fill: { color: LAV } } }, { text: "121.5万円", options: { bold: true, color: BLUE, fill: { color: LAV } } }]], 7.65, 3.08, [1.0, 1.35, 1.25, 1.12], { size: 10.5, rowH: 0.42, firstCol: true });
-    conclusion(s, "件数が伸びても、売上は伸びていない。葬儀だけでは成長しにくい構造になっています。", 6.2);
-    source(s, "出典：経済産業省「特定サービス産業動態統計調査」（葬儀業）をもとに作成。1件あたりの売上は売上高÷取扱件数で算出。調査対象は売上の大きい事業所。", 6.68);
+    txt(s, [B("2015年比 ", { color: DARK }), B("約26%減", { color: RED })], 5.15, 2.7, 2.15, 0.36, { size: 12, align: "center", valign: "middle" });
+    s.addChart(pres.charts.BAR, [{ name: "1事業所あたり売上高（億円）", labels: ["2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024"], values: [2.75, 2.62, 2.59, 2.50, 2.40, 2.02, 1.92, 2.01, 2.04, 2.03] }], {
+      x: 0.72, y: 3.15, w: 6.6, h: 2.95, barDir: "col", barGapWidthPct: 45, chartColors: [NAVY], showValue: true, dataLabelPosition: "outEnd",
+      dataLabelFormatCode: "0.00", dataLabelFontSize: 10, dataLabelFontBold: true, dataLabelColor: NAVY, dataLabelFontFace: FONT,
+      catAxisLabelFontSize: 10, catAxisLabelFontFace: FONT, catAxisLabelColor: DARK, valAxisHidden: true, valGridLine: { style: "none" },
+      showLegend: false, valAxisMinVal: 0, valAxisMaxVal: 3.2, objectName: "site_chart",
+    });
+    txt(s, "（単位：億円）", 5.6, 6.02, 1.7, 0.25, { size: 8.5, color: MGRAY, align: "right", valign: "middle" });
+    txt(s, "1事業所あたりの推移", 7.65, 2.72, 5, 0.32, { size: 12, bold: true, color: NAVY, valign: "middle" });
+    const HL = (t) => ({ text: t, options: { bold: true, color: BLUE, fill: { color: LAV } } });
+    table(s, [["年", "年間売上高", "年間取扱件数", "1件あたり"], ["2015年", "2.75億円", "190件", "144.5万円"], ["2019年", "2.40億円", "179件", "134.3万円"], ["2020年", "2.02億円", "172件", "117.4万円"], ["2023年", "2.04億円", "172件", "118.5万円"], [HL("2024年"), HL("2.03億円"), HL("167件"), HL("121.5万円")]], 7.65, 3.08, [1.0, 1.3, 1.3, 1.12], { size: 10.5, rowH: 0.42, firstCol: true });
+    conclusion(s, "1か所あたりの件数も単価も減っている。葬儀だけでは、売上を維持しにくい構造です。", 6.25);
+    source(s, "出典：経済産業省「特定サービス産業動態統計調査」（葬儀業）をもとに作成。売上高・取扱件数を、調査対象の当該業務を営む事業所数で割って算出。調査対象は売上の大きい企業の事業所。", 6.7);
   }
   {
     const s = page(1, C1, [B("集客は紹介サイト頼みで、"), B("施行後の接点がない", { color: RED })],

@@ -14,7 +14,7 @@ const ASSET = path.join(__dirname, "assets", "report27");
 
 // ---------- パレット（レポートから採色） ----------
 const BLUE = "3333FF", NAVY = "1E2A5A", CARD = "F3F4F7", LAV = "EEEFFF", RED = "FF0000", TAGRED = "E60012";
-const DARK = "1A1A1A", GRAY = "595959", MGRAY = "8C8C99", LINE = "C8CBD6", WHITE = "FFFFFF", YEL = "FFF100";
+const DARK = "1A1A1A", GRAY = "262626", MGRAY = "4D4D4D", LINE = "C8CBD6", WHITE = "FFFFFF", YEL = "FFF100";
 const FONT = "Yu Gothic";
 const MODEL = "※船井総研作成のモデル数値です。成果を保証するものではありません。";
 
@@ -110,7 +110,7 @@ async function main() {
     const s = pres.addSlide({ masterName: "CONTENT" });
     txt(s, `${ch}.`, 1.22, 0.33, 0.75, 0.68, { size: 40, bold: true, color: BLUE, valign: "bottom" });
     txt(s, chTitle, 1.98, 0.42, 9, 0.55, { size: 22, bold: true, color: DARK, valign: "middle" });
-    txt(s, head, 0.8, 1.42, 11.9, 0.5, { size: 19, bold: true, color: DARK, valign: "middle" });
+    if (head) txt(s, head, 0.8, 1.42, 11.9, 0.5, { size: 19, bold: true, color: DARK, valign: "middle" });
     if (lead) txt(s, lead, 0.8, 1.98, 11.75, 0.62, { size: 11.5, color: GRAY, ls: 1.45 });
     if (notes) s.addNotes(notes);
     return s;
@@ -393,153 +393,85 @@ async function main() {
   }
 
   // =================================================================
-  // 4章
+  // 4章（2027年予測レポートの p6・p11・p12 と同じ内容）
   // =================================================================
   const C4 = "成功するための取組み";
   {
-    const s = page(4, C4, [B("屋号もHPも、本業とは分けて"), B("「専門店」", { color: RED }), B("に")],
-      "不動産会社の名前のまま遺品整理を打ち出すと、「売却を勧められそう」と警戒されます。遺品整理専門の屋号とHPを別に立て、まずは片付けの専門家として信頼を得ることが出発点です。",
-      "【話し方】売却相談は「片付けで信頼を得た後」に自然に生まれる。最初から不動産を前に出さないことがポイント。HPの4条件は2027年予測レポートより。");
-    // 左：before / after
-    rect(s, 0.72, 2.78, 5.6, 1.55, CARD, { round: true, r: 0.06 });
-    rect(s, 0.9, 2.9, 2.1, 0.32, MGRAY, { round: true, r: 0.15 });
-    txt(s, "不動産会社の一部門として", 0.9, 2.9, 2.1, 0.32, { size: 9.5, bold: true, color: WHITE, align: "center", valign: "middle" });
-    icon(s, "ng", 0.95, 3.38, 0.42, MGRAY);
-    txt(s, "「遺品整理もやっています」", 1.5, 3.3, 4.6, 0.4, { size: 13.5, bold: true, color: GRAY, valign: "middle" });
-    txt(s, "売り込みを警戒され、相談のハードルが上がる。片付け業者として比較もされにくい", 1.5, 3.72, 4.65, 0.55, { size: 10, color: GRAY, ls: 1.3 });
-    arrowD(s, 3.32, 4.4, 0.4, 0.3, BLUE);
-    rect(s, 0.72, 4.78, 5.6, 1.55, WHITE, { round: true, r: 0.06, line: BLUE, lw: 1.5 });
-    rect(s, 0.9, 4.9, 2.1, 0.32, BLUE, { round: true, r: 0.15 });
-    txt(s, "遺品整理の専門店として", 0.9, 4.9, 2.1, 0.32, { size: 9.5, bold: true, color: WHITE, align: "center", valign: "middle" });
-    icon(s, "ok", 0.95, 5.38, 0.42, BLUE);
-    txt(s, "専門の屋号・専門HPで「指名」される", 1.5, 5.3, 4.7, 0.4, { size: 13.5, bold: true, color: NAVY, valign: "middle" });
-    txt(s, "片付けの専門家として信頼され、相談が集まる。運営会社として貴社名を出し、安心感にもつなげる", 1.5, 5.72, 4.7, 0.55, { size: 10, color: GRAY, ls: 1.3 });
-    // 右：HPの4条件
-    txt(s, "反響が取れる専門HPの4つの条件", 6.8, 2.72, 5.5, 0.32, { size: 12, bold: true, color: NAVY, valign: "middle" });
-    const H = [["迷わない導線設計", "トップで専門性・料金・対応エリアを伝え、相談まで一直線に"], ["選びやすい商品設計", "間取り別のパック料金で「何を・いくらで」が一目でわかる"], ["安心できる信頼設計", "施工事例・お客様の声・Google口コミ・スタッフ・許可を明示"], ["問い合わせしやすいUI", "スマホで電話・LINE・見積フォームにすぐ届く"]];
-    H.forEach(([t, d], i) => {
-      const y = 3.12 + i * 0.82;
-      rect(s, 6.78, y, 5.6, 0.72, CARD, { round: true, r: 0.08 });
-      num(s, i + 1, 6.92, y + 0.14, 0.44);
-      txt(s, [B(t + "\n", { fontSize: 12, color: DARK }), N(d, { fontSize: 9.5, color: GRAY })], 7.52, y, 4.75, 0.72, { valign: "middle", ls: 1.2 });
+    const s = page(4, C4, null, null, "【出典】2027年予測レポート p6「2027年 実施いただきたいこと」と同じ内容。");
+    txt(s, "これからやるべきこと　それは、", 0.8, 1.25, 11, 0.45, { size: 19, bold: true, color: DARK, valign: "middle" });
+    txt(s, "「遺品整理専門店」を立ち上げ、地域一番店を取りにいくこと", 0.8, 1.78, 11.5, 0.5, { size: 21, bold: true, color: RED, valign: "middle" });
+    txt(s, "便利屋の延長ではなく、遺品整理に絞り込んだ「専門店」として打ち出すことが出発点です。顧客が求める「分かりやすさ」「納得感」「グリーフケア（心のケア）」に応えるため、売り先・売り物・売り方の3要素を一致させます。", 0.8, 2.3, 11.75, 0.62, { size: 11.5, color: GRAY, ls: 1.45 });
+    const T3 = [["① 売り先", "（ターゲット・商圏）", ["実家を相続する50〜60代の一般客", "賃貸オーナーなどの法人（貸室の残置物）", "商圏人口20万人エリア"]], ["② 売り物", "（商品・価格）", ["遺品整理標準パック（仕分け・搬出・処分・供養・簡易清掃）", "価格帯：5万円（1K）〜150万円（4LDK）"]], ["③ 売り方", "（販促・営業体制）", ["チラシ・WEB・アライアンス先からの紹介で集客", "現地確認＆即時クロージング型の営業"]]];
+    T3.forEach(([t, sub, b], i) => {
+      const x = 0.72 + i * 3.98;
+      rect(s, x, 3.03, 3.7, 1.5, CARD, { round: true, r: 0.06 });
+      rect(s, x, 3.03, 3.7, 0.42, NAVY, { round: true, r: 0.12 });
+      txt(s, [B(t + " ", { fontSize: 13 }), N(sub, { fontSize: 9.5 })], x, 3.03, 3.7, 0.42, { color: WHITE, align: "center", valign: "middle" });
+      bullets(s, b, x + 0.2, 3.55, 3.35, 0.95, { size: 10.5, ls: 1.3 });
     });
-    band(s, "まずは片付けで信頼を得る。売却の相談は、その先に自然と生まれます。", 6.5, 0.48);
+    txt(s, "2027年に実施いただきたい5つのこと", 0.75, 4.65, 8, 0.32, { size: 12.5, bold: true, color: NAVY, valign: "middle" });
+    const F5 = [["専門店ロゴ・屋号をつくる", "草引き・剪定・害虫駆除などは打ち出さず、遺品整理の客層に絞る", 1], ["専門店HPを立ち上げる", "単価の低い便利屋商品を外し、遺品整理・不用品回収・買取の3つの受け皿をつくる", 1], ["価格を明瞭にする", "「基本パック＋オプション」で、間取りと物量から総額が分かる料金表にする", 0], ["5つの施策で集客する", "SEO・MEO・WEB広告・チラシ・アライアンス。広告宣伝費は粗利の15〜20%が目安", 0], ["即決できる営業の仕組みをつくる", "0次接客・営業ツール・顧客管理シートで、契約率80%を目指す", 0]];
+    F5.forEach(([t, d, must], i) => {
+      const x = 0.72 + i * 2.38;
+      rect(s, x, 5.02, 2.2, 1.95, WHITE, { line: "C9CBF5", round: true, r: 0.06 });
+      num(s, i + 1, x + 0.15, 5.14, 0.42);
+      if (must) { rect(s, x + 1.45, 5.18, 0.62, 0.28, TAGRED, { round: true, r: 0.06 }); txt(s, "必須", x + 1.45, 5.18, 0.62, 0.28, { size: 9, bold: true, color: WHITE, align: "center", valign: "middle" }); }
+      txt(s, t, x + 0.15, 5.62, 1.95, 0.5, { size: 11, bold: true, color: NAVY, valign: "top", ls: 1.15 });
+      txt(s, d, x + 0.15, 6.12, 1.95, 0.8, { size: 9.5, color: GRAY, ls: 1.25 });
+    });
   }
   {
-    const s = page(4, C4, [B("集客は"), B("3本柱", { color: RED }), B("、営業は"), B("契約率80%", { color: RED })],
-      "専門店HPを土台に、WEB・チラシ・提携の3本柱で反響をとります。営業は案件の規模で進め方を分け、最初の電話から即決までを仕組みにします。広告宣伝費は粗利の15〜20%が目安です。",
-      "【出典】2027年予測レポート（5つの集客施策・営業KPI）。営業KPIは2年目の年間目安：反響230組→現場調査225組（98%）→契約180組（80%）＝月15組。");
-    txt(s, "集客の3本柱", 0.75, 2.72, 4, 0.32, { size: 12, bold: true, color: NAVY, valign: "middle" });
-    const P = [["laptop", "WEB", ["SEO・MEO・AIO対策", "Google検索広告・Meta広告"]], ["paper", "チラシ", ["「遺品整理」「保存版」を大きく", "配布数は世帯数×80%が目安"]], ["shake", "提携", ["司法書士・税理士・葬儀社・ケアマネと相互紹介", "自社の売却・買取物件の残置物も初期の仕事に"]]];
-    P.forEach(([k, t, b], i) => {
-      const y = 3.1 + i * 1.05;
-      rect(s, 0.72, y, 5.6, 0.95, CARD, { round: true, r: 0.08 });
-      icon(s, k, 0.88, y + 0.17, 0.6, WHITE, i === 2 ? BLUE : NAVY);
-      txt(s, t, 1.6, y, 1.0, 0.95, { size: 14, bold: true, color: i === 2 ? BLUE : NAVY, valign: "middle" });
-      bullets(s, b, 2.55, y + 0.05, 3.7, 0.85, { size: 10, ls: 1.3, valign: "middle" });
+    const s = page(4, C4, "集客：「反響が取れる専門店HP」を土台に、5つの施策で安定的に案件を獲得する",
+      "集客の一丁目一番地は、専門店の屋号とHPです。そのうえで5つの施策を組み合わせ、反響を最大化します。広告宣伝費は粗利の15〜20%が目安です（2年目モデルで年726万円）。",
+      "【出典】2027年予測レポート p11と同じ内容。");
+    txt(s, "反響が取れるHPの4つの条件", 0.75, 2.72, 6, 0.32, { size: 12.5, bold: true, color: NAVY, valign: "middle" });
+    const H4 = [["1. 迷わない導線設計", "トップで専門性・料金・対応エリアを伝え、相談まで一直線に"], ["2. 選びやすい商品設計", "間取り別のパック料金で「何を・いくらで」が一目でわかる"], ["3. 安心できる信頼設計", "施工事例・お客様の声・Google口コミ・スタッフ・許可を明示"], ["4. 問い合わせしやすいUI", "スマホで電話・LINE・見積フォームにすぐ届く"]];
+    H4.forEach(([t, d], i) => {
+      const x = 0.72 + i * 2.95;
+      rect(s, x, 3.08, 2.82, 0.85, LAV, { round: true, r: 0.06 });
+      txt(s, [B(t + "\n", { fontSize: 11.5, color: NAVY }), N(d, { fontSize: 9.5, color: GRAY })], x + 0.15, 3.08, 2.6, 0.85, { valign: "middle", ls: 1.2 });
     });
-    txt(s, "案件の規模で、営業方法を分ける", 6.8, 2.72, 5.5, 0.32, { size: 12, bold: true, color: NAVY, valign: "middle" });
-    const SL = [["30万円未満", "オンライン中心で効率化", BLUE, "電話ヒアリング → アンケート → 写真 → オンライン見積 → 電話で契約"], ["30万円以上", "現地訪問で信頼と提案力を強化", NAVY, "電話ヒアリング → 事前準備 → 現地確認 → その場で見積・契約"]];
-    SL.forEach(([t, sub, c, f], i) => {
-      const x = 6.78 + i * 2.85;
-      rect(s, x, 3.1, 2.75, 0.62, c, { round: true, r: 0.1 });
-      txt(s, [B(t + "\n", { fontSize: 13 }), N(sub, { fontSize: 9 })], x, 3.1, 2.75, 0.62, { color: WHITE, align: "center", valign: "middle", ls: 1.05 });
-      rect(s, x, 3.78, 2.75, 1.05, CARD, { round: true, r: 0.06 });
-      txt(s, f, x + 0.15, 3.83, 2.45, 0.95, { size: 10, color: GRAY, valign: "middle", ls: 1.4 });
+    txt(s, "5つの集客施策", 0.75, 4.08, 6, 0.32, { size: 12.5, bold: true, color: NAVY, valign: "middle" });
+    const P5 = [["01 SEO対策", "検索で見つけてもらう", ["お役立ち記事の作成", "地域ページ・事例・FAQの充実", "長期的に反響が増える「資産型」の集客"]], ["02 MEO対策", "地域の地図検索で選ばれる", ["Googleビジネスプロフィールの最適化", "写真・投稿の定期更新", "口コミの獲得", "SEOより上位表示しやすい"]], ["03 WEB広告・SNS", "今すぐ客を集める", ["Google検索広告で顕在客に", "Meta広告で検討前の層に", "Threadsでビフォーアフターと費用を発信（他社例：3か月で反響月20〜30件）"]], ["04 チラシ・販促", "地域に認知してもらう", ["「遺品整理」「保存版」を大きく", "料金表と追加料金の考え方を掲載", "配布数は世帯数×80%、エリア別反響率で頻度を調整"]], ["05 アライアンス提携", "紹介で安定的に獲得", ["不動産・葬儀・司法書士・ケアマネ・解体などと相互紹介", "提携先の信用を守ることが最大の営業フック"]]];
+    P5.forEach(([t, sub, b], i) => {
+      const x = 0.72 + i * 2.38;
+      rect(s, x, 4.45, 2.22, 2.5, WHITE, { line: "C9CBF5", round: true, r: 0.06 });
+      rect(s, x, 4.45, 2.22, 0.62, NAVY, { round: true, r: 0.1 });
+      txt(s, [B(t + "\n", { fontSize: 12 }), N(sub, { fontSize: 9 })], x, 4.45, 2.22, 0.62, { color: WHITE, align: "center", valign: "middle", ls: 1.05 });
+      bullets(s, b, x + 0.12, 5.15, 2.0, 1.75, { size: 9.5, ls: 1.25 });
     });
-    txt(s, "営業KPI（2年目・年間の目安）", 6.8, 5.05, 5.5, 0.3, { size: 11, bold: true, color: NAVY, valign: "middle" });
-    [["反響", "230組", "A6A9D8"], ["現場調査", "225組", "7A7DFF"], ["契約", "180組", BLUE]].forEach(([t, v, c], i) => {
-      const x = 6.78 + i * 1.9;
-      chev(s, x, 5.42, 2.0, 0.6, c, i === 0);
-      txt(s, [B(t + "  ", { fontSize: 10 }), B(v, { fontSize: 14 })], x + (i === 0 ? 0.05 : 0.3), 5.42, 1.5, 0.6, { color: WHITE, align: "center", valign: "middle" });
-    });
-    txt(s, "＝ 月15組 × 客単価30万円 ＝ 月商450万円", 6.8, 6.07, 5.6, 0.3, { size: 10.5, bold: true, color: DARK, align: "right", valign: "middle" });
-    band(s, "最初の電話の印象で、契約率が決まります。", 6.52, 0.46);
   }
   {
-    const s = page(4, C4, [B("顧客リストは、不動産案件の"), B("「宝の山」", { color: RED })],
-      "遺品整理のお客様の多くは、片付けの後に「この家をどうするか」を考え始めます。現場では売り込まずにご家族の予定をお聞きし、契約後も関係を続けることで、売却・解体のご相談につなげます。",
-      "【話し方】トーク例は「売り込まない聞き方」の例。売却の提案は、ご家族から相談が出てから。追客は顧客管理シートで仕組みにする（DL資料の営業STEP04）。");
-    txt(s, "片付けの後に続く、ご家族との関係", 0.75, 2.72, 6, 0.32, { size: 12, bold: true, color: NAVY, valign: "middle" });
-    const T = [["box", "作業完了のご報告", "貴重品・思い出の品の確認、作業報告書のお渡し"], ["file", "相続手続きのご相談", "司法書士・税理士など提携先のご紹介"], ["key", "空き家の管理・活用", "空き家管理、賃貸・リフォームのご提案"], ["home", "売却・解体のご相談", "査定・買取・解体まで貴社でワンストップ"]];
-    T.forEach(([k, t, d], i) => {
-      const y = 3.1 + i * 0.82;
-      rect(s, 0.72, y, 6.0, 0.72, i === 3 ? LAV : CARD, { round: true, r: 0.08, line: i === 3 ? BLUE : undefined });
-      icon(s, k, 0.88, y + 0.12, 0.48, WHITE, i === 3 ? BLUE : NAVY);
-      txt(s, [B(t + "\n", { fontSize: 12, color: i === 3 ? BLUE : DARK }), N(d, { fontSize: 9.5, color: GRAY })], 1.5, y, 5.1, 0.72, { valign: "middle", ls: 1.2 });
-      if (i < 3) arrowD(s, 1.03, y + 0.72, 0.18, 0.1, LINE);
+    const s = page(4, C4, "営業：案件規模で営業方法を分け、契約率80%・月15組の契約を実現する",
+      "契約率を高めるカギは、0次接客（電話ヒアリング）から即決までの流れを仕組みにすること。さらに遺品整理を入口に関連サービスを段階的に提案し、1件あたりの粗利を最大化します。",
+      "【出典】2027年予測レポート p12と同じ内容。");
+    const SL = [["30万円未満の案件", "オンライン中心で効率化", BLUE, ["0次接客（電話ヒアリング）", "アンケート送付（SMS・LINE）", "写真の提出（お客様）", "オンライン見積", "電話でクロージング・契約", "作業実施"], "訪問を省いたコスト削減を価格に反映。即日見積で契約率アップ"], ["30万円以上の案件", "現地訪問で信頼と提案力を強化", NAVY, ["0次接客（電話ヒアリング）", "事前の情報収集・日程調整", "現地確認（訪問）", "見積提示・追加提案", "その場でのクロージング・契約", "作業実施"], "コミコミ価格と作業スケジュールを明示し、買取・供養・解体などを追加提案"]];
+    SL.forEach(([t, sub, c, st, pt], i) => {
+      const x = 0.72 + i * 3.88;
+      rect(s, x, 2.78, 3.7, 4.12, CARD, { round: true, r: 0.06 });
+      rect(s, x, 2.78, 3.7, 0.62, c, { round: true, r: 0.1 });
+      txt(s, [B(t + "\n", { fontSize: 13 }), N(sub, { fontSize: 9.5 })], x, 2.78, 3.7, 0.62, { color: WHITE, align: "center", valign: "middle", ls: 1.05 });
+      st.forEach((v, k) => {
+        txt(s, [B(`STEP${k + 1}`, { color: BLUE, fontSize: 10 }), N("　" + v, { color: DARK, fontSize: 10.5 })], x + 0.2, 3.52 + k * 0.4, 3.4, 0.36, { valign: "middle" });
+      });
+      txt(s, [B("ポイント：", { color: NAVY }), N(pt, { color: GRAY })], x + 0.2, 6.0, 3.35, 0.8, { size: 9.5, ls: 1.3 });
     });
-    txt(s, "現場での、売り込まない聞き方（例）", 7.2, 2.72, 5.2, 0.32, { size: 12, bold: true, color: NAVY, valign: "middle" });
-    ["ご実家は、今後どうされるご予定ですか？", "相続のお手続きで、お困りのことはありませんか？", "しばらく空き家になる場合は、管理のご相談も承っています。"].forEach((t, i) => {
-      const y = 3.12 + i * 0.86;
-      s.addShape(pres.shapes.ROUNDED_RECTANGULAR_CALLOUT, { x: 7.2, y, w: 5.18, h: 0.66, fill: { color: WHITE }, line: { color: LINE, width: 1 }, objectName: nm("bubble") });
-      txt(s, `「${t}」`, 7.3, y, 5.0, 0.56, { size: 11, bold: true, color: DARK, valign: "middle" });
+    txt(s, "遺品整理から広がる7つの収益機会", 8.5, 2.72, 4, 0.32, { size: 12.5, bold: true, color: NAVY, valign: "middle" });
+    const R7 = ["リフォーム・リノベーション", "不動産売却・買取サポート", "解体工事", "特殊清掃・消臭・除菌", "供養・お焚き上げ", "買取・リユース", "遺品整理（基本サービス）"];
+    R7.forEach((t, i) => {
+      const n = 7 - i, w = 2.35 + n * 0.25, y = 3.1 + i * 0.5;
+      rect(s, 8.5, y, w, 0.42, n === 1 ? NAVY : (n >= 5 ? BLUE : "6F73F5"), { round: true, r: 0.05 });
+      txt(s, `${n}  ${t}`, 8.62, y, w - 0.15, 0.42, { size: 10.5, bold: true, color: WHITE, valign: "middle" });
     });
-    rect(s, 7.2, 5.72, 5.18, 0.6, CARD, { round: true, r: 0.08 });
-    icon(s, "db", 7.35, 5.82, 0.4, NAVY);
-    txt(s, "顧客管理シートで、案件・ご家族の予定・連絡履歴を記録し、追客を仕組みにする", 7.85, 5.72, 4.45, 0.6, { size: 10, color: GRAY, valign: "middle", ls: 1.3 });
-    band(s, "片付けのお客様の名簿が、そのまま貴社の「仕入れリスト」になります。", 6.52, 0.46);
+    txt(s, "顧客の課題をワンストップで解決し、粗利を最大化する", 8.5, 6.6, 4.3, 0.3, { size: 10.5, bold: true, color: NAVY, valign: "middle" });
   }
 
   // =================================================================
-  // 5章
+  // 5章（タイトルのみ・中身は別途差し込み）
   // =================================================================
   const C5 = "船井総研がお手伝いできること";
-  {
-    const s = page(5, C5, "事業計画から商品設計・集客・営業まで、一気通貫で立上げをサポートします",
-      "「遺品整理 新規事業立上げコンサルティングパッケージ」として、4つの領域でご支援します。協力業者探しや単価調整など、立上げ時につまずきやすい実務までお手伝いします。",
-      "【出典】2027年予測レポートの4つのソリューションと立上げスケジュール（※仮のスケジュール）。");
-    const SV = [["chart", "① 事業戦略策定", "3ヵ年経営計画・販促計画・財務分析"], ["gem", "② 商品設計提案", "遺品整理・不用品回収・買取の商品設計、協力業者探し"], ["laptop", "③ 集客戦略策定", "専門HP制作ディレクション・チラシ制作・WEB分析"], ["talk", "④ 営業戦略策定", "0次接客トーク・見積ツール・顧客管理の仕組み"]];
-    SV.forEach(([k, t, d], i) => {
-      const y = 2.78 + i * 0.92;
-      rect(s, 0.72, y, 5.0, 0.8, CARD, { round: true, r: 0.08 });
-      icon(s, k, 0.86, y + 0.12, 0.56, WHITE, i % 2 ? BLUE : NAVY);
-      txt(s, [B(t + "\n", { fontSize: 12.5, color: DARK }), N(d, { fontSize: 9.5, color: GRAY })], 1.55, y, 4.1, 0.8, { valign: "middle", ls: 1.2 });
-    });
-    // 右：スケジュール
-    const X0 = 7.55, MW = 0.8;
-    txt(s, "立上げスケジュール（6か月）", 6.1, 2.72, 5, 0.3, { size: 12, bold: true, color: NAVY, valign: "middle" });
-    rect(s, 6.1, 3.08, 6.28, 0.36, NAVY);
-    for (let m = 0; m < 6; m++) txt(s, `${m + 1}か月目`, X0 + m * MW, 3.08, MW, 0.36, { size: 9.5, bold: true, color: WHITE, align: "center", valign: "middle" });
-    const G = [["業者探し", 0, 2, "協力業者・原価確認", "5B9BD5"], ["商品設計", 0, 2, "パック・オプション", "70AD47"], ["ブランド設計", 0, 2, "屋号・ロゴ・コンセプト", "4472C4"], ["HP制作", 0.4, 2.5, "TOP公開→全ページ公開", "ED7D31"], ["営業体制", 1.5, 6, "営業ツール・営業研修", "E6A700"], ["集客施策", 1.5, 6, "チラシ・WEB広告・SEO・MEO", "44546A"], ["アライアンス", 1.0, 3.0, "リストアップ・資料", "E05A5A"], ["", 3.8, 6, "提携に向けた営業活動", "E05A5A"]];
-    let row = 0;
-    G.forEach(([t, a, b, l, c]) => {
-      if (t) row++;
-      const y = 3.48 + (row - 1) * 0.42;
-      if (t) { rect(s, 6.1, y, 6.28, 0.4, row % 2 ? CARD : WHITE); txt(s, t, 6.15, y, 1.4, 0.4, { size: 9.5, bold: true, color: DARK, valign: "middle" }); }
-      rect(s, X0 + a * MW + 0.02, y + 0.06, (b - a) * MW - 0.04, 0.28, c, { round: true, r: 0.05 });
-      txt(s, l, X0 + a * MW, y + 0.06, (b - a) * MW, 0.28, { size: 8, bold: true, color: WHITE, align: "center", valign: "middle" });
-    });
-    source(s, "※仮のスケジュールです。状況により変動いたします。", 6.4);
-    txt(s, "マニュアル4種（事業概要・営業・現場・集客）と、見積ツール・トークスクリプト・業者間提携のご提案書などのツールも、貴社仕様でご提供します。", 0.75, 6.55, 11.8, 0.4, { size: 10.5, bold: true, color: NAVY, valign: "middle" });
-  }
-  {
-    const s = page(5, C5, [B("まずは、"), B("貴社の商圏で試算", { color: RED }), B("してみませんか？")],
-      "遺品整理の市場規模や、残置物撤去の内製化による効果は、商圏と貴社の案件数によって大きく変わります。個別の無料経営相談で、貴社の場合の数字を一緒に整理します。",
-      "【案内】電話：0120-958-270（平日9:45〜17:30、土日祝・年末年始を除く）。WEB：https://www.funaisoken.co.jp/form/consulting");
-    txt(s, "無料経営相談で分かること", 0.75, 2.72, 6, 0.32, { size: 12, bold: true, color: NAVY, valign: "middle" });
-    const Q = [["map", "貴社商圏の遺品整理市場の規模", "商圏人口から市場規模と目標シェアを試算"], ["yen", "残置物撤去の内製化で残る利益", "今の外注件数・単価から自社化の効果を試算"], ["building", "不動産案件への波及効果", "売却・買取・解体につながる件数と粗利を整理"]];
-    Q.forEach(([k, t, d], i) => {
-      const x = 0.72 + i * 3.98;
-      rect(s, x, 3.1, 3.7, 1.75, CARD, { round: true, r: 0.06 });
-      num(s, i + 1, x + 0.18, 3.25, 0.44);
-      icon(s, k, x + 3.0, 3.25, 0.5, BLUE);
-      txt(s, t, x + 0.2, 3.8, 3.3, 0.45, { size: 12.5, bold: true, color: DARK, valign: "middle" });
-      txt(s, d, x + 0.2, 4.25, 3.3, 0.55, { size: 10, color: GRAY, ls: 1.3 });
-    });
-    // 連絡先
-    rect(s, 0.72, 5.08, 11.66, 1.55, WHITE, { line: LINE, round: true, r: 0.06 });
-    txt(s, "お電話でのお問い合わせ・ご相談", 1.0, 5.18, 5.2, 0.32, { size: 11.5, bold: true, color: DARK, align: "center", valign: "middle" });
-    icon(s, "phone", 1.55, 5.62, 0.42, BLUE);
-    txt(s, "0120-958-270", 2.05, 5.52, 4.0, 0.62, { size: 28, bold: true, color: BLUE, valign: "middle" });
-    txt(s, "【受付時間】平日 9時45分〜17時30分（土日祝、年末年始を除く）", 1.0, 6.15, 5.2, 0.3, { size: 8.5, color: GRAY, align: "center", valign: "middle" });
-    s.addShape(pres.shapes.LINE, { x: 6.55, y: 5.25, w: 0, h: 1.2, line: { color: LINE, width: 0.75 }, objectName: nm("ln") });
-    txt(s, "WEBでのお問い合わせ・ご相談", 6.85, 5.18, 5.3, 0.32, { size: 11.5, bold: true, color: DARK, align: "center", valign: "middle" });
-    rect(s, 7.95, 5.58, 3.1, 0.55, NAVY, { round: true, r: 0.08 });
-    txt(s, "無料 経営相談に申し込む", 7.95, 5.58, 3.1, 0.55, { size: 13, bold: true, color: WHITE, align: "center", valign: "middle" });
-    txt(s, "https://www.funaisoken.co.jp/form/consulting", 6.85, 6.15, 5.3, 0.3, { size: 9, color: BLUE, align: "center", valign: "middle" });
-    txt(s, "※本資料の数値は船井総研作成のモデル数値であり、成果を保証するものではありません。本資料には生成AIにより生成した情報が含まれている場合があります。", 0.75, 6.72, 11.8, 0.28, { size: 7.5, color: MGRAY, valign: "middle" });
-  }
+  page(5, C5, null, null, "【白紙】ご支援内容のページを差し込む。");
+  page(5, C5, null, null, "【白紙】ご支援内容・無料経営相談のご案内を差し込む。");
 
   await pres.writeFile({ fileName: OUT });
   if (process.env.PPTX_SKILL) {

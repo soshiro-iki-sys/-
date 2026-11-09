@@ -190,16 +190,25 @@ async function main() {
     oval(s, CX - 0.95, CY - 0.95, 1.9, NAVY);
     txt(s, "遺品整理\n（新規事業）", CX - 0.95, CY - 0.5, 1.9, 1.0, { size: 13, bold: true, color: WHITE, align: "center", valign: "middle", ls: 1.05 });
   }
-  // 6 シナジー
+  // 6 シナジー（3つの観点×6つの型。当てはまる型だけ残して使う）
   {
-    const s = page(HEADER, "貴社ならではのシナジー", "（記入：シナジーをひと言で）", "【記入】4つの観点のうち、当てはまるものだけ残して使う。");
-    [["お客様・商流", "users", NAVY], ["経営資源（人・車両・ノウハウ）", "truck", BLUE], ["集客チャネル", "paper", ORANGE], ["本業への出口", "building", GREEN]].forEach(([t, k, c], i) => {
-      const x = 0.45 + (i % 2) * 5.02, y = 2.0 + Math.floor(i / 2) * 2.45;
-      rect(s, x, y, 4.88, 2.25, WHITE, { line: c, lw: 1.5 });
-      rect(s, x, y, 4.88, 0.55, c);
-      icon(s, k, x + 0.12, y + 0.08, 0.4, WHITE);
-      txt(s, t, x + 0.62, y, 4.1, 0.55, { size: 13.5, bold: true, color: WHITE, valign: "middle" });
-      ph(s, [B("（見出し）\n", { fontSize: 13, color: DARK }), N("（記入：内容）\n（記入：内容）", { fontSize: 11 })], x + 0.2, y + 0.7, 4.5, 1.45, { ls: 1.5 });
+    const s = page(HEADER, "貴社ならではのシナジー", "（記入：シナジーをひと言で）", "【記入】6つの型のうち、貴社に当てはまるものだけ残す（2〜4つが目安）。使わない型は削除し、残した枠を広げて使う。業種ごとの当てはまり方は最後の「参考：業種別シナジー早見表」を参照。");
+    const G = [["売上を伸ばす", NAVY, [["search", "本業の入口になる", "本業の案件・仕入れを、市場に出る前に獲得"], ["chart", "客単価・LTVを上げる", "1人のお客様から受ける仕事を増やす"]]],
+      ["コストを下げる", GREEN, [["box", "外注を内製化する", "外注していた片付け・撤去を自社の粗利に"], ["truck", "空いている人・車両を活かす", "閑散期・空き時間の稼働を売上に"]]],
+      ["立ち位置を強くする", ORANGE, [["users", "既存のお客様・会員に応える", "既存顧客へのアフターサービスとリピート"], ["store", "直接受注・差別化", "下請け・価格競争から抜け、選ばれる会社に"]]]];
+    G.forEach(([gt, c, items], i) => {
+      const x = 0.45 + i * 3.35;
+      rect(s, x, 1.95, 3.15, 0.42, c);
+      txt(s, gt, x, 1.95, 3.15, 0.42, { size: 13, bold: true, color: WHITE, align: "center", valign: "middle" });
+      items.forEach(([k, t, d], j) => {
+        const y = 2.5 + j * 2.2;
+        rect(s, x, y, 3.15, 2.05, WHITE, { line: c, lw: 1.5 });
+        icon(s, k, x + 0.12, y + 0.12, 0.42, WHITE, c);
+        txt(s, t, x + 0.62, y + 0.1, 2.45, 0.46, { size: 12.5, bold: true, color: c, valign: "middle" });
+        txt(s, d, x + 0.15, y + 0.6, 2.85, 0.32, { size: 9, color: GRAY, valign: "middle" });
+        line(s, x + 0.15, y + 0.95, 2.85, 0.001, LINE, 0.75, { dash: "dash" });
+        ph(s, "（記入：貴社での具体的な内容）", x + 0.15, y + 1.02, 2.85, 0.95, { size: 10.5, ls: 1.35 });
+      });
     });
   }
   // 7 商圏
@@ -296,6 +305,18 @@ async function main() {
       rect(s, X0 + 0.05, y + 0.06, MW * 2 - 0.1, 0.24, "D5DAE3", { round: true, r: 0.05 });
       ph(s, "（期間・内容を記入）", X0 + 0.05, y + 0.06, MW * 2 - 0.1, 0.24, { size: 8.5, align: "center", valign: "middle", color: GRAY });
     });
+  }
+
+  // 参考：業種別シナジー早見表（社内用。お客様に見せる前に削除してよい）
+  {
+    const s = page("参考（社内用）", "参考：業種別シナジー早見表", "企画書の業種別シナジーを6つの型に整理（◎強い　○ある）", "【社内用】お客様にお出しする前に削除する。企画書の業種別シナジー（10業種）の4項目ずつを6つの型に振り分けたもの。");
+    const H = ["業種", "本業の入口", "客単価・LTV", "外注の内製化", "人・車両の活用", "既存顧客・会員", "直接受注・差別化"];
+    const R = [["不動産", "◎", "○", "◎", "", "", "○"], ["解体", "◎", "◎", "◎", "○", "", "◎"], ["住宅・リフォーム", "◎", "○", "", "", "○", "○"], ["葬儀", "○", "○", "", "", "◎", "○"], ["便利業", "", "◎", "", "○", "○", "◎"], ["リサイクル", "◎", "", "", "", "", "◎"], ["買取", "◎", "◎", "", "", "", "○"], ["引越し", "", "◎", "", "◎", "○", ""], ["運送", "", "○", "", "◎", "", "◎"]];
+    const GC = [NAVY, NAVY, NAVY, GREEN, GREEN, ORANGE, ORANGE];
+    const data = [H.map((h, j) => ({ text: h, options: { fontFace: FONT, fontSize: 10.5, bold: true, color: WHITE, align: "center", valign: "middle", fill: { color: GC[j] }, border: { type: "solid", pt: 0.75, color: LINE } } }))];
+    R.forEach((r, i) => data.push(r.map((v, j) => ({ text: v, options: { fontFace: FONT, fontSize: j === 0 ? 11 : 15, bold: true, align: "center", valign: "middle", color: j === 0 ? NAVY : (v === "◎" ? RED : GRAY), fill: { color: j === 0 ? LBLUE : (i % 2 ? LGRAY : WHITE) }, border: { type: "solid", pt: 0.75, color: LINE } } }))));
+    s.addTable(data, { x: 0.45, y: 1.95, w: 9.95, colW: [1.85, 1.35, 1.35, 1.35, 1.35, 1.35, 1.35], rowH: 0.45, objectName: "synergy_map" });
+    note(s, "※企画書の業種別シナジーをもとに整理。実際の当てはまりはヒアリングで確認する。", 6.6);
   }
 
   await pres.writeFile({ fileName: OUT });

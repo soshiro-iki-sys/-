@@ -28,4 +28,5 @@ for f in glob.glob(sys.argv[1]+'/ppt/slides/slide*.xml'):
     open(f,'w',encoding='utf-8').write(x)
 PY
 rm -f "$OUT"; (cd "$W/x" && zip -qXrD "$OUT" .)
+python3 "$(dirname "$0")/merge_textboxes.py" "$W/x" && rm -f "$OUT" && (cd "$W/x" && zip -qXrD "$OUT" .)
 echo "written: $OUT"

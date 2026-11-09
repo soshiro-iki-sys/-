@@ -28,5 +28,11 @@ for f in glob.glob(sys.argv[1]+'/ppt/slides/slide*.xml'):
     open(f,'w',encoding='utf-8').write(x)
 PY
 rm -f "$OUT"; (cd "$W/x" && zip -qXrD "$OUT" .)
-python3 "$(dirname "$0")/merge_textboxes.py" "$W/x" && rm -f "$OUT" && (cd "$W/x" && zip -qXrD "$OUT" .)
+# 4) 1行ずつのボックスを段落単位にまとめる／貴社向けページは元のスライドに差し替え／表はグループ化
+D="$(dirname "$0")"
+python3 "$D/merge_textboxes.py" "$W/x"
+# NATIVE: build_revival.js で出力したpptxの展開フォルダ（環境変数で指定）
+python3 "$D/transplant_native_slides.py" "$W/x" "$NATIVE" "$D/assets/kikaku"
+python3 "$D/group_tables.py" "$W/x"
+rm -f "$OUT"; (cd "$W/x" && zip -qXrD "$OUT" .)
 echo "written: $OUT"

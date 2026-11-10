@@ -193,7 +193,7 @@ async function main() {
   // 6 シナジー（何を共有するかで4つに分ける。向きはどちらでもよい）
   {
     const s = page(HEADER, "貴社ならではのシナジー", "（記入：シナジーをひと言で）", "【記入】4つの観点のうち、貴社に当てはまるものだけ残して使う。本業→遺品整理、遺品整理→本業のどちらの向きでも、同じ観点に書いてよい。業種ごとの当てはまり方は最後の「参考：業種別シナジー早見表」を参照。");
-    const G = [["users", "① お客様", "同じお客様に、本業と遺品整理の両方を提供できる", "送客・紹介、既存顧客・会員の活用、クロスセル", NAVY],
+    const G = [["users", "① LTVの最大化", "同じお客様に、本業と遺品整理の両方を提供できる", "送客・紹介、既存顧客・会員の活用、クロスセル", NAVY],
       ["truck", "② 経営資源", "人・車両・ノウハウ・拠点を、両方の事業で使える", "空いている稼働の活用、設備投資を抑えた立ち上げ", BLUE],
       ["yen", "③ 収益・コスト", "お金の流れが良くなる", "外注の内製化、客単価・粗利の向上、集客費の共通化", GREEN],
       ["store", "④ 信頼・ブランド", "地域での立ち位置が強くなる", "専門店化、直接受注・脱下請け、ワンストップでの差別化", ORANGE]];
@@ -208,6 +208,69 @@ async function main() {
       line(s, x + 0.18, y + 1.18, 4.52, 0.001, LINE, 0.75, { dash: "dash" });
       ph(s, [B("（見出し）\n", { fontSize: 13, color: DARK }), N("（記入：貴社での具体的な内容）", { fontSize: 11 })], x + 0.18, y + 1.25, 4.52, 1.05, { ls: 1.4 });
     });
+  }
+  // 6-2 シナジー創出スキーム（大枠）
+  {
+    const s = page(HEADER, "シナジーを生むスキーム", "（記入：スキームをひと言で）", "【記入】横軸はお客様の流れ（接点→相談→遺品整理→整理後→その後）。各レーンの枠に、そのタイミングで誰が何をするかを書く。送客の矢印は向き・本数を貴社に合わせて動かす・消す。使わないレーン・枠は削除してよい。");
+    const L0 = 1.75, CW = 1.72, X0 = 1.75;
+    const COLS = ["① 接点", "② 相談", "③ 遺品整理", "④ 整理後", "⑤ その後"];
+    COLS.forEach((c, i) => {
+      s.addShape(i === 0 ? pres.shapes.PENTAGON : pres.shapes.CHEVRON, { x: X0 + i * CW, y: 1.95, w: CW + 0.08, h: 0.42, fill: { color: i === 2 ? BLUE : NAVY }, line: { type: "none" } });
+      txt(s, c, X0 + i * CW + 0.15, 1.95, CW - 0.25, 0.42, { size: 11.5, bold: true, color: WHITE, align: "center", valign: "middle" });
+    });
+    const LANES = [["貴社\n本業", NAVY, LBLUE], ["貴社\n遺品整理事業", BLUE, "EEF3FB"], ["提携先・\n外注先", ORANGE, LORANGE]];
+    LANES.forEach(([t, c, bg], i) => {
+      const y = 2.5 + i * 1.3;
+      rect(s, 0.35, y, 1.32, 1.18, c);
+      txt(s, t, 0.35, y, 1.32, 1.18, { size: 12, bold: true, color: WHITE, align: "center", valign: "middle", ls: 1.15 });
+      rect(s, 1.72, y, 8.76, 1.18, bg);
+      for (let k = 0; k < 5; k++) {
+        rect(s, X0 + k * CW + 0.07, y + 0.1, CW - 0.14, 0.98, WHITE, { line: c, round: true, r: 0.06 });
+        ph(s, [B("（誰が・何を）\n", { fontSize: 10, color: DARK }), N("（記入）", { fontSize: 9.5 })], X0 + k * CW + 0.15, y + 0.15, CW - 0.3, 0.88, { ls: 1.3, align: "center", valign: "middle" });
+      }
+    });
+    // 送客の矢印（例）
+    [[X0 + 1 * CW + CW / 2, 3.6, 0.32, "送客"], [X0 + 3 * CW + CW / 2, 3.6, 0.32, "送客"]].forEach(([cx, y, h, t], i) => {
+      s.addShape(i === 0 ? pres.shapes.DOWN_ARROW : pres.shapes.UP_ARROW, { x: cx - 0.17, y: y - 0.02, w: 0.34, h: 0.42, fill: { color: RED }, line: { type: "none" } });
+      txt(s, t, cx + 0.2, y, 0.6, 0.35, { size: 9, bold: true, color: RED, valign: "middle" });
+    });
+    rect(s, 0.35, 6.45, 10.13, 0.5, LGRAY);
+    txt(s, [B("スキームのポイント　", { color: NAVY }), N("（記入：このスキームで生まれる効果。例：本業のお客様を遺品整理へ送客し、整理後の案件を本業で受注する）", { color: PH })], 0.5, 6.45, 9.9, 0.5, { size: 11, valign: "middle" });
+  }
+  // 6-3 外注スキーム（請負部分）
+  {
+    const s = page(HEADER, "遺品整理の外注スキーム", "（記入：自社が担う工程と、外注する工程をひと言で）", "【記入】工程（列）ごとに、自社と外注先のどちらが担うかを書く。担わないレーンの枠は消す。工程は貴社に合わせて増減してよい。上のモデル案件は、総量×単価＝売上、外注費、粗利（粗利率）を記入。本業・関連事業のレーンは、遺品整理の前後で本業につながる動きを書く（不要なら削除）。");
+    rect(s, 0.35, 1.9, 1.35, 0.42, NAVY);
+    txt(s, "モデル案件", 0.35, 1.9, 1.35, 0.42, { size: 11.5, bold: true, color: WHITE, align: "center", valign: "middle" });
+    rect(s, 1.7, 1.9, 6.0, 0.42, WHITE, { line: LINE });
+    ph(s, [N("総量 ○○㎥ × 単価 ○○円/㎥ → ", { color: DARK }), B("売上 ○○万円", { color: RED }), N("　｜　外注費 ○○万円", { color: DARK })], 1.85, 1.9, 5.8, 0.42, { size: 11, valign: "middle" });
+    rect(s, 7.8, 1.9, 2.68, 0.42, RED);
+    txt(s, "粗利 ○○万円（粗利率○○%）", 7.8, 1.9, 2.68, 0.42, { size: 11.5, bold: true, color: WHITE, align: "center", valign: "middle" });
+    const STEPS = ["集客", "現地調査", "営業・見積", "仕分け指示", "現場作業", "処分", "完了確認"];
+    const X0 = 1.75, CW = 1.247;
+    STEPS.forEach((t, i) => {
+      rect(s, X0 + i * CW + 0.03, 2.45, CW - 0.06, 0.38, "D9E2F0", { round: true, r: 0.08 });
+      txt(s, `${["①", "②", "③", "④", "⑤", "⑥", "⑦"][i]} ${t}`, X0 + i * CW + 0.03, 2.45, CW - 0.06, 0.38, { size: 10, bold: true, color: NAVY, align: "center", valign: "middle" });
+    });
+    const LANES = [["自社\n遺品整理事業", NAVY, "EEF3FB"], ["外注\n（専門業者）", ORANGE, LORANGE], ["自社\n本業・関連事業", GREEN, LGREEN]];
+    LANES.forEach(([t, c, bg], i) => {
+      const y = 2.95 + i * 1.12;
+      rect(s, 0.35, y, 1.35, 1.02, c);
+      txt(s, t, 0.35, y, 1.35, 1.02, { size: 11, bold: true, color: WHITE, align: "center", valign: "middle", ls: 1.15 });
+      rect(s, 1.72, y, 8.76, 1.02, bg);
+      for (let k = 0; k < 7; k++) {
+        rect(s, X0 + k * CW + 0.05, y + 0.08, CW - 0.1, 0.86, WHITE, { line: c, round: true, r: 0.06 });
+        ph(s, "（作業内容）\n（金額）", X0 + k * CW + 0.1, y + 0.12, CW - 0.2, 0.78, { size: 9, align: "center", valign: "middle", ls: 1.3 });
+      }
+    });
+    s.addShape(pres.shapes.RECTANGLE, { x: 0.35, y: 6.33, w: 2.0, h: 0.62, fill: { color: NAVY }, line: { type: "none" } });
+    txt(s, "スキームのポイント", 0.35, 6.33, 2.0, 0.62, { size: 11.5, bold: true, color: WHITE, align: "center", valign: "middle" });
+    for (let k = 0; k < 3; k++) {
+      const x = 2.45 + k * 2.68;
+      rect(s, x, 6.33, 2.6, 0.62, WHITE, { line: LINE });
+      icon(s, "ok", x + 0.08, 6.49, 0.3, ORANGE);
+      ph(s, "（記入）", x + 0.45, 6.33, 2.1, 0.62, { size: 10, valign: "middle" });
+    }
   }
   // 7 商圏
   {
@@ -308,7 +371,7 @@ async function main() {
   // 参考：業種別シナジー早見表（社内用。お客様に見せる前に削除してよい）
   {
     const s = page("参考（社内用）", "参考：業種別シナジー早見表", "企画書の業種別シナジーを4つの観点に整理（◎強い　○ある）", "【社内用】お客様にお出しする前に削除する。企画書の業種別シナジー（10業種）の4項目ずつを6つの型に振り分けたもの。");
-    const H = ["業種", "① お客様", "② 経営資源", "③ 収益・コスト", "④ 信頼・ブランド"];
+    const H = ["業種", "① LTVの最大化", "② 経営資源", "③ 収益・コスト", "④ 信頼・ブランド"];
     const R = [["不動産", "◎", "", "◎", "○"], ["解体", "◎", "○", "◎", "◎"], ["住宅・リフォーム", "◎", "", "○", "○"], ["葬儀", "◎", "○", "○", "○"], ["便利業", "○", "○", "◎", "◎"], ["リサイクル", "○", "", "◎", "◎"], ["買取", "○", "", "◎", "○"], ["引越し", "◎", "◎", "◎", ""], ["運送", "", "◎", "◎", "○"]];
     const GC = [NAVY, NAVY, BLUE, GREEN, ORANGE];
     const data = [H.map((h, j) => ({ text: h, options: { fontFace: FONT, fontSize: 11.5, bold: true, color: WHITE, align: "center", valign: "middle", fill: { color: GC[j] }, border: { type: "solid", pt: 0.75, color: LINE } } }))];

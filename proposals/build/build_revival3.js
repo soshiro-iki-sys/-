@@ -181,7 +181,7 @@ async function main() {
     const cw = [1.6, 4.2, 4.33], cx = [0.35, 1.95, 6.15];
     hd.forEach((h, j) => { rect(s, cx[j], 2.0, cw[j] - 0.05, 0.45, NAVY); txt(s, h, cx[j], 2.0, cw[j] - 0.05, 0.45, { size: 12.5, bold: true, color: WHITE, align: "center", valign: "middle" }); });
     const R = [["財務", "融資約1.6億円・在庫約8,000万円・現金約8,000万円", "手元現金が拘束され新規仕入れが停滞"],
-      ["エリア", "都内拠点だが、他社が回らない北関東の物件を業者回りで仕入れ", "地盤のないエリアの業者回りに依存し、広げられない"],
+      ["エリア", "事務所は都内なのに、物件は北関東で、他社が回らない地域の業者を回って仕入れている", "遠方で業者のつながりも限られ、件数を増やせない（社長：このやり方では広げられない）"],
       ["組織", "営業1名で月1件程度。育っても独立した方が得になる", "仕入れが営業マン個人の腕・足に依存。属人化と独立リスク"],
       ["仕入れの質", "業者からの出物待ち。実需寄りの中途半端な物件を買い、売れ残りがある", "物件を選べる立場にない（出物を取り合う）"]];
     R.forEach(([k, a, b], i) => {
@@ -378,7 +378,7 @@ async function main() {
     const s = page(HEADER, "4大課題と、遺品整理で解決できること", "4大課題は、遺品整理を入口にすることで同時に解決できる", "");
     txt(s, "貴社の課題", 0.45, 1.9, 4.5, 0.35, { size: 14, bold: true, color: MGRAY, valign: "middle" });
     txt(s, "遺品整理で解決できること", 5.9, 1.9, 4.5, 0.35, { size: 14, bold: true, color: NAVY, valign: "middle" });
-    [["財務", "現金が拘束され新規仕入れが停滞", "在庫リスクゼロで即日キャッシュ化", "解決策①"], ["エリア", "北関東の業者回りに依存", "都内近郊のWeb反響獲得", "解決策①"], ["組織", "属人化と独立リスク", "組織営業（0次接客・即時見積）", "解決策②"], ["仕入れの質", "実需寄りの物件をつかみ売れ残る", "売主直で、物件を見てから選ぶ", "解決策③"]].forEach(([k, a, b, r], i) => {
+    [["財務", "現金が拘束され新規仕入れが停滞", "在庫リスクゼロで即日キャッシュ化", "解決策①"], ["エリア", "遠い北関東の業者回りでは件数を増やせない", "都内近郊のWeb反響獲得", "解決策①"], ["組織", "属人化と独立リスク", "組織営業（0次接客・即時見積）", "解決策②"], ["仕入れの質", "実需寄りの物件をつかみ売れ残る", "売主直で、物件を見てから選ぶ", "解決策③"]].forEach(([k, a, b, r], i) => {
       const y = 2.32 + i * 1.12;
       rect(s, 0.45, y, 4.6, 0.98, LGRAY);
       icon(s, "search", 0.6, y + 0.12, 0.32, MGRAY);
@@ -392,16 +392,30 @@ async function main() {
   divider(4, "事業収支シミュレーション", "遺品整理の収益・不動産への波及・3年間の数値計画");
   // 18 単体PL（P.7）
   {
-    const s = page(HEADER, "【フロント収益】遺品整理事業 単体PLモデル", "月5〜10件の稼働で、年間1,000万〜2,000万円規模の安定粗利を確立。", "【トーク】前回の「今は残置物撤去に1軒約40万円払っている。30万円で全部やってくれたらかなり安い」につなげる。");
-    const cell = (t, i, j, hdr) => ({ text: t, options: { fontFace: FONT, fontSize: 12, valign: "middle", align: j === 0 ? "left" : "center", bold: hdr || j === 0 || t.includes("粗利"), color: hdr ? WHITE : (j === 0 ? NAVY : DARK), fill: { color: hdr ? NAVY : (j === 0 ? LBLUE : WHITE) }, border: { type: "solid", pt: 0.75, color: LINE } } });
-    txt(s, "1件あたり", 0.45, 1.95, 4.4, 0.35, { size: 13, bold: true, color: NAVY, valign: "middle" });
-    s.addTable([["項目", "金額・比率"], ["平均客単価", "30万円"], ["売上原価", "約40%"], ["売上総利益（粗利）", "約60%（18万円）"]].map((r, i) => r.map((c, j) => cell(c, i, j, i === 0))), { x: 0.45, y: 2.35, w: 4.4, colW: [2.2, 2.2], rowH: 0.62, objectName: "pl_unit" });
-    txt(s, "稼働件数別", 5.25, 1.95, 5.15, 0.35, { size: 13, bold: true, color: NAVY, valign: "middle" });
-    s.addTable([["", "月間5件稼働時", "月間10件稼働時"], ["月商", "150万円", "300万円"], ["月粗利", "90万円", "180万円"], ["年間粗利", "1,080万円", "2,160万円"]].map((r, i) => r.map((c, j) => cell(c, i, j, i === 0))), { x: 5.25, y: 2.35, w: 5.15, colW: [1.55, 1.8, 1.8], rowH: 0.62, objectName: "pl_volume" });
-    rect(s, 0.45, 5.1, 9.95, 0.85, LGRAY);
-    txt(s, [B("客単価30万円：", { color: NAVY }), N("家一棟丸ごと・高単価案件中心。売上原価は提携処分費・作業外注費。\n", { color: DARK }), B("前回のお話：", { color: NAVY }), N("今は残置物撤去に1軒約40万円を支払っている → 払う側から、利益を得る側へ", { color: DARK })], 0.65, 5.1, 9.6, 0.85, { size: 11, valign: "middle", ls: 1.35 });
-    band(s, "月5〜10件の稼働で、年間1,000万〜2,000万円規模の安定粗利", 6.1, 0.6, 15);
-    note(s, MODEL, 6.82);
+    const s = page(HEADER, "【フロント収益】遺品整理事業 単体PLモデル", "1件30万円・月10件で、年間売上3,600万円・粗利2,420万円（企画書の1年目モデル）",
+      "企画書の数値計画（1年目）を、1件あたり・月間・年間に割り戻したもの。1件あたり・月間は年間÷120件・÷12で計算。\n前回の骨子の「原価約40%・粗利約60%（18万円）」は、企画書のモデル（処分費30%＋消耗品、粗利67%）に合わせて差し替え。\n【要確認】1年目の営業利益：表の経費を合計すると2,420万−1,834万＝586万円（16.3%）となり、企画書の106万円（2.94%）と合わない。\n【トーク】前回の「今は残置物撤去に1軒約40万円払っている」につなげる。");
+    const C = (t, o = {}) => ({ text: t, options: Object.assign({ fontFace: FONT, fontSize: 10.5, valign: "middle", align: "center", color: DARK, fill: { color: WHITE }, border: { type: "solid", pt: 0.75, color: LINE } }, o) });
+    const H = (t) => C(t, { bold: true, color: WHITE, fill: { color: NAVY }, fontSize: 11 });
+    const L = (t, o = {}) => C(t, Object.assign({ align: "left", bold: true, color: NAVY }, o));
+    const SUM = { bold: true, fill: { color: LBLUE }, color: NAVY };
+    const CAT = (t, n) => C(t, { rowspan: n, bold: true, color: WHITE, fill: { color: NAVY2 }, fontSize: 11 });
+    const rows = [
+      [H("項目"), H(""), H("1件あたり"), H("月間（10件）"), H("年間（1年目・120件）"), H("備考")],
+      [L("売上", { colspan: 2, fontSize: 12 }), C("30.0万円", { bold: true, fontSize: 12 }), C("300万円", { bold: true, fontSize: 12 }), C("3,600万円", { bold: true, fontSize: 12 }), C("客単価30万円", { fontSize: 9.5, color: GRAY })],
+      [CAT("原価", 2), L("処分費"), C("9.0万円"), C("90万円"), C("1,080万円"), C("売上の30%", { fontSize: 9.5, color: GRAY })],
+      [L("その他消耗品費"), C("0.8万円"), C("8.3万円"), C("100万円"), C("資材等", { fontSize: 9.5, color: GRAY })],
+      [L("粗利", Object.assign({ colspan: 2 }, SUM)), C("20.2万円", SUM), C("201.7万円", SUM), C("2,420万円", SUM), C("粗利率67%", Object.assign({}, SUM, { fontSize: 9.5 }))],
+      [CAT("経費", 5), L("アルバイト事務"), C("1.0万円"), C("10.0万円"), C("120万円"), C("事務1名", { fontSize: 9.5, color: GRAY })],
+      [L("広告宣伝費"), C("4.0万円"), C("40.3万円"), C("484万円"), C("粗利の20%", { fontSize: 9.5, color: GRAY })],
+      [L("その他事業経費"), C("1.3万円"), C("12.5万円"), C("150万円"), C("", {})],
+      [L("人件費"), C("5.0万円"), C("50.0万円"), C("600万円"), C("専任1名", { fontSize: 9.5, color: GRAY })],
+      [L("作業員アルバイト"), C("4.0万円"), C("40.0万円"), C("480万円"), C("2名", { fontSize: 9.5, color: GRAY })],
+      [L("営業利益", { colspan: 2, fill: { color: "E8EFE9" }, color: GREEN, fontSize: 12 }), C("0.9万円", { bold: true, fill: { color: "E8EFE9" }, color: GREEN }), C("8.8万円", { bold: true, fill: { color: "E8EFE9" }, color: GREEN }), C("106万円", { bold: true, fill: { color: "E8EFE9" }, color: GREEN, fontSize: 12 }), C("営業利益率2.94%", { bold: true, fill: { color: "E8EFE9" }, color: GREEN, fontSize: 9.5 })],
+    ];
+    s.addTable(rows, { x: 0.45, y: 1.95, w: 9.95, colW: [0.75, 2.05, 1.65, 1.75, 2.05, 1.7], rowH: 0.37, objectName: "pl_unit" });
+    rect(s, 0.45, 6.12, 9.95, 0.6, "FDECEC", { line: RED, dash: "dash" });
+    txt(s, [B("要確認　", { color: RED }), N("1年目の営業利益は、表の経費を合計して計算すると586万円（16.3%）。企画書の106万円（2.94%）と合わないため、どちらが正しいか確認が必要", { color: DARK })], 0.6, 6.12, 9.7, 0.6, { size: 10.5, valign: "middle", ls: 1.2 });
+    note(s, MODEL + "　出典：企画書の数値計画（3年間）の1年目。", 6.82);
   }
   // 19 バックエンド（P.8）
   {
@@ -423,34 +437,85 @@ async function main() {
     note(s, MODEL, 6.82);
   }
   {
-    const s = page(HEADER, "買取再販1件のインパクト", "良い物件を1件仕入れられれば、遺品整理の利益を大きく上回る。", "社長ご自身の実例。差額は売却価格−仕入れ価格で、リフォーム費・諸経費・税金は含まない（金額は不明）。遺品整理1件の粗利18万円はP.7の数字。");
-    [["仕入れ価格", NAVY, "2,300万円"], ["売却価格", BLUE, "3,500万円"], ["保有期間", GREEN, "約1か月"], ["差額", RED, "約1,200万円"]].forEach(([t, c, v], i) => {
-      const x = 0.45 + i * 2.5;
-      rect(s, x, 2.05, 2.35, 1.6, WHITE, { line: c, lw: 1.5, round: true, r: 0.08 });
-      rect(s, x, 2.05, 2.35, 0.45, c, { round: true, r: 0.12 });
-      txt(s, t, x, 2.05, 2.35, 0.45, { size: 12, bold: true, color: WHITE, align: "center", valign: "middle" });
-      txt(s, v, x, 2.6, 2.35, 0.9, { size: 22, bold: true, color: c, align: "center", valign: "middle" });
+    const s = page(HEADER, "買取再販・仲介のインパクト（1件あたり・年間）", "単純な差額ではなく、諸経費を引いた利益で見る",
+      "【1件あたり】社長ご自身の実例（2,300万円で仕入れ、約1か月で3,500万円で売却）。単純な差額1,200万円から諸経費を引く必要がある。\n・売却時の仲介手数料：他社に仲介を依頼した場合、3,500万円×3%＋6万円＝111万円（税込122.1万円）。自社で買主を見つければ不要。\n・仕入時の仲介手数料：売主直なら不要（業者経由なら2,300万円×3%＋6万円＝75万円、税込82.5万円）。\n・リフォーム費、登記費用（登録免許税・司法書士報酬）、不動産取得税、保有中の固定資産税・融資金利は不明。法人税は別途。\n【年間】企画書1年目の120件×5〜10%＝6〜12件。内訳（仲介5件・買取再販1件）は仮定。仲介手数料は2,300万円の物件・片手の宅建業法の上限（税込82.5万円）で計算。宅建業の免許の有無は不明。\n※P.20（バックエンド収益）の「年間受託80件」「仲介手数料1件100万〜300万円」は、企画書の件数・宅建業法の上限とずれがあるため要確認。");
+    // 左：1件あたり
+    rect(s, 0.45, 1.95, 5.35, 4.1, WHITE, { line: NAVY, lw: 1.5 });
+    rect(s, 0.45, 1.95, 5.35, 0.45, NAVY);
+    txt(s, "1件あたりの利益（社長の実例）", 0.45, 1.95, 5.35, 0.45, { size: 13, bold: true, color: WHITE, align: "center", valign: "middle" });
+    const L = [["売却価格", "3,500万円", DARK, true], ["仕入価格", "−2,300万円", DARK, true], ["単純な差額", "約1,200万円", NAVY, true, LBLUE],
+      ["売却時の仲介手数料（他社に依頼した場合）", "−約122万円", DARK], ["仕入時の仲介手数料（売主直なら不要）", "0円", DARK], ["リフォーム費", "不明", RED], ["登記費用・不動産取得税など", "不明", RED], ["保有中の固定資産税・金利（約1か月）", "不明", RED]];
+    L.forEach(([k, v, c, b, bg], i) => {
+      const y = 2.48 + i * 0.36 + (i >= 3 ? 0.12 : 0);
+      if (bg) rect(s, 0.6, y, 5.05, 0.34, bg);
+      txt(s, (i >= 3 ? "・" : "") + k, 0.7, y, 3.6, 0.34, { size: i >= 3 ? 10 : 11.5, bold: !!b, color: DARK, valign: "middle" });
+      txt(s, v, 4.2, y, 1.4, 0.34, { size: i >= 3 ? 10.5 : 12, bold: true, color: c, align: "right", valign: "middle" });
     });
-    rect(s, 0.45, 3.95, 9.95, 1.9, LGRAY);
-    txt(s, "遺品整理の利益と比べると", 0.65, 4.0, 6, 0.4, { size: 13, bold: true, color: NAVY, valign: "middle" });
-    txt(s, [N("買取再販1件の差額 約1,200万円", { color: DARK }), N("　÷　遺品整理1件の粗利 18万円", { color: DARK }), N("　＝　", { color: DARK }), N("遺品整理 約67件分", { color: RED })], 0.65, 4.5, 9.6, 0.7, { size: 14.5, bold: true, align: "center", valign: "middle" });
-    txt(s, [N("リフォーム費・諸経費・税金：", { color: DARK }), N("不明", { color: RED }), N("（差額には含まない）", { color: DARK })], 0.65, 5.25, 9.6, 0.5, { size: 11, align: "center", valign: "middle" });
-    band(s, "良い物件を1件仕入れるだけで、遺品整理 約67件分", 6.1, 0.62, 15);
-    note(s, "※社長ご自身の実例をもとにした試算。成果を保証するものではありません。", 6.82);
+    txt(s, "差し引く諸経費", 0.7, 3.57, 3, 0.12, { size: 8, bold: true, color: GRAY, valign: "middle" });
+    rect(s, 0.6, 5.42, 5.05, 0.5, "FDECEC");
+    txt(s, [B("1件あたりの利益（税引前）　", { color: DARK }), B("約1,078万円", { color: RED }), N(" − 不明分", { color: RED })], 0.7, 5.42, 4.9, 0.5, { size: 12, valign: "middle" });
+    // 右：年間
+    rect(s, 6.0, 1.95, 4.4, 4.1, WHITE, { line: RED, lw: 1.5 });
+    rect(s, 6.0, 1.95, 4.4, 0.45, RED);
+    txt(s, "年間のインパクト（1年目・試算）", 6.0, 1.95, 4.4, 0.45, { size: 13, bold: true, color: WHITE, align: "center", valign: "middle" });
+    rect(s, 6.2, 2.5, 4.0, 0.42, LGRAY, { round: true, r: 0.08 });
+    txt(s, [N("遺品整理 ", { color: DARK }), B("120件", { color: NAVY }), N(" → 不動産の相談 ", { color: DARK }), B("6〜12件", { color: RED }), N("（5〜10%）", { color: GRAY })], 6.2, 2.5, 4.0, 0.42, { size: 10, align: "center", valign: "middle" });
+    txt(s, "内訳の例（仮定）", 6.2, 3.02, 4, 0.3, { size: 10.5, bold: true, color: NAVY, valign: "middle" });
+    [["仲介 5件 × 約82.5万円", "約413万円"], ["買取再販 1件", "約1,078万円"]].forEach(([k, v], i) => {
+      const y = 3.35 + i * 0.42;
+      rect(s, 6.2, y, 4.0, 0.38, WHITE, { line: LINE });
+      txt(s, k, 6.3, y, 2.5, 0.38, { size: 11, color: DARK, valign: "middle" });
+      txt(s, v, 8.4, y, 1.7, 0.38, { size: 11.5, bold: true, color: DARK, align: "right", valign: "middle" });
+    });
+    rect(s, 6.2, 4.25, 4.0, 0.5, "FDECEC");
+    txt(s, [B("不動産の上乗せ　", { color: DARK }), B("約1,490万円", { color: RED }), N(" − 不明分", { color: RED })], 6.3, 4.25, 3.85, 0.5, { size: 12, valign: "middle" });
+    rect(s, 6.2, 4.9, 4.0, 0.95, LBLUE);
+    txt(s, [N("参考：遺品整理単体の営業利益（1年目）\n", { fontSize: 10, color: GRAY }), B("106万円", { fontSize: 16, color: NAVY }), N("（企画書）", { fontSize: 10, color: GRAY })], 6.3, 4.9, 3.85, 0.95, { align: "center", valign: "middle", ls: 1.2 });
+    band(s, "不動産が年に数件決まるだけで、遺品整理単体の利益を大きく上回る", 6.15, 0.6, 15);
+    note(s, "※社長の実例と宅建業法の仲介手数料の上限をもとにした試算。内訳の件数は仮定。成果を保証するものではありません。", 6.82);
   }
-
   // 20 3年間の数値計画
   {
-    const s = page(HEADER, "3年間の数値計画", "企画書の「3年1億円モデル」を当てはめた場合", "企画書の3年モデル（売上3,600万→5,400万→1億円、営業利益率2.9%→16.7%→23.1%）。件数は客単価30万円で割り戻した目安。体制は担当者が決まっていないため不明。");
-    const T = [["", "1年目", "2年目", "3年目"], ["売上", "3,600万円", "5,400万円", "1億円"], ["月間契約件数", "約10件", "約15件", "約28件"], ["営業利益率", "2.9%", "16.7%", "23.1%"], ["体制", "不明", "不明", "不明"]];
-    const data = T.map((r, i) => r.map((c, j) => ({ text: c, options: { fontFace: FONT, fontSize: 13, valign: "middle", align: "center", bold: i === 0 || j === 0, color: i === 0 ? WHITE : (j === 0 ? NAVY : (c === "不明" ? RED : DARK)), fill: { color: i === 0 ? NAVY : (j === 0 ? LBLUE : WHITE) }, border: { type: "solid", pt: 0.75, color: LINE } } })));
-    s.addTable(data, { x: 0.45, y: 2.0, w: 6.4, colW: [1.9, 1.5, 1.5, 1.5], rowH: 0.7, objectName: "plan" });
-    rect(s, 7.05, 2.0, 3.35, 3.5, WHITE, { line: GREEN, lw: 1.5 });
-    rect(s, 7.05, 2.0, 3.35, 0.5, GREEN);
-    txt(s, "本業への波及（上乗せ）", 7.05, 2.0, 3.35, 0.5, { size: 13, bold: true, color: WHITE, align: "center", valign: "middle" });
-    blist(s, ["受託の5〜10%が不動産案件に", "年間80件の受託で年4〜8件", "出口：仲介・厳選買取再販", "買取再販1件で差額約1,200万円（実例）", "上乗せの金額：不明"], 7.2, 2.65, 3.15, 11.5, 1.55);
-    band(s, "3年目に遺品整理単体で年商1億円、さらに仲介・買取再販へ上乗せ", 5.9, 0.62, 15);
-    note(s, MODEL, 6.7);
+    const s = page(HEADER, "3年間の数値計画", "3年目には売上1億円を達成し、営業利益率23.1%の高収益体制へ（企画書の3年モデル）",
+      "企画書の数値計画（3年間）をそのまま掲載。古物商許可は取得済みのため、初期投資の古物商許可取得費用（5〜8万円）は不要。\n【要確認】1年目の営業利益：表の経費を合計すると586万円（16.3%）となり、企画書の106万円（2.94%）と合わない。2年目・3年目は計算と一致。\n体制（人件費の専任人数）は貴社の担当者が決まっていないため、企画書のモデルのまま。");
+    const C = (t, o = {}) => ({ text: t, options: Object.assign({ fontFace: FONT, fontSize: 9.5, valign: "middle", align: "center", color: DARK, fill: { color: WHITE }, border: { type: "solid", pt: 0.75, color: LINE } }, o) });
+    const G = (t) => C(t, { fontSize: 8, color: GRAY });
+    const L = (t, o = {}) => C(t, Object.assign({ align: "left", bold: true, color: NAVY }, o));
+    const SUM = { bold: true, fill: { color: LBLUE }, color: NAVY };
+    const OP = { bold: true, fill: { color: "E8EFE9" }, color: GREEN };
+    const CAT = (t, n) => C(t, { rowspan: n, bold: true, color: WHITE, fill: { color: NAVY2 }, fontSize: 10.5 });
+    const Y = (t, c) => C(t, { colspan: 2, bold: true, color: WHITE, fill: { color: c }, fontSize: 11 });
+    const rows = [
+      [C("項目", { colspan: 2, bold: true, color: WHITE, fill: { color: NAVY }, fontSize: 11 }), Y("1年目", NAVY), Y("2年目", "B8892B"), Y("3年目", BLUE)],
+      [L("売上", { colspan: 2, fontSize: 11 }), C("3,600万円", { colspan: 2, bold: true, fontSize: 11 }), C("5,400万円", { colspan: 2, bold: true, fontSize: 11 }), C("1億円", { colspan: 2, bold: true, fontSize: 11 })],
+      [CAT("原価", 3), L("処分費"), C("1,080万円"), G("30%"), C("1,620万円"), G("30%"), C("3,000万円"), G("30%")],
+      [L("その他消耗品費"), C("100万円"), G("資材等"), C("150万円"), G("件数増加分"), C("200万円"), G("件数増加分")],
+      [L("粗利", SUM), C("2,420万円", SUM), C("67%", SUM), C("3,630万円", SUM), C("67%", SUM), C("6,800万円", SUM), C("68%", SUM)],
+      [CAT("経費", 5), L("アルバイト事務"), C("120万円"), G("事務1名"), C("120万円"), G("事務1名"), C("120万円"), G("事務1名")],
+      [L("広告宣伝費"), C("484万円"), G("粗利の20%"), C("726万円"), G("粗利の20%"), C("1,360万円"), G("粗利の20%")],
+      [L("その他事業経費"), C("150万円"), G(""), C("200万円"), G(""), C("250万円"), G("")],
+      [L("人件費"), C("600万円"), G("専任1名"), C("1,200万円"), G("専任2名"), C("1,800万円"), G("専任3名")],
+      [L("作業員アルバイト"), C("480万円"), G("2名"), C("480万円"), G("2名"), C("960万円"), G("4名")],
+      [L("営業利益", Object.assign({ colspan: 2 }, OP)), C("106万円", Object.assign({ colspan: 2 }, OP)), C("904万円", Object.assign({ colspan: 2 }, OP)), C("2,310万円", Object.assign({ colspan: 2 }, OP))],
+      [L("営業利益率", Object.assign({ colspan: 2 }, OP)), C("2.94%", Object.assign({ colspan: 2 }, OP)), C("16.74%", Object.assign({ colspan: 2 }, OP)), C("23.10%", Object.assign({ colspan: 2 }, OP))],
+    ];
+    s.addTable(rows, { x: 0.35, y: 1.92, w: 7.5, colW: [0.55, 1.45, 1.0, 0.85, 1.0, 0.85, 1.0, 0.8], rowH: 0.34, objectName: "plan" });
+    // 右：初期投資・投資回収
+    rect(s, 8.05, 1.92, 2.43, 2.15, WHITE, { line: NAVY, lw: 1.5 });
+    rect(s, 8.05, 1.92, 2.43, 0.45, NAVY);
+    txt(s, "初期投資", 8.05, 1.92, 2.43, 0.45, { size: 13, bold: true, color: WHITE, align: "center", valign: "middle" });
+    txt(s, [N("HP制作費\n", { fontSize: 10, color: DARK }), B("150万円", { fontSize: 17, color: RED })], 8.2, 2.42, 2.15, 0.75, { valign: "middle", ls: 1.1 });
+    line(s, 8.2, 3.2, 2.13, 0.001, LINE, 0.75);
+    txt(s, [N("古物商許可取得費用\n", { fontSize: 10, color: DARK }), B("取得済み（0円）", { fontSize: 13, color: GREEN })], 8.2, 3.25, 2.15, 0.75, { valign: "middle", ls: 1.1 });
+    s.addShape(pres.shapes.DOWN_ARROW, { x: 9.0, y: 4.12, w: 0.55, h: 0.35, fill: { color: NAVY }, line: { type: "none" } });
+    rect(s, 8.05, 4.52, 2.43, 1.9, WHITE, { line: NAVY, lw: 1.5 });
+    rect(s, 8.05, 4.52, 2.43, 0.45, NAVY);
+    txt(s, "投資回収", 8.05, 4.52, 2.43, 0.45, { size: 13, bold: true, color: WHITE, align: "center", valign: "middle" });
+    txt(s, [B("2年目", { fontSize: 22, color: RED }), N("で回収", { fontSize: 12, color: RED })], 8.15, 5.0, 2.25, 0.6, { align: "center", valign: "middle" });
+    txt(s, "2年目の営業利益904万円により、初期投資を回収見込み", 8.2, 5.6, 2.15, 0.75, { size: 9.5, color: DARK, valign: "middle" });
+    txt(s, [B("要確認　", { color: RED }), N("1年目の営業利益は、表の経費を合計すると586万円（16.3%）。企画書の106万円（2.94%）と合わない", { color: DARK })], 0.35, 6.12, 7.5, 0.4, { size: 9.5, valign: "middle" });
+    txt(s, [B("【特徴】", { color: DARK }), B("初期投資が低く、社員1名からスタート可能。20%以上の利益率を目指せる", { color: RED })], 0.35, 6.48, 10.13, 0.35, { size: 12, valign: "middle" });
+    note(s, MODEL + "　出典：企画書の数値計画（3年間）。", 6.85);
   }
   divider(5, "立ち上げの不安を解消する", "過去のFCとの違い・リソース・外注スキーム・原価");
   // 22 過去のFCとの違い（P.11）

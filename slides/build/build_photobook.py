@@ -48,6 +48,46 @@ YEAR = '2026'
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                    '..', '2026撮影指示書_マルユウハウジー_お片付けサイト.pptx')
 
+# 参考画像（任意）。<カット番号>.png / .jpg を置くと写真枠に差し込まれる。
+# 無いカットはプレースホルダーのまま。環境変数 PHOTOBOOK_ASSETS で差し替え可。
+ASSETS = os.environ.get(
+    'PHOTOBOOK_ASSETS',
+    os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                 '..', '..', 'assets', 'photobook'))
+
+PH_X, PH_Y, PH_W, PH_H = 0.53, 1.45, 6.15, 4.22   # 写真枠（3:2 横位置）
+
+
+def find_image(no):
+    for ext in ('.png', '.jpg', '.jpeg', '.PNG', '.JPG'):
+        p = os.path.join(ASSETS, no + ext)
+        if os.path.isfile(p):
+            return p
+    return None
+
+
+def place_photo(s, path):
+    """写真枠いっぱいに入れて、はみ出した分を中央でトリミングする。"""
+    pic = s.shapes.add_picture(path, Inches(PH_X), Inches(PH_Y),
+                               width=Inches(PH_W), height=Inches(PH_H))
+    try:
+        from PIL import Image
+        with Image.open(path) as im:
+            iw, ih = im.size
+    except Exception:
+        return pic
+    frame_ar = PH_W / PH_H
+    img_ar = iw / float(ih)
+    if abs(img_ar - frame_ar) < 0.01:
+        return pic
+    if img_ar > frame_ar:                       # 画像のほうが横長 → 左右を切る
+        c = (1.0 - frame_ar / img_ar) / 2.0
+        pic.crop_left = pic.crop_right = c
+    else:                                       # 画像のほうが縦長 → 上下を切る
+        c = (1.0 - img_ar / frame_ar) / 2.0
+        pic.crop_top = pic.crop_bottom = c
+    return pic
+
 
 # ── 図形ヘルパー ───────────────────────────────────────────
 def rect(s, x, y, w, h, fill=None, line=None, lw=0.75, rounded=False):
@@ -242,19 +282,26 @@ def cut_page(prs, c):
 
     rect(s, M, 1.24, BODY_W, 0.02, fill=NAVY)
 
-    # 写真（未撮影のため枠のみ）
-    rect(s, 0.53, 1.45, 6.15, 4.22, fill=TINT1, line=RULE)
-    _, tf = tb(s, 0.90, 3.26, 5.41, 0.6, anchor=MSO_ANCHOR.MIDDLE)
-    put(tf, '撮影完成イメージ', size=13.5, bold=True, color=SUB,
-        align=PP_ALIGN.CENTER)
-    put(tf, c['name'], size=10.5, color=SUB, align=PP_ALIGN.CENTER)
+    # 写真。参考画像があれば差し込み、無ければプレースホルダー
+    img = find_image(c['no'])
+    if img:
+        place_photo(s, img)
+        rect(s, PH_X, PH_Y, PH_W, PH_H, fill=None, line=RULE)
+        note = 'AI生成・撮影参考'
+    else:
+        rect(s, PH_X, PH_Y, PH_W, PH_H, fill=TINT1, line=RULE)
+        _, tf = tb(s, 0.90, 3.26, 5.41, 0.6, anchor=MSO_ANCHOR.MIDDLE)
+        put(tf, '撮影完成イメージ', size=13.5, bold=True, color=SUB,
+            align=PP_ALIGN.CENTER)
+        put(tf, c['name'], size=10.5, color=SUB, align=PP_ALIGN.CENTER)
+        note = '撮影前・参考枠'
 
     _, tf = tb(s, M, 5.77, 1.53, 0.22)
     put(tf, 'REFERENCE IMAGE', size=7.5, bold=True, color=BLUE)
     _, tf = tb(s, 2.03, 5.77, 2.19, 0.22)
     put(tf, '撮影完成イメージ', size=7.5, color=SUB)
     _, tf = tb(s, 5.10, 5.77, 1.59, 0.22)
-    put(tf, '撮影前・参考枠', size=7.5, color=SUB, align=PP_ALIGN.RIGHT)
+    put(tf, note, size=7.5, color=SUB, align=PP_ALIGN.RIGHT)
 
     # 仕様表（7行固定）
     for n, (label, val) in enumerate(zip(SPEC_ROWS, c['spec'])):
